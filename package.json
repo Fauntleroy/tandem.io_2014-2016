@@ -1,0 +1,18 @@
+{
+  "name": "quicksync",
+  "version": "0.0.0",
+  "description": "Minimal, open-source version of TK Sync",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fauntleroy/quicksync.git"
+  },
+  "author": "Timothy Kempf",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Fauntleroy/quicksync/issues"
+  },
+  "dependencies": {
+    "express": "~3.4.8"
+  }
+}
