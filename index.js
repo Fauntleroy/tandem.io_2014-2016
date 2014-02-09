@@ -33,19 +33,6 @@ server.use( express.session({
 	})
 }) );
 
-// DB
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/quicksync');
-
-var User = mongoose.model( 'User', {
-	soundcloud_id: String,
-	soundcloud_access_token: String,
-	soundcloud_refresh_token: String,
-	youtube_id: String,
-	youtube_access_token: String,
-	youtube_refresh_token: String
-});
-
 // Passport stuffhttps://www.googleapis.com/auth/youtube
 var passport = require('passport');
 
