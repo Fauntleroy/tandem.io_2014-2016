@@ -144,10 +144,13 @@ server.get( '/logout', function( req, res ){
 	res.redirect('/');
 });
 
-server.get( '/*', function( req, res ){
+var renderIndex = function( req, res ){
 	console.log( 'req.user', req.user );
 	res.render('index.hbs');
-});
+};
+
+server.get( '/', renderIndex );
+server.get( '/rooms/:id', renderIndex );
 
 server.listen( PORT );
 

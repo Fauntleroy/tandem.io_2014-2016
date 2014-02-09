@@ -20,7 +20,8 @@
     "passport-youtube": "0.0.6",
     "connect-mongo": "~0.4.0",
     "underscore": "~1.5.2",
-    "request": "~2.33.0"
+    "request": "~2.33.0",
+    "mongoose": "~3.8.6"
   },
   "devDependencies": {
     "jquery": "~2.1.0",
