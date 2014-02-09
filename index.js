@@ -6,6 +6,7 @@ const YOUTUBE_APP_ID = process.env.QUICKSYNC_YOUTUBE_APP_ID;
 const YOUTUBE_APP_SECRET = process.env.QUICKSYNC_YOUTUBE_APP_SECRET;
 const URL = 'http://dev.quick.tksync.com:8080';
 
+var _ = require('underscore');
 var express = require('express');
 var server = express();
 
@@ -32,7 +33,20 @@ server.use( express.session({
 	})
 }) );
 
-// Passport stuff
+// DB
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/quicksync');
+
+var User = mongoose.model( 'User', {
+	soundcloud_id: String,
+	soundcloud_access_token: String,
+	soundcloud_refresh_token: String,
+	youtube_id: String,
+	youtube_access_token: String,
+	youtube_refresh_token: String
+});
+
+// Passport stuffhttps://www.googleapis.com/auth/youtube
 var passport = require('passport');
 
 server.use( passport.initialize() );
@@ -53,10 +67,18 @@ var SoundcloudStrategy = passport_soundcloud.Strategy;
 passport.use( new SoundcloudStrategy({
 	clientID: SOUNDCLOUD_APP_ID,
 	clientSecret: SOUNDCLOUD_APP_SECRET,
-	callbackURL: URL +'/auth/soundcloud/callback'
-}, function( access_token, refresh_token, profile, done ){
-	var user = {};
-	console.log( 'soundcloud profile', profile );
+	callbackURL: URL +'/auth/soundcloud/callback',
+	passReqToCallback: true
+}, function( req, access_token, refresh_token, profile, done ){
+	var user = {
+		soundcloud_id: profile.id,
+		soundcloud_access_token: access_token,
+		soundcloud_refresh_token: refresh_token
+	};
+	// if we already have a user session, merge them
+	if( req.user ){
+		user = _.extend( req.user, user );
+	}
 	done( null, user );
 }));
 
@@ -67,16 +89,25 @@ var YoutubeStrategy = passport_youtube.Strategy;
 passport.use( new YoutubeStrategy({
 	clientID: YOUTUBE_APP_ID,
 	clientSecret: YOUTUBE_APP_SECRET,
-	callbackURL: URL +'/auth/youtube/callback'
-}, function( access_token, refresh_token, profile, done ){
-	var user = {};
-	console.log( 'youtube profile', profile );
+	callbackURL: URL +'/auth/youtube/callback',
+	passReqToCallback: true
+}, function( req, access_token, refresh_token, profile, done ){
+	var user = {
+		youtube_id: profile.id,
+		youtube_access_token: access_token,
+		youtube_refresh_token: refresh_token
+	};
+	// if we already have a user session, merge them
+	if( req.user ){
+		user = _.extend( req.user, user );
+	}
 	done( null, user );
 }));
 
 // Routes
 server.get( '/', function( req, res ){
 	res.render('index.hbs');
+	console.log( 'req.user', req.user );
 });
 
 server.get( '/auth/soundcloud',	passport.authenticate('soundcloud') );
@@ -88,7 +119,7 @@ server.get( '/auth/soundcloud/callback', passport.authenticate( 'soundcloud', {
 
 server.get( '/auth/youtube', passport.authenticate( 'youtube', {
 	scope: 'https://www.googleapis.com/auth/youtube'
-}) );
+}));
 
 server.get( '/auth/youtube/callback', passport.authenticate( 'youtube', {
 	successRedirect: '/',
