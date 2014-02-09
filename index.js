@@ -98,11 +98,6 @@ passport.use( new YoutubeStrategy({
 }));
 
 // Routes
-server.get( '/', function( req, res ){
-	console.log( 'req.user', req.user );
-	res.render('index.hbs');
-});
-
 server.get( '/auth/soundcloud',	passport.authenticate('soundcloud') );
 
 server.get( '/auth/soundcloud/callback', passport.authenticate( 'soundcloud', {
@@ -147,6 +142,11 @@ server.get( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
 server.get( '/logout', function( req, res ){
 	req.logout();
 	res.redirect('/');
+});
+
+server.get( '/*', function( req, res ){
+	console.log( 'req.user', req.user );
+	res.render('index.hbs');
 });
 
 server.listen( PORT );
