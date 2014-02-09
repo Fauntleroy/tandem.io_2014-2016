@@ -4,9 +4,13 @@ const SOUNDCLOUD_APP_ID = process.env.QUICKSYNC_SOUNDCLOUD_APP_ID;
 const SOUNDCLOUD_APP_SECRET = process.env.QUICKSYNC_SOUNDCLOUD_APP_SECRET;
 const YOUTUBE_APP_ID = process.env.QUICKSYNC_YOUTUBE_APP_ID;
 const YOUTUBE_APP_SECRET = process.env.QUICKSYNC_YOUTUBE_APP_SECRET;
+const YOUTUBE_API_KEY = process.env.QUICKSYNC_YOUTUBE_API_KEY;
 const URL = 'http://dev.quick.tksync.com:8080';
+const SOUNDCLOUD_API_BASE_URL = 'https://api.soundcloud.com';
+const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 
 var _ = require('underscore');
+var request = require('request');
 var express = require('express');
 var server = express();
 
@@ -93,8 +97,8 @@ passport.use( new YoutubeStrategy({
 
 // Routes
 server.get( '/', function( req, res ){
-	res.render('index.hbs');
 	console.log( 'req.user', req.user );
+	res.render('index.hbs');
 });
 
 server.get( '/auth/soundcloud',	passport.authenticate('soundcloud') );
@@ -112,6 +116,31 @@ server.get( '/auth/youtube/callback', passport.authenticate( 'youtube', {
 	successRedirect: '/',
 	failureRedirect: '/?err=youtube-login-failed'
 }));
+
+server.get( /^\/api\/v1\/proxy\/soundcloud\/(.+)$/, function( req, res ){
+	var query = _.extend( req.query, {
+		oauth_token: req.user.soundcloud_access_token
+	});
+	var endpoint = req.params[0];
+	request({
+		url: SOUNDCLOUD_API_BASE_URL +'/'+ endpoint,
+		qs: query
+	}).pipe( res );
+});
+
+server.get( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
+	var query = _.extend( req.query, {
+		key: YOUTUBE_API_KEY
+	});
+	var endpoint = req.params[0];
+	request({
+		url: YOUTUBE_API_BASE_URL +'/'+ endpoint,
+		qs: query,
+		headers: {
+			'Authorization': 'Bearer '+ req.user.youtube_access_token
+		}
+	}).pipe( res );
+});
 
 server.get( '/logout', function( req, res ){
 	req.logout();
