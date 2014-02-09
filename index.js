@@ -60,10 +60,11 @@ passport.use( new SoundcloudStrategy({
 	clientSecret: SOUNDCLOUD_APP_SECRET,
 	callbackURL: URL +'/auth/soundcloud/callback',
 	passReqToCallback: true
-}, function( req, access_token, refresh_token, profile, done ){
+}, function( req, access_token, refresh_token, params, profile, done ){
 	var user = {
 		soundcloud_id: profile.id,
 		soundcloud_access_token: access_token,
+		soundcloud_access_token_expiry: Date.now() + ( params.expires_in * 1000 ),
 		soundcloud_refresh_token: refresh_token
 	};
 	// if we already have a user session, merge them
@@ -82,10 +83,11 @@ passport.use( new YoutubeStrategy({
 	clientSecret: YOUTUBE_APP_SECRET,
 	callbackURL: URL +'/auth/youtube/callback',
 	passReqToCallback: true
-}, function( req, access_token, refresh_token, profile, done ){
+}, function( req, access_token, refresh_token, params, profile, done ){
 	var user = {
 		youtube_id: profile.id,
 		youtube_access_token: access_token,
+		youtube_access_token_expiry: Date.now() + ( params.expires_in * 1000 ),
 		youtube_refresh_token: refresh_token
 	};
 	// if we already have a user session, merge them
