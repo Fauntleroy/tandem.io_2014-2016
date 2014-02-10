@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
+var $ = require('jquery');
 
 // Application modules
 var Router = require('./routers/router.js');
@@ -12,9 +13,16 @@ var mediator = quicksync.mediator = _.extend( {}, Backbone.Events );
 quicksync.router = new Router({ mediator: mediator });
 quicksync.room = new Room( null, { mediator: mediator });
 quicksync.rooms = new Rooms( null, { mediator: mediator });
-quicksync.views = {
-	rooms: new RoomsView({ collection: quicksync.rooms }),
-};
 
-// Start the routers
-Backbone.history.start({ pushState: true });
+// Wait for DOM so views will work
+$( function(){
+	quicksync.views = {
+		rooms: new RoomsView({
+			el: '#rooms',
+			collection: quicksync.rooms
+		}),
+	};
+
+	// Start the routers
+	Backbone.history.start({ pushState: true });
+});
