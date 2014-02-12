@@ -15,7 +15,7 @@ gulp.task( 'compile templates', function(){
 
 gulp.task( 'compile js', function(){
 	gulp.run('compile templates');
-	gulp.src('./assets/scripts/index.js')
+	gulp.src('./assets/scripts/room.js')
 	.pipe( gulp_jshint() )
 	.pipe( gulp_jshint.reporter('default') )
 	.pipe( gulp_browserify() )
