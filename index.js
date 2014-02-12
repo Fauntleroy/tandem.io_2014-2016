@@ -199,6 +199,14 @@ server.get( '/logout', function( req, res ){
 	res.redirect('/');
 });
 
+server.get( '/rooms/:id', function( req, res ){
+	Room.findById( req.params.id, function( err, room ){
+		res.render( 'room.hbs', {
+			room: room
+		});
+	});
+});
+
 var renderIndex = function( req, res ){
 	console.log( 'req.user', req.user );
 	Room.find( function( err, rooms ){
