@@ -18,7 +18,7 @@ var server = express();
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/quicksync');
 
-var Room = mongoose.model( 'Room', {
+var RoomSchema = new mongoose.Schema({
 	name: String,
 	users: [{
 		name: String
@@ -35,6 +35,7 @@ var Room = mongoose.model( 'Room', {
 		elapsed: Number
 	}
 });
+var Room = mongoose.model( 'Room', RoomSchema );
 
 // Set up templates for Express
 var express_handlebars = require('express3-handlebars');
@@ -197,6 +198,13 @@ server.get( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
 server.get( '/logout', function( req, res ){
 	req.logout();
 	res.redirect('/');
+});
+
+server.post( '/rooms', function( req, res ){
+	var room = new Room;
+	room.save( function( err, room ){
+		res.redirect( '/rooms/'+ room.id );
+	});
 });
 
 server.get( '/rooms/:id', function( req, res ){
