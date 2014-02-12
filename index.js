@@ -201,7 +201,11 @@ server.get( '/logout', function( req, res ){
 
 var renderIndex = function( req, res ){
 	console.log( 'req.user', req.user );
-	res.render('index.hbs');
+	Room.find( function( err, rooms ){
+		res.render( 'index.hbs', {
+			rooms: rooms
+		});
+	});
 };
 
 server.get( '/', renderIndex );

@@ -9,6 +9,12 @@
 	<br /><a href="/auth/soundcloud">Soundcloud Auth</a>
 	<br /><a href="/api/v1/proxy/youtube/playlistItems?part=snippet&playlistId=LL1EFhPorcJKyjWsfJGVfZnA">Youtube Favorites</a>
 	<br /><a href="/api/v1/proxy/soundcloud/me/favorites.json">Soundcloud Likes</a>
-	<div id="rooms"></div>
+	<div id="rooms">
+		<ul class="list">
+			{{#rooms}}
+			<li><a href="/rooms/{{id}}">{{id}}</a></li>
+			{{/rooms}}
+		</ul>
+	</div>
 </body>
 </html>
