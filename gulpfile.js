@@ -18,7 +18,9 @@ gulp.task( 'compile js', function(){
 	gulp.src('./assets/scripts/room.js')
 	.pipe( gulp_jshint() )
 	.pipe( gulp_jshint.reporter('default') )
-	.pipe( gulp_browserify() )
+	.pipe( gulp_browserify({
+		transform: ['hbsfy']
+	}) )
 	.pipe( gulp.dest('./assets/compiled') );
 });
 
