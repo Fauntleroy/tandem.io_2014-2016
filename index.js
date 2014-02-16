@@ -9,10 +9,19 @@ const URL = 'http://dev.quick.tksync.com:8080';
 const SOUNDCLOUD_API_BASE_URL = 'https://api.soundcloud.com';
 const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 
+var http = require('http');
+var Stream = require('stream');
+var es = require('event-stream');
 var _ = require('underscore');
 var request = require('request');
 var express = require('express');
+var expose = require('express-expose');
 var server = express();
+var http_server = http.createServer( server );
+
+// Sockets
+var EngineServer = require('engine.io-stream');
+var room_streams = {};
 
 // Database
 var mongoose = require('mongoose');
@@ -33,6 +42,31 @@ var RoomSchema = new mongoose.Schema({
 	}],
 	player: {
 		elapsed: Number
+	}
+});
+RoomSchema.post( 'init', function( room ){
+	if( !room_streams[room.id] ){
+		// create stream for all room data
+		var room_stream = room_streams[room.id] = new Stream.Duplex({ objectMode: true });
+		room_stream._read = function(){
+		};
+		room_stream._write = function( chunk, encoding, next ){
+			this.push( chunk );
+			next();
+		};
+		var engine = EngineServer( function( stream ){
+			// stream connection stream into room stream
+			// stream room stream into connection stream
+			stream
+				.pipe( room_stream )
+				.pipe( stream );
+			// stringify outgoing messages
+			// parse incoming messages
+			var stringify_stream = es.stringify();
+			stringify_stream.pipe( stream );
+			stream = es.duplex( stringify_stream, stream.pipe( es.parse() ) );
+		});
+		engine.attach( http_server, '/streaming/rooms/'+ room.id );
 	}
 });
 var Room = mongoose.model( 'Room', RoomSchema );
@@ -209,8 +243,10 @@ server.post( '/rooms', function( req, res ){
 
 server.get( '/rooms/:id', function( req, res ){
 	Room.findById( req.params.id, function( err, room ){
+		var room_obj = room.toObject({ virtuals: true });
+		res.expose( room_obj, 'quicksync.bridge.room' );
 		res.render( 'room.hbs', {
-			room: room
+			room: room_obj
 		});
 	});
 });
@@ -227,6 +263,6 @@ var renderIndex = function( req, res ){
 server.get( '/', renderIndex );
 server.get( '/rooms/:id', renderIndex );
 
-server.listen( PORT );
+http_server.listen( PORT );
 
 console.log('[quicksync] listening on port', PORT );
