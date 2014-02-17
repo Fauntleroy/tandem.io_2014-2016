@@ -85,7 +85,6 @@ server.use( express.static( __dirname + '/assets' ) );
 
 // Sessions
 var MongoStore = require('connect-mongo')( express );
-var guestSetup = require('./middleware/guest.js');
 server.use( express.cookieParser() );
 server.use( express.bodyParser() );
 server.use( express.session({
@@ -94,13 +93,14 @@ server.use( express.session({
 		db: 'quicksync'
 	})
 }) );
-server.use( guestSetup );
 
 // Passport stuff
 var passport = require('passport');
+var guestSetup = require('./middleware/guest.js');
 
 server.use( passport.initialize() );
 server.use( passport.session() );
+server.use( guestSetup );
 
 passport.serializeUser( function( user, done ){
 	done( null, user );
