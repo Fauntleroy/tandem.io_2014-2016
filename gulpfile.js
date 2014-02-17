@@ -25,7 +25,7 @@ gulp.task( 'compile js', function(){
 });
 
 gulp.task( 'watch', function(){
-	gulp.watch( './assets/scripts/**/*.js', ['compile js'] );
+	gulp.watch( ['./assets/scripts/**/*.js', './assets/templates/**/*.hbs'], ['compile js'] );
 });
 
 gulp.task( 'start application', function(){
