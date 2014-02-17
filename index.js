@@ -297,10 +297,11 @@ server.post( '/rooms', function( req, res ){
 });
 
 server.get( '/rooms/:id', function( req, res ){
+	var user = req.session.passport.user || {};
 	Room.findById( req.params.id, function( err, room ){
 		var room_obj = room.toObject({ virtuals: true });
-		var user_obj = _.pick( req.user, 'id', 'name' );
-		user_obj.token = generateAuthToken( req.user.id, req.user.name );
+		var user_obj = _.pick( user, 'id', 'name' );
+		user_obj.token = generateAuthToken( user.id, user.name );
 		res.expose( room_obj, 'quicksync.bridge.room' );
 		res.expose( user_obj, 'quicksync.bridge.user' );
 		res.render( 'room.hbs', {
