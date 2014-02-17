@@ -1,4 +1,5 @@
 const PORT = 8080;
+const TOKEN_SECRET = process.env.QUICKSYNC_TOKEN_SECRET;
 const SESSION_SECRET = process.env.QUICKSYNC_SESSION_SECRET;
 const SOUNDCLOUD_APP_ID = process.env.QUICKSYNC_SOUNDCLOUD_APP_ID;
 const SOUNDCLOUD_APP_SECRET = process.env.QUICKSYNC_SOUNDCLOUD_APP_SECRET;
@@ -11,6 +12,7 @@ const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 
 var http = require('http');
 var Stream = require('stream');
+var crypto = require('crypto');
 var es = require('event-stream');
 var _ = require('underscore');
 var request = require('request');
@@ -18,6 +20,15 @@ var express = require('express');
 var expose = require('express-expose');
 var server = express();
 var http_server = http.createServer( server );
+
+// generate auth token for use with streaming endpoints
+var generateAuthToken = function( id ){
+	var hmac = crypto.createHmac( 'sha256', TOKEN_SECRET );
+	hmac.setEncoding('hex');
+	hmac.write( id );
+	hmac.end();
+	return hmac.read();
+};
 
 // Sockets
 var EngineServer = require('engine.io-stream');
@@ -55,16 +66,45 @@ RoomSchema.post( 'init', function( room ){
 			next();
 		};
 		var engine = EngineServer( function( stream ){
-			// stream connection stream into room stream
-			// stream room stream into connection stream
-			stream
-				.pipe( room_stream )
-				.pipe( stream );
 			// stringify outgoing messages
 			// parse incoming messages
 			var stringify_stream = es.stringify();
 			stringify_stream.pipe( stream );
 			stream = es.duplex( stringify_stream, stream.pipe( es.parse() ) );
+			// check user validity
+			// close user connection if no auth sent in time
+			var revokeAuth = function( reason ){
+				reason = reason || 'Authentication error';
+				stream.write({
+					module: 'notifications',
+					type: 'error',
+					payload: {
+						message: reason
+					}
+				});
+				stream.end();
+			};
+			var checkAuth = function( id, token ){
+				return generateAuthToken( id ) === token;
+			};
+			var auth_timeout = setTimeout( function(){
+				revokeAuth('Authentication timed out');
+			}, 15 * 1000 );
+			stream.on( 'data', function( data ){
+				if( data.type === 'auth' ){
+					if( checkAuth( data.payload.id, data.payload.token ) ){
+						clearTimeout( auth_timeout );
+						// stream connection stream into room stream
+						// stream room stream into connection stream
+						stream
+							.pipe( room_stream )
+							.pipe( stream );
+					}
+					else {
+						revokeAuth();
+					}
+				}
+			});
 		});
 		engine.attach( http_server, '/streaming/rooms/'+ room.id );
 	}
@@ -246,7 +286,10 @@ server.post( '/rooms', function( req, res ){
 server.get( '/rooms/:id', function( req, res ){
 	Room.findById( req.params.id, function( err, room ){
 		var room_obj = room.toObject({ virtuals: true });
+		var user_obj = _.pick( req.user, 'id', 'name' );
+		user_obj.token = generateAuthToken( req.user.id );
 		res.expose( room_obj, 'quicksync.bridge.room' );
+		res.expose( user_obj, 'quicksync.bridge.user' );
 		res.render( 'room.hbs', {
 			room: room_obj
 		});

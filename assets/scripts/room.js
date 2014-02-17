@@ -9,10 +9,21 @@ var ChatView = require('./views/chat.js');
 
 window.quicksync = window.quicksync || {};
 var mediator = quicksync.mediator = _.extend( {}, Backbone.Events );
+
+// initialize room stream
 var stream = quicksync.stream = engine('/streaming/rooms/'+ quicksync.bridge.room.id );
 var stringify_stream = es.stringify();
 stringify_stream.pipe( stream );
 stream = es.duplex( stringify_stream, stream.pipe( es.parse() ) );
+
+// authenticate user with streaming endpoint
+stream.write({
+	type: 'auth',
+	payload: {
+		id: quicksync.bridge.user.id,
+		token: quicksync.bridge.user.token
+	}
+});
 
 quicksync.messages = new Messages( null, {
 	mediator: mediator,
