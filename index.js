@@ -255,7 +255,6 @@ server.get( '/rooms/:id', function( req, res ){
 
 var renderIndex = function( req, res ){
 	console.log( 'req.user', req.user );
-	console.log( 'req.session', req.session );
 	Room.find( function( err, rooms ){
 		res.render( 'index.hbs', {
 			rooms: rooms

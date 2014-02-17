@@ -5,10 +5,10 @@ var _ = require('underscore');
 var uuid = require('node-uuid');
 
 module.exports = function( req, res, next ){
-	req.session.user = req.session.user || {};
+	var user = req.session.passport.user || {};
 	// user already has an id, so we've done this already
-	if( req.session.user.id ) return next();
-	req.session.user = _.extend( req.session.user, {
+	if( user.id ) return next();
+	user = _.extend( user, {
 		id: uuid.v4(),
 		name: _.sample( adjectives ) +' '+ _.sample( nouns )
 	});
