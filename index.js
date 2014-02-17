@@ -22,10 +22,12 @@ var server = express();
 var http_server = http.createServer( server );
 
 // generate auth token for use with streaming endpoints
-var generateAuthToken = function( id ){
+// pass any data we need attached to message objects
+var generateAuthToken = function( id, name ){
 	var hmac = crypto.createHmac( 'sha256', TOKEN_SECRET );
 	hmac.setEncoding('hex');
 	hmac.write( id );
+	hmac.write( name );
 	hmac.end();
 	return hmac.read();
 };
@@ -84,8 +86,8 @@ RoomSchema.post( 'init', function( room ){
 				});
 				stream.end();
 			};
-			var checkAuth = function( id, token ){
-				return generateAuthToken( id ) === token;
+			var checkAuth = function( id, name, token ){
+				return generateAuthToken( id, name ) === token;
 			};
 			var auth_timeout = setTimeout( function(){
 				revokeAuth('Authentication timed out');
@@ -93,15 +95,18 @@ RoomSchema.post( 'init', function( room ){
 			stream.on( 'data', function( data ){
 				if( data.type === 'auth' ){
 					var id = data.payload.id;
+					var name = data.payload.name;
 					var token = data.payload.token;
-					if( checkAuth( id, token ) ){
+					if( checkAuth( id, name, token ) ){
 						clearTimeout( auth_timeout );
 						// stream connection stream into room stream
 						// stream room stream into connection stream
 						stream
+							// attach user data
 							.pipe( es.through( function( data ){
 								data.user = {
-									id: id
+									id: id,
+									name: name
 								};
 								this.queue( data );
 							}))
@@ -295,7 +300,7 @@ server.get( '/rooms/:id', function( req, res ){
 	Room.findById( req.params.id, function( err, room ){
 		var room_obj = room.toObject({ virtuals: true });
 		var user_obj = _.pick( req.user, 'id', 'name' );
-		user_obj.token = generateAuthToken( req.user.id );
+		user_obj.token = generateAuthToken( req.user.id, req.user.name );
 		res.expose( room_obj, 'quicksync.bridge.room' );
 		res.expose( user_obj, 'quicksync.bridge.user' );
 		res.render( 'room.hbs', {
@@ -305,7 +310,7 @@ server.get( '/rooms/:id', function( req, res ){
 });
 
 var renderIndex = function( req, res ){
-	console.log( 'req.user', req.user );
+	console.log( 'req.session', req.session );
 	Room.find( function( err, rooms ){
 		res.render( 'index.hbs', {
 			rooms: rooms

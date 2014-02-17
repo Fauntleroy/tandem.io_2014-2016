@@ -21,6 +21,7 @@ stream.write({
 	type: 'auth',
 	payload: {
 		id: quicksync.bridge.user.id,
+		name: quicksync.bridge.user.name,
 		token: quicksync.bridge.user.token
 	}
 });
