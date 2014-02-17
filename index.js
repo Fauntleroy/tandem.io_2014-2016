@@ -85,6 +85,7 @@ server.use( express.static( __dirname + '/assets' ) );
 
 // Sessions
 var MongoStore = require('connect-mongo')( express );
+var guestSetup = require('./middleware/guest.js');
 server.use( express.cookieParser() );
 server.use( express.bodyParser() );
 server.use( express.session({
@@ -93,6 +94,7 @@ server.use( express.session({
 		db: 'quicksync'
 	})
 }) );
+server.use( guestSetup );
 
 // Passport stuff
 var passport = require('passport');
@@ -253,6 +255,7 @@ server.get( '/rooms/:id', function( req, res ){
 
 var renderIndex = function( req, res ){
 	console.log( 'req.user', req.user );
+	console.log( 'req.session', req.session );
 	Room.find( function( err, rooms ){
 		res.render( 'index.hbs', {
 			rooms: rooms
