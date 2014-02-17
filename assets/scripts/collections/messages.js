@@ -18,11 +18,12 @@ module.exports = Backbone.Collection.extend({
 	},
 	// Ensures stream data is properly routed
 	processStream: function( data ){
-		console.log( data );
 		if( data.module === 'chat' ){
 			switch( data.type ){
 			case 'message':
-				this.onMessage( data.payload );	
+				var message = data.payload;
+				message.user = data.user;
+				this.onMessage( message );	
 			break;
 			}
 		}
