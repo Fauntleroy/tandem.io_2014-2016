@@ -92,11 +92,19 @@ RoomSchema.post( 'init', function( room ){
 			}, 15 * 1000 );
 			stream.on( 'data', function( data ){
 				if( data.type === 'auth' ){
-					if( checkAuth( data.payload.id, data.payload.token ) ){
+					var id = data.payload.id;
+					var token = data.payload.token;
+					if( checkAuth( id, token ) ){
 						clearTimeout( auth_timeout );
 						// stream connection stream into room stream
 						// stream room stream into connection stream
 						stream
+							.pipe( es.through( function( data ){
+								data.user = {
+									id: id
+								};
+								this.queue( data );
+							}))
 							.pipe( room_stream )
 							.pipe( stream );
 					}
