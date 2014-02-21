@@ -26,7 +26,8 @@
     "sockjs": "~0.3.8",
     "express-expose": "~0.3.3",
     "event-stream": "~3.1.0",
-    "node-uuid": "~1.4.1"
+    "node-uuid": "~1.4.1",
+    "engine.io-stream": "~0.4.3"
   },
   "devDependencies": {
     "jquery": "~2.1.0",
