@@ -105,9 +105,29 @@ var Room = function( data, options ){
 						name: name,
 						sid: sid
 					};
-					room.addPresence( presence );
+					var presences = room.addPresence( presence );
+					// if there's only one presence this is a new user
+					if( presences === 1 ){
+						room.stream.write({
+							module: 'presences',
+							type: 'join',
+							payload: {
+								user: presence
+							}
+						});
+					}
 					stream.on('close', function(){
-						room.removePresence( presence );
+						var presences = room.removePresence( presence );
+						// if there are no presences this user has left
+						if( presences === 0 ){
+							room.stream.write({
+								module: 'presences',
+								type: 'leave',
+								payload: {
+									user: presence
+								}
+							});
+						}
 					});
 				}
 				else {
@@ -144,6 +164,7 @@ Room.findById = function( id, convert ){
 
 // add a user presence
 Room.prototype.addPresence = function( presence ){
+	var sessions;
 	// check to see if id exists
 	var existing_user = _.find( this.data.users, function( user ){
 		return user.id === presence.id;
@@ -151,6 +172,7 @@ Room.prototype.addPresence = function( presence ){
 	// if id exists, add sid to sids array
 	if( existing_user ){
 		existing_user.sids.push( presence.sid );
+		sessions = existing_user.sids.length;
 	}
 	// if id does not exist, add new user to users array
 	else {
@@ -159,8 +181,9 @@ Room.prototype.addPresence = function( presence ){
 			name: presence.name,
 			sids: [ presence.sid ]
 		});
+		sessions = 1;
 	}
-	return this.data.users;
+	return sessions;
 };
 
 // remove a user presence
@@ -176,7 +199,7 @@ Room.prototype.removePresence = function( presence ){
 	if( existing_user.sids.length === 0 ){
 		this.data.users = _.without( this.users, existing_user );
 	}
-	return this.data.users;
+	return existing_user.sids.length;
 };
 
 // export a function so we can pass in http_server instance
