@@ -12,7 +12,6 @@ const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 const NO_OP = function(){};
 
 var http = require('http');
-var Stream = require('stream');
 var crypto = require('crypto');
 var es = require('event-stream');
 var _ = require('underscore');
@@ -33,147 +32,11 @@ var generateAuthToken = function( id, name ){
 	return hmac.read();
 };
 
-// Sockets
-var EngineServer = require('engine.io-stream');
-var room_streams = {};
+var Room = require('./models/room.js')({ http_server: http_server });
 
 // Database
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/quicksync');
-
-var RoomSchema = new mongoose.Schema({
-	name: String,
-	users: [{
-		name: String,
-		id: String,
-		sids: Array
-	}],
-	playlist: [{
-		title: String,
-		image: String,
-		provider: String,
-		url: String,
-		media_url: String,
-		duration: Number
-	}],
-	player: {
-		elapsed: Number
-	}
-});
-// add a user presence
-RoomSchema.methods.addPresence = function( presence, callback ){
-	callback = callback || NO_OP;
-	// check to see if id exists
-	var existing_user = _.find( this.users, function( user ){
-		return user.id === presence.id;
-	});
-	// if id exists, add sid to sids array
-	if( existing_user ){
-		existing_user.sids.push( presence.sid );
-	}
-	// if id does not exist, add new user to users array
-	else {
-		this.users.push({
-			id: presence.id,
-			name: presence.name,
-			sids: [ presence.sid ]
-		});
-	}
-	this.save( callback );
-};
-// remove a user presence
-RoomSchema.methods.removePresence = function( presence, callback ){
-	callback = callback || NO_OP;
-	// find user with id
-	var existing_user = _.find( this.users, function( user ){
-		return user.id === presence.id;
-	});
-	if( !existing_user ) return callback( new Error('No user '+ presence.id ) );
-	// remove sid
-	existing_user.sids = _.without( existing_user.sids, presence.sid );
-	// if sids.length === 0 remove user from users array
-	if( existing_user.sids.length === 0 ){
-		this.users = _.without( this.users, existing_user );
-	}
-	this.save( callback );
-};
-RoomSchema.post( 'init', function( room ){
-	if( !room_streams[room.id] ){
-		// create stream for all room data
-		var room_stream = room_streams[room.id] = new Stream.Duplex({ objectMode: true });
-		room_stream._read = function(){
-		};
-		room_stream._write = function( chunk, encoding, next ){
-			this.push( chunk );
-			next();
-		};
-		var engine = EngineServer( function( stream ){
-			var sid = stream.transport.sid;
-			// stringify outgoing messages
-			// parse incoming messages
-			var stringify_stream = es.stringify();
-			stringify_stream.pipe( stream );
-			stream = es.duplex( stringify_stream, stream.pipe( es.parse() ) );
-			// check user validity
-			// close user connection if no auth sent in time
-			var revokeAuth = function( reason ){
-				reason = reason || 'Authentication error';
-				stream.write({
-					module: 'notifications',
-					type: 'error',
-					payload: {
-						message: reason
-					}
-				});
-				stream.end();
-			};
-			var checkAuth = function( id, name, token ){
-				return generateAuthToken( id, name ) === token;
-			};
-			var auth_timeout = setTimeout( function(){
-				revokeAuth('Authentication timed out');
-			}, 15 * 1000 );
-			stream.on( 'data', function( data ){
-				if( data.type === 'auth' ){
-					var id = data.payload.id;
-					var name = data.payload.name;
-					var token = data.payload.token;
-					if( checkAuth( id, name, token ) ){
-						clearTimeout( auth_timeout );
-						// stream connection stream into room stream
-						// stream room stream into connection stream
-						stream
-							// attach user data
-							.pipe( es.through( function( data ){
-								data.user = {
-									id: id,
-									name: name
-								};
-								this.queue( data );
-							}))
-							.pipe( room_stream )
-							.pipe( stream );
-						// user join/leave
-						var presence = {
-							id: id,
-							name: name,
-							sid: sid
-						};
-						room.addPresence( presence );
-						stream.on('close', function(){
-							room.removePresence( presence );
-						});
-					}
-					else {
-						revokeAuth();
-					}
-				}
-			});
-		});
-		engine.attach( http_server, '/streaming/rooms/'+ room.id );
-	}
-});
-var Room = mongoose.model( 'Room', RoomSchema );
 
 // Set up templates for Express
 var express_handlebars = require('express3-handlebars');
@@ -342,31 +205,26 @@ server.get( '/logout', function( req, res ){
 
 server.post( '/rooms', function( req, res ){
 	var room = new Room;
-	room.save( function( err, room ){
-		res.redirect( '/rooms/'+ room.id );
-	});
+	res.redirect( '/rooms/'+ room.id );
 });
 
 server.get( '/rooms/:id', function( req, res ){
 	var user = req.session.passport.user || {};
-	Room.findById( req.params.id, function( err, room ){
-		var room_obj = room.toObject({ virtuals: true });
-		var user_obj = _.pick( user, 'id', 'name' );
-		user_obj.token = generateAuthToken( user.id, user.name );
-		res.expose( room_obj, 'quicksync.bridge.room' );
-		res.expose( user_obj, 'quicksync.bridge.user' );
-		res.render( 'room.hbs', {
-			room: room_obj
-		});
+	user = _.pick( user, 'id', 'name' );
+	user.token = generateAuthToken( user.id, user.name );
+	var room = Room.findById( req.params.id, true );
+	res.expose( room, 'quicksync.bridge.room' );
+	res.expose( user, 'quicksync.bridge.user' );
+	res.render( 'room.hbs', {
+		room: room
 	});
 });
 
 var renderIndex = function( req, res ){
 	console.log( 'req.session', req.session );
-	Room.find( function( err, rooms ){
-		res.render( 'index.hbs', {
-			rooms: rooms
-		});
+	var rooms = Room.list( true );
+	res.render( 'index.hbs', {
+		rooms: rooms
 	});
 };
 
