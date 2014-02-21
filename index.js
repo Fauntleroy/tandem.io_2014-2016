@@ -9,6 +9,7 @@ const YOUTUBE_API_KEY = process.env.QUICKSYNC_YOUTUBE_API_KEY;
 const URL = 'http://dev.quick.tksync.com:8080';
 const SOUNDCLOUD_API_BASE_URL = 'https://api.soundcloud.com';
 const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
+const NO_OP = function(){};
 
 var http = require('http');
 var Stream = require('stream');
@@ -43,7 +44,9 @@ mongoose.connect('mongodb://localhost/quicksync');
 var RoomSchema = new mongoose.Schema({
 	name: String,
 	users: [{
-		name: String
+		name: String,
+		id: String,
+		sids: Array
 	}],
 	playlist: [{
 		title: String,
@@ -57,6 +60,43 @@ var RoomSchema = new mongoose.Schema({
 		elapsed: Number
 	}
 });
+// add a user presence
+RoomSchema.methods.addPresence = function( presence, callback ){
+	callback = callback || NO_OP;
+	// check to see if id exists
+	var existing_user = _.find( this.users, function( user ){
+		return user.id === presence.id;
+	});
+	// if id exists, add sid to sids array
+	if( existing_user ){
+		existing_user.sids.push( presence.sid );
+	}
+	// if id does not exist, add new user to users array
+	else {
+		this.users.push({
+			id: presence.id,
+			name: presence.name,
+			sids: [ presence.sid ]
+		});
+	}
+	this.save( callback );
+};
+// remove a user presence
+RoomSchema.methods.removePresence = function( presence, callback ){
+	callback = callback || NO_OP;
+	// find user with id
+	var existing_user = _.find( this.users, function( user ){
+		return user.id === presence.id;
+	});
+	if( !existing_user ) return callback( new Error('No user '+ presence.id ) );
+	// remove sid
+	existing_user.sids = _.without( existing_user.sids, presence.sid );
+	// if sids.length === 0 remove user from users array
+	if( existing_user.sids.length === 0 ){
+		this.users = _.without( this.users, existing_user );
+	}
+	this.save( callback );
+};
 RoomSchema.post( 'init', function( room ){
 	if( !room_streams[room.id] ){
 		// create stream for all room data
@@ -68,6 +108,7 @@ RoomSchema.post( 'init', function( room ){
 			next();
 		};
 		var engine = EngineServer( function( stream ){
+			var sid = stream.transport.sid;
 			// stringify outgoing messages
 			// parse incoming messages
 			var stringify_stream = es.stringify();
@@ -112,6 +153,16 @@ RoomSchema.post( 'init', function( room ){
 							}))
 							.pipe( room_stream )
 							.pipe( stream );
+						// user join/leave
+						var presence = {
+							id: id,
+							name: name,
+							sid: sid
+						};
+						room.addPresence( presence );
+						stream.on('close', function(){
+							room.removePresence( presence );
+						});
 					}
 					else {
 						revokeAuth();
