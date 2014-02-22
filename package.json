@@ -38,6 +38,8 @@
     "gulp-browserify": "~0.4.2",
     "gulp-handlebars": "~1.0.2",
     "sockjs-client": "~0.1.3",
-    "hbsfy": "~1.3.2"
+    "hbsfy": "~1.3.2",
+    "vinyl-source-stream": "~0.1.1",
+    "watchify": "~0.6.1"
   }
 }
