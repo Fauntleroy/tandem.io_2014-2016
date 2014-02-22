@@ -13,10 +13,10 @@ window.quicksync = window.quicksync || {};
 var mediator = quicksync.mediator = _.extend( {}, Backbone.Events );
 
 // initialize room stream
-var stream = quicksync.stream = engine('/streaming/rooms/'+ quicksync.bridge.room.id );
+var stream = engine('/streaming/rooms/'+ quicksync.bridge.room.id );
 var stringify_stream = es.stringify();
 stringify_stream.pipe( stream );
-stream = es.duplex( stringify_stream, stream.pipe( es.parse() ) );
+quicksync.stream = stream = es.duplex( stringify_stream, stream.pipe( es.parse() ) );
 stream.on('data',function( data ){ console.log( 'data', data ); });
 
 // authenticate user with streaming endpoint
