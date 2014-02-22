@@ -21,6 +21,7 @@ module.exports = Backbone.Collection.extend({
 		if( data.module === 'chat' ){
 			switch( data.type ){
 			case 'message':
+				data.payload.user = data.user;
 				this.onMessage( data.payload );	
 			break;
 			}
