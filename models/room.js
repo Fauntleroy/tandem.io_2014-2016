@@ -141,6 +141,12 @@ var Room = function( data, options ){
 							});
 						}
 					});
+					// send existing playlist
+					stream.write({
+						module: 'playlist',
+						type: 'list',
+						payload: room.data.playlist
+					});
 				}
 				else {
 					revokeAuth();
