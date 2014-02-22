@@ -147,6 +147,12 @@ var Room = function( data, options ){
 						type: 'list',
 						payload: room.data.playlist
 					});
+					// send existing player
+					stream.write({
+						module: 'player',
+						type: 'state',
+						payload: room.data.player
+					});
 				}
 				else {
 					revokeAuth();
