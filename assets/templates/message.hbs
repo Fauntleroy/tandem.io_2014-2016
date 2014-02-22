@@ -1,4 +1,12 @@
-<li>
+<li class="{{type}}">
+{{#equal type "chat"}}
 	{{#user}}<strong>{{name}}</strong>{{/user}}
 	<span>{{content}}</span>
+{{/equal}}
+{{#equal type "join"}}
+	{{user.name}} has joined.
+{{/equal}}
+{{#equal type "leave"}}
+	{{user.name}} has left.
+{{/equal}}
 </li>

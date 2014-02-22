@@ -1,5 +1,8 @@
 var Backbone = require('backbone');
 var $ = Backbone.$ = require('jquery');
+var Handlebars = require('hbsfy/runtime');
+var handlebars_helper = require('handlebars-helper');
+handlebars_helper.help( Handlebars );
 
 var chat_template = require('../../templates/chat.hbs');
 var message_template = require('../../templates/message.hbs');

@@ -21,10 +21,18 @@ module.exports = Backbone.Collection.extend({
 		if( data.module === 'chat' ){
 			switch( data.type ){
 			case 'message':
-				var message = data.payload;
-				message.user = data.user;
-				this.onMessage( message );	
+				this.onMessage( data.payload );	
 			break;
+			}
+		}
+		else if( data.module === 'presences' ){
+			switch( data.type ){
+				case 'join':
+					this.onJoin( data.payload.user );
+				break;
+				case 'leave':
+					this.onLeave( data.payload.user );
+				break;
 			}
 		}
 	},
@@ -37,6 +45,21 @@ module.exports = Backbone.Collection.extend({
 		});
 	},
 	onMessage: function( message ){
+		message.type = 'chat';
+		this.add( message );
+	},
+	onJoin: function( user ){
+		var message = {
+			type: 'join',
+			user: user
+		};
+		this.add( message );
+	},
+	onLeave: function( user ){
+		var message = {
+			type: 'leave',
+			user: user
+		};
 		this.add( message );
 	}
 })
