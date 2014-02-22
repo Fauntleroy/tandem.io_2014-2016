@@ -205,7 +205,7 @@ Room.prototype.removePresence = function( presence ){
 	existing_user.sids = _.without( existing_user.sids, presence.sid );
 	// if sids.length === 0 remove user from users array
 	if( existing_user.sids.length === 0 ){
-		this.data.users = _.without( this.users, existing_user );
+		this.data.users = _.without( this.data.users, existing_user );
 	}
 	return existing_user.sids.length;
 };
