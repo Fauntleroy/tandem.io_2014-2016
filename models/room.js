@@ -147,7 +147,7 @@ var Room = function( data, options ){
 				}
 			}
 		});
-		stream.on( 'data', function( data ){
+		room.stream.on( 'data', function( data ){
 			if( data.module === 'playlist' ){
 				switch( data.type ){
 					case 'add':
@@ -228,12 +228,8 @@ Room.prototype.removePresence = function( presence ){
 
 Room.prototype.addItem = function( item ){
 	item.id = uuid.v4();
-	if( !this.data.player.item ){
-		this.playItem( item );
-	}
-	else {
-		this.data.playlist.push( item );
-	}
+	this.data.playlist.push( item );
+	if( !this.data.player.item ) this.nextItem();
 	return item;
 };
 
