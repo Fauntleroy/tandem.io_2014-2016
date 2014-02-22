@@ -1,6 +1,6 @@
 const TOKEN_SECRET = process.env.QUICKSYNC_TOKEN_SECRET;
 const PLAYER_TICK_INTERVAL_SECONDS = 3;
-const PLAYER_TICK_INTERVAL = PLAYER_TICK_INTERVAL * 1000;
+const PLAYER_TICK_INTERVAL = PLAYER_TICK_INTERVAL_SECONDS * 1000;
 const NO_OP = function(){};
 
 var Stream = require('stream');
@@ -237,9 +237,18 @@ Room.prototype.addItem = function( item ){
 	return item;
 };
 
-Room.prototype.removeItem = function( id ){
+Room.prototype.removeItem = function( id, write_to_stream ){
 	var item = _.findWhere( this.data.playlist, { id: id } );
 	this.data.playlist = _.without( this.data.playlist, item );
+	if( write_to_stream ){
+		this.stream.write({
+			module: 'playlist',
+			type: 'remove',
+			payload: {
+				id: id
+			}
+		});
+	}
 	return item;
 };
 
@@ -256,17 +265,36 @@ Room.prototype.playItem = function( item ){
 		this.data.player.item = item;
 		this.player_interval = setInterval( function(){
 			this.data.player.elapsed += PLAYER_TICK_INTERVAL_SECONDS;
-			this.nextItem();
+			if( this.data.player.elapsed >= this.data.player.item.duration ){
+				this.nextItem();
+			}
+			else {
+				this.stream.write({
+					module: 'playlist',
+					type: 'elapsed',
+					payload: this.data.player.elapsed
+				});
+			}
 		}.bind( this ), PLAYER_TICK_INTERVAL );
 	}
+	this.stream.write({
+		module: 'player',
+		type: 'play',
+		payload: {
+			item: item
+		}
+	});
 };
 
 Room.prototype.nextItem = function(){
 	var next_item;
 	switch( this.data.player.order ){
 		case 'fifo':
-			next_item = this.data.playlist.shift();
+			next_item = this.data.playlist[0];
 		break;
+	}
+	if( next_item ){
+		this.removeItem( next_item.id, true );
 	}
 	this.playItem( next_item );
 };
