@@ -6,6 +6,7 @@ var es = require('event-stream');
 
 var Messages = require('./collections/messages.js');
 var Users = require('./collections/users.js');
+var PlaylistItems = require('./collections/playlist_items.js');
 var ChatView = require('./views/chat.js');
 var UsersView = require('./views/users.js');
 
@@ -34,6 +35,10 @@ quicksync.messages = new Messages( null, {
 	stream: stream
 });
 quicksync.users = new Users( null, {
+	mediator: mediator,
+	stream: stream
+});
+quicksync.playlist_items = new PlaylistItems( null, {
 	mediator: mediator,
 	stream: stream
 });
