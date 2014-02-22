@@ -99,6 +99,14 @@ var Room = function( data, options ){
 						}))
 						.pipe( room.stream )
 						.pipe( stream );
+					// send existing presences
+					stream.write({
+						module: 'presences',
+						type: 'list',
+						payload: {
+							users: room.data.users
+						}
+					});
 					// user join/leave
 					var presence = {
 						id: id,
