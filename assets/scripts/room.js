@@ -5,7 +5,9 @@ var engine = require('engine.io-stream');
 var es = require('event-stream');
 
 var Messages = require('./collections/messages.js');
+var Users = require('./collections/users.js');
 var ChatView = require('./views/chat.js');
+var UsersView = require('./views/users.js');
 
 window.quicksync = window.quicksync || {};
 var mediator = quicksync.mediator = _.extend( {}, Backbone.Events );
@@ -31,6 +33,10 @@ quicksync.messages = new Messages( null, {
 	mediator: mediator,
 	stream: stream
 });
+quicksync.users = new Users( null, {
+	mediator: mediator,
+	stream: stream
+});
 
 // Wait for DOM so views will work
 $( function(){
@@ -38,6 +44,10 @@ $( function(){
 		chat: new ChatView({
 			el: '#chat',
 			collection: quicksync.messages
+		}),
+		users: new UsersView({
+			el: '#users',
+			collection: quicksync.users
 		})
 	};
 });
