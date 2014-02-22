@@ -1,4 +1,6 @@
 const TOKEN_SECRET = process.env.QUICKSYNC_TOKEN_SECRET;
+const PLAYER_TICK_INTERVAL_SECONDS = 3;
+const PLAYER_TICK_INTERVAL = PLAYER_TICK_INTERVAL * 1000;
 const NO_OP = function(){};
 
 var Stream = require('stream');
@@ -34,7 +36,9 @@ var Room = function( data, options ){
 	this.data = {
 		id: this.id,
 		name: 'Default Room Name',
-		player: {},
+		player: {
+			order: 'fifo'
+		},
 		users: [],
 		playlist: []
 	};
@@ -143,6 +147,18 @@ var Room = function( data, options ){
 				}
 			}
 		});
+		stream.on( 'data', function( data ){
+			if( data.module === 'playlist' ){
+				switch( data.type ){
+					case 'add':
+						room.addItem( data.payload );
+					break;
+					case 'remove':
+						room.removeItem( data.payload );
+					break;
+				}
+			}
+		});
 	});
 	engine.attach( http_server, '/streaming/rooms/'+ room.id );
 
@@ -208,6 +224,51 @@ Room.prototype.removePresence = function( presence ){
 		this.data.users = _.without( this.data.users, existing_user );
 	}
 	return existing_user.sids.length;
+};
+
+Room.prototype.addItem = function( item ){
+	item.id = uuid.v4();
+	if( !this.data.player.item ){
+		this.playItem( item );
+	}
+	else {
+		this.data.playlist.push( item );
+	}
+	return item;
+};
+
+Room.prototype.removeItem = function( id ){
+	var item = _.findWhere( this.data.playlist, { id: id } );
+	this.data.playlist = _.without( this.data.playlist, item );
+	return item;
+};
+
+Room.prototype.playItem = function( item ){
+	// reset timer
+	if( this.player_interval ) clearInterval( this.player_interval );
+	this.data.player.elapsed = 0;
+	// clear player if we're playing nothing
+	if( !item ){
+		this.data.player.item = null;
+	}
+	// set item and start player interval
+	else {
+		this.data.player.item = item;
+		this.player_interval = setInterval( function(){
+			this.data.player.elapsed += PLAYER_TICK_INTERVAL_SECONDS;
+			this.nextItem();
+		}.bind( this ), PLAYER_TICK_INTERVAL );
+	}
+};
+
+Room.prototype.nextItem = function(){
+	var next_item;
+	switch( this.data.player.order ){
+		case 'fifo':
+			next_item = this.data.playlist.shift();
+		break;
+	}
+	this.playItem( next_item );
 };
 
 // export a function so we can pass in http_server instance
