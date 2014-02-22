@@ -278,7 +278,7 @@ Room.prototype.playItem = function( item ){
 			}
 			else {
 				this.stream.write({
-					module: 'playlist',
+					module: 'player',
 					type: 'elapsed',
 					payload: this.data.player.elapsed
 				});
