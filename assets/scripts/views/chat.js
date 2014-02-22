@@ -5,8 +5,6 @@ var chat_template = require('../../templates/chat.hbs');
 var message_template = require('../../templates/message.hbs');
 
 module.exports = Backbone.View.extend({
-	template: chat_template,
-	message_template: message_template,
 	events: {
 		'submit form': 'submitMessage',
 		'keypress textarea[name="message"]': 'keyMessage'
@@ -16,13 +14,13 @@ module.exports = Backbone.View.extend({
 		this.listenTo( this.collection, 'add', this.addMessage );
 	},
 	render: function(){
-		this.$el.html( this.template() );
+		this.$el.html( chat_template() );
 		this.$messages = this.$('.messages');
 		this.$new_message = this.$('.new_message');
 		this.$message = this.$('[name="message"]');
 	},
 	addMessage: function( message ){
-		this.$messages.prepend( this.message_template( message.toJSON() ) );
+		this.$messages.prepend( message_template( message.toJSON() ) );
 	},
 	// send a new message when the form is submitted and a message exists
 	submitMessage: function( e ){
