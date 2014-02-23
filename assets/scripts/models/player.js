@@ -59,7 +59,7 @@ module.exports = Backbone.Model.extend({
 	// act on load events from the server
 	onPlay: function( playlist_item ){
 		this.set( 'item', playlist_item );
-		this.set( 'duration', playlist_item ? playlist_item.item.duration : 0 );
+		this.set( 'duration', playlist_item.duration || 0 );
 	},
 	// act on elapsed events from the server
 	onElapsed: function( elapsed ){
