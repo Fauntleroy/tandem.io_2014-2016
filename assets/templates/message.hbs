@@ -1,12 +1,37 @@
 <li class="{{type}}">
 {{#equal type "chat"}}
-	{{#user}}<strong>{{name}}</strong>{{/user}}
+	{{#user}}
+	<span class="user" data-user-id="{{id}}"><strong class="name">{{name}}</strong></span>
+	{{/user}}
 	<span>{{content}}</span>
 {{/equal}}
 {{#equal type "join"}}
-	{{user.name}} has joined.
+	<i class="fa fa-chevron-right"></i>
+	{{#user}}
+	<span class="user"><strong class="name">{{name}}</strong></span>
+	{{/user}} has joined.
 {{/equal}}
 {{#equal type "leave"}}
-	{{user.name}} has left.
+	<i class="fa fa-chevron-left"></i>
+	{{#user}}
+	<span class="user"><strong class="name">{{name}}</strong></span>
+	{{/user}} has left.
+{{/equal}}
+{{#equal type "play"}}
+	{{#item}}
+	<span class="item">
+		<span class="image {{item.source}}" style="background-image:url({{item.image}})" />
+		<h3 class="title"><a href="{{item.url}}" target="_blank">{{item.title}}</a></h3>
+	</span>
+	Posted by {{#owner}}<span class="user"><strong class="name">{{name}}</strong><img class="avatar" src="{{avatar}}" /></span>{{/owner}}
+	{{/item}}
+	{{^item}}
+		<em>The player is now empty.</em>
+	{{/item}}
+{{/equal}}
+{{#equal type "skip"}}
+	<i class="fa fa-forward"></i>
+	{{#user}}<span class="user"><strong class="name">{{name}}</strong><img class="avatar" src="{{avatar}}" /></span>{{/user}} skipped
+	{{#item}}<span class="item"><strong class="title"><a href="{{item.url}}" target="_blank">{{item.title}}</a></strong></span>{{/item}}
 {{/equal}}
 </li>
