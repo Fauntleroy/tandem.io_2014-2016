@@ -36,6 +36,13 @@ module.exports = Backbone.Collection.extend({
 				break;
 			}
 		}
+		else if( data.module === 'player' ){
+			switch( data.type ){
+				case 'play':
+					this.onPlay( data.payload );
+				break;
+			}
+		}
 	},
 	sendMessage: function( message ){
 		this.stream.write({
@@ -60,6 +67,13 @@ module.exports = Backbone.Collection.extend({
 		var message = {
 			type: 'leave',
 			user: user
+		};
+		this.add( message );
+	},
+	onPlay: function( item ){
+		var message = {
+			type: 'play',
+			item: item
 		};
 		this.add( message );
 	}
