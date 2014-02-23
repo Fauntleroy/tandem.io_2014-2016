@@ -55,6 +55,19 @@ var Room = function( data, options ){
 		next();
 	};
 
+	this.stream.on( 'data', function( data ){
+		if( data.module === 'playlist' ){
+			switch( data.type ){
+				case 'add':
+					room.addItem( data.payload );
+				break;
+				case 'remove':
+					room.removeItem( data.payload );
+				break;
+			}
+		}
+	});
+
 	// set up engine.io streams
 	// this is where user connections are made
 	var engine = EngineServer( function( stream ){
@@ -159,18 +172,6 @@ var Room = function( data, options ){
 				}
 			}
 		});
-		room.stream.on( 'data', function( data ){
-			if( data.module === 'playlist' ){
-				switch( data.type ){
-					case 'add':
-						room.addItem( data.payload );
-					break;
-					case 'remove':
-						room.removeItem( data.payload );
-					break;
-				}
-			}
-		});
 	});
 	engine.attach( http_server, '/streaming/rooms/'+ room.id );
 
@@ -252,9 +253,7 @@ Room.prototype.removeItem = function( id, write_to_stream ){
 		this.stream.write({
 			module: 'playlist',
 			type: 'remove',
-			payload: {
-				id: id
-			}
+			payload: id
 		});
 	}
 	return item;
