@@ -288,9 +288,7 @@ Room.prototype.playItem = function( item ){
 	this.stream.write({
 		module: 'player',
 		type: 'play',
-		payload: {
-			item: item
-		}
+		payload: item
 	});
 };
 
