@@ -10,9 +10,12 @@
 		> li {
 			position: relative;
 			clear: both;
-			padding: 10px;
+			margin: 0 0 10px 0;
+			padding: 0;
 
 			h3 {
+				display: inline-block;
+				vertical-align: top;
 				margin: 2px 0;
 			}
 
@@ -25,7 +28,7 @@
 			var.duration {
 				display: inline-block;
 				position: absolute;
-				top: 0;
+				bottom: 0;
 				left: 0;
 				padding: 3px 4px;
 				font-size: 75%;
@@ -35,7 +38,7 @@
 			}
 
 			span.image {
-				float: left;
+				display: inline-block;
 				margin-right: 10px
 			}
 		}

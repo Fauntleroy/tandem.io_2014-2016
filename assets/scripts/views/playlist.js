@@ -5,6 +5,7 @@ var Handlebars = require('hbsfy/runtime');
 var handlebars_helper = require('handlebars-helper');
 handlebars_helper.help( Handlebars );
 var secondsToTime = require('../utils/secondsToTime.js');
+Handlebars.registerHelper( 'secondsToTime', secondsToTime );
 
 var playlist_template = require('../../templates/playlist.hbs');
 var playlist_item_template = require('../../templates/playlist_item.hbs');
