@@ -22,12 +22,11 @@ module.exports = Backbone.View.extend({
 		'mousedown li.volume .level': 'mousedownVolume'
 	},
 	initialize: function(){
-		_( this ).bindAll( 'render', 'renderElapsed', 'renderDuration', 'renderItem', 'renderMute', 'renderVolume',
+		_( this ).bindAll( 'render', 'renderElapsed', 'renderItem', 'renderMute', 'renderVolume',
 			'clickSkip', 'clickMute', 'mousedownVolume', 'mousemoveVolume', 'mouseupVolume',
 			'calculateVolume', 'checkSync' );
 		this.render();
 		this.listenTo( this.model, 'change:elapsed', this.checkSync );
-		this.listenTo( this.model, 'change:duration', this.renderDuration );
 		this.listenTo( this.model, 'change:item', this.renderItem );
 		this.listenTo( this.model, 'change:volume', this.renderVolume );
 		this.listenTo( this.model, 'change:mute', this.renderMute );
@@ -62,19 +61,16 @@ module.exports = Backbone.View.extend({
 		this.$elapsed.text( secondsToTime( elapsed ) );
 		this.$elapsed_bar.css( 'width', ( ( e.position / e.duration ) * 100 ) +'%' );
 	},
-	// render duration
-	renderDuration: function( player, duration ){
-		this.$duration.text( secondsToTime( duration ) );
-	},
 	// render item
-	renderItem: function( player, playlist_item ){
-		if( playlist_item ){
+	renderItem: function( player, item ){
+		if( item ){
 			this.$progress.show();
-			this.$item.html( player_item_template( playlist_item ) );
+			this.$item.html( player_item_template( item ) );
+			this.$duration.text( secondsToTime( item.duration ) );
 			this.player.load({
-				file: playlist_item.media_url,
-				type: MEDIA_TYPES[playlist_item.source],
-				image: playlist_item.image
+				file: item.media_url,
+				type: MEDIA_TYPES[item.source],
+				image: item.image
 			});
 			var elapsed = this.model.get('elapsed');
 			this.player.play( true );
@@ -82,6 +78,7 @@ module.exports = Backbone.View.extend({
 		} else {
 			this.$item.html('');
 			this.$progress.hide();
+			this.$duration.text('');
 			this.player.stop();
 		}
 	},
