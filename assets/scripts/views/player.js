@@ -77,7 +77,7 @@ module.exports = Backbone.View.extend({
 				image: playlist_item.image
 			});
 			var elapsed = this.model.get('elapsed');
-			this.player.play();
+			this.player.play( true );
 			if( elapsed > 0 ) this.player.seek( elapsed );
 		} else {
 			this.$item.html('');
