@@ -1,0 +1,108 @@
+#players {
+
+	position: relative;
+
+	> div {
+		position: absolute !important;
+		width: 100% !important;
+		height: 100% !important;
+	}
+
+	img.aspect {
+		display: block;
+		width: 100%;
+	}
+}
+
+#player {
+
+	div.progress {
+		.box-sizing(border-box);
+		position: relative;
+		width: 100%;
+		padding: 10px;
+
+		> var.elapsed {
+			font-style: normal;
+		}
+
+		> span.duration {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+		}
+
+		> div.bars {
+			position: absolute;
+			top: 16px;
+			right: 70px;
+			left: 70px;
+			height: 3px;
+
+			> * {
+				position: absolute;
+				height: 3px;
+			}
+
+			> var.elapsed {
+				display: block;
+				z-index: 3;
+				background: #000;
+			}
+
+			> span.duration {
+				display: block;
+				z-index: 1;
+				width: 100%;
+				background: #ccc;
+			}
+		}
+	}
+
+	ul.controls {
+		.list-reset;
+		padding: 10px;
+
+		> li {
+			margin: 0;
+			padding: 0;
+			display: inline-block;
+		}
+
+		li.volume {
+
+			&.muted {
+				
+				.level {
+					> var {
+						background: #999;
+					}
+				}
+			}
+
+			.level {
+				.user-select(none);
+				cursor: pointer;
+				display: inline-block;
+				width: 100px;
+				height: 20px;
+				background: #ccc;
+
+				> var {
+					display: block;
+					width: 0;
+					height: 20px;
+					background: #000;
+				}
+			}
+		}
+	}
+
+	div.item {
+		padding: 10px;
+
+		h3 {
+			margin: 2px 0;
+		}
+	}
+}
