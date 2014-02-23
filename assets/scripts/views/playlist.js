@@ -9,7 +9,6 @@ Handlebars.registerHelper( 'secondsToTime', secondsToTime );
 
 var playlist_template = require('../../templates/playlist.hbs');
 var playlist_item_template = require('../../templates/playlist_item.hbs');
-var playlist_duration_template = require('../../templates/playlist_duration.hbs');
 
 module.exports = Backbone.View.extend({
 	events: {
@@ -33,10 +32,10 @@ module.exports = Backbone.View.extend({
 	},
 	render: function(){
 		this.$el.html( playlist_template() );
-		this.$form = this.$el.find('form');
+		this.$form = this.$('form');
 		this.$url = this.$form.find('input[name="url"]');
-		this.$duration = this.$el.children('var.duration');
-		this.$items = this.$el.find('ul.items');
+		this.$duration = this.$('var.duration');
+		this.$items = this.$('ul.items');
 	},
 	// render all playlist items
 	renderItems: function( collection ){
