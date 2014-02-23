@@ -9,6 +9,7 @@ var Users = require('./collections/users.js');
 var PlaylistItems = require('./collections/playlist_items.js');
 var ChatView = require('./views/chat.js');
 var UsersView = require('./views/users.js');
+var PlaylistView = require('./views/playlist.js');
 
 window.quicksync = window.quicksync || {};
 var mediator = quicksync.mediator = _.extend( {}, Backbone.Events );
@@ -53,6 +54,10 @@ $( function(){
 		users: new UsersView({
 			el: '#users',
 			collection: quicksync.users
+		}),
+		playlist: new PlaylistView({
+			el: '#playlist',
+			collection: quicksync.playlist_items
 		})
 	};
 });
