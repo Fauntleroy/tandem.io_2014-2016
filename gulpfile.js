@@ -4,13 +4,15 @@ var vinyl_source = require('vinyl-source-stream');
 var watchify = require('watchify');
 var gulp = require('gulp');
 var gulp_less = require('gulp-less');
+var gulp_livereload = require('gulp-livereload');
 
 gulp.task( 'compile css', function(){
 	gulp.src('./assets/styles/index.less')
 		.pipe( gulp_less({
 			paths: [ path.join( __dirname, 'assets', 'styles' ) ]
 		}))
-		.pipe( gulp.dest('./assets/compiled') );
+		.pipe( gulp.dest('./assets/compiled') )
+		.pipe( gulp_livereload() );
 });
 
 gulp.task( 'compile js', function(){

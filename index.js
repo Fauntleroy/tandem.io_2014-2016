@@ -6,6 +6,7 @@ const SOUNDCLOUD_APP_SECRET = process.env.QUICKSYNC_SOUNDCLOUD_APP_SECRET;
 const YOUTUBE_APP_ID = process.env.QUICKSYNC_YOUTUBE_APP_ID;
 const YOUTUBE_APP_SECRET = process.env.QUICKSYNC_YOUTUBE_APP_SECRET;
 const YOUTUBE_API_KEY = process.env.QUICKSYNC_YOUTUBE_API_KEY;
+const ENV = process.env.NODE_ENV;
 const URL = 'http://dev.quick.tksync.com:8080';
 const SOUNDCLOUD_API_BASE_URL = 'https://api.soundcloud.com';
 const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
@@ -60,6 +61,9 @@ server.use( express.session({
 		db: 'quicksync'
 	})
 }) );
+
+// Pass environment to views
+server.locals.dev = ( ENV === 'development' );
 
 // Passport stuff
 var passport = require('passport');
