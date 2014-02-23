@@ -49,6 +49,9 @@ module.exports = Backbone.Model.extend({
 			case 'elapsed':
 				this.onElapsed( data.payload );
 			break;
+			case 'order':
+				this.onOrder( data.payload );
+			break;
 			}
 		}
 	},
@@ -64,10 +67,21 @@ module.exports = Backbone.Model.extend({
 	onElapsed: function( elapsed ){
 		this.set( 'elapsed', elapsed );
 	},
+	// act on order events from server
+	onOrder: function( order ){
+		this.set( 'order', order );
+	},
 	// send a skip command to server
 	sendSkip: function(){
 		this.stream.write({
 			type: 'skip'
+		});
+	},
+	// send order to server
+	sendOrder: function( order ){
+		this.stream.write({
+			type: 'order',
+			payload: order
 		});
 	},
 	// store volume data locally

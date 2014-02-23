@@ -71,6 +71,9 @@ var Room = function( data, options ){
 			case 'skip':
 				room.nextItem();
 			break;
+			case 'order':
+				room.setOrder( data.payload );
+			break;
 			}
 		}
 	});
@@ -305,12 +308,23 @@ Room.prototype.nextItem = function(){
 		case 'fifo':
 			next_item = this.data.playlist[0];
 		break;
+		case 'shuffle':
+			next_item = _.sample( this.data.playlist );
+		break;
 	}
 	if( next_item ){
 		this.removeItem( next_item.id, true );
 	}
 	this.playItem( next_item );
 };
+
+Room.prototype.setOrder = function( order ){
+	order = order || 'fifo';
+	var orders = ['fifo','shuffle'];
+	if( orders.indexOf( order ) < 0 ) return new Error('Invalid order '+ order);
+	this.data.player.order = order;
+	return order;
+}
 
 // export a function so we can pass in http_server instance
 module.exports = function( config ){

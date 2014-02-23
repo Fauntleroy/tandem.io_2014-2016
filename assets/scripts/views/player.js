@@ -18,15 +18,17 @@ var player_item_template = require('../../templates/player_item.hbs');
 module.exports = Backbone.View.extend({
 	events: {
 		'click li.skip a': 'clickSkip',
+		'change li.order select': 'changeOrder',
 		'click li.volume a[href="#mute"]': 'clickMute',
 		'mousedown li.volume .level': 'mousedownVolume'
 	},
 	initialize: function(){
-		_( this ).bindAll( 'render', 'renderElapsed', 'renderItem', 'renderMute', 'renderVolume',
-			'clickSkip', 'clickMute', 'mousedownVolume', 'mousemoveVolume', 'mouseupVolume',
+		_( this ).bindAll( 'render', 'renderElapsed', 'renderOrder', 'renderItem', 'renderMute', 'renderVolume',
+			'clickSkip', 'changeOrder', 'clickMute', 'mousedownVolume', 'mousemoveVolume', 'mouseupVolume',
 			'calculateVolume', 'checkSync' );
 		this.render();
 		this.listenTo( this.model, 'change:elapsed', this.checkSync );
+		this.listenTo( this.model, 'change:order', this.renderOrder );
 		this.listenTo( this.model, 'change:item', this.renderItem );
 		this.listenTo( this.model, 'change:volume', this.renderVolume );
 		this.listenTo( this.model, 'change:mute', this.renderMute );
@@ -42,6 +44,7 @@ module.exports = Backbone.View.extend({
 		this.$duration_bar = this.$progress.find('div.bars span.duration');
 		this.$controls = this.$el.find('ul.controls');
 		this.$skip = this.$controls.find('li.skip a');
+		this.$order = this.$controls.find('li.order select[name="order"]');
 		this.$volume = this.$controls.find('li.volume');
 		this.$mute = this.$volume.find('a[href="#mute"]');
 		this.$volume_level = this.$volume.find('.level');
@@ -60,6 +63,10 @@ module.exports = Backbone.View.extend({
 		var elapsed = parseInt( e.position, 10 );
 		this.$elapsed.text( secondsToTime( elapsed ) );
 		this.$elapsed_bar.css( 'width', ( ( e.position / e.duration ) * 100 ) +'%' );
+	},
+	// render player order
+	renderOrder: function( player, order ){
+		this.$order.children('option[value='+ order +']').prop( 'selected', true );
 	},
 	// render item
 	renderItem: function( player, item ){
@@ -99,6 +106,11 @@ module.exports = Backbone.View.extend({
 		this.model.sendSkip( function( err ){
 			if( err ) alert( err );
 		});
+	},
+	// modify player order
+	changeOrder: function( e ){
+		var order = this.$order.val();
+		this.model.sendOrder( order );
 	},
 	// update player mute state
 	clickMute: function( e ){
