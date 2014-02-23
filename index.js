@@ -215,6 +215,11 @@ server.get( '/rooms/:id', function( req, res ){
 	var room = Room.findById( req.params.id, true );
 	res.expose( room, 'quicksync.bridge.room' );
 	res.expose( user, 'quicksync.bridge.user' );
+	res.expose( {
+		soundcloud: {
+			client_id: SOUNDCLOUD_APP_ID
+		}
+	}, 'quicksync.bridge.apis' );
 	res.render( 'room.hbs', {
 		room: room
 	});
