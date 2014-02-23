@@ -7,9 +7,11 @@ var es = require('event-stream');
 var Messages = require('./collections/messages.js');
 var Users = require('./collections/users.js');
 var PlaylistItems = require('./collections/playlist_items.js');
+var Player = require('./models/player.js');
 var ChatView = require('./views/chat.js');
 var UsersView = require('./views/users.js');
 var PlaylistView = require('./views/playlist.js');
+var PlayerView = require('./views/player.js');
 
 window.quicksync = window.quicksync || {};
 var mediator = quicksync.mediator = _.extend( {}, Backbone.Events );
@@ -43,6 +45,10 @@ quicksync.playlist_items = new PlaylistItems( null, {
 	mediator: mediator,
 	stream: stream
 });
+quicksync.player = new Player( null, {
+	mediator: mediator,
+	stream: stream
+});
 
 // Wait for DOM so views will work
 $( function(){
@@ -58,6 +64,10 @@ $( function(){
 		playlist: new PlaylistView({
 			el: '#playlist',
 			collection: quicksync.playlist_items
+		}),
+		player: new PlayerView({
+			el: '#player',
+			model: quicksync.player
 		})
 	};
 });

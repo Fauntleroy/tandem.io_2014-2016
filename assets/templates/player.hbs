@@ -1,0 +1,27 @@
+<div id="players">
+	<div id="jwplayer"></div>
+	<img class="aspect" src="/images/16x9.png" />
+</div>
+<ul class="controls">
+	<li class="order">
+		<select name="order">
+			<option value="normal">Normal</option>
+			<option value="shuffle">Shuffle</option>
+		</select>
+	</li>
+	<li class="skip">
+		<a href="#skip">Skip <i class="fa fa-forward"></i></a>
+	</li>
+	<li class="volume {{#if mute}}muted{{/if}}">
+		<a href="#mute"><span>{{#if mute}}Unmute{{else}}Mute{{/if}}</span> <i class="fa fa-volume-off"></i></a>
+		<span class="level"><var style="width: {{volume}}%;"></var></span>
+	</li>
+</ul>
+<div class="item"></div>
+<div class="progress">
+	<var class="elapsed"></var><span class="duration"></span>
+	<div class="bars">
+		<var class="elapsed"></var>
+		<span class="duration"></var>
+	</div>
+</div>

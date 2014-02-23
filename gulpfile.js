@@ -6,12 +6,16 @@ var gulp = require('gulp');
 gulp.task( 'compile js', function(){
 	var w = watchify('./assets/scripts/room.js');
 	w.transform('hbsfy');
+	w.transform('browserify-shim');
 	var bundle = function(){
 		return w.bundle()
 			.pipe( vinyl_source('room.js') )
 			.pipe( gulp.dest('./assets/compiled') );
 	};
 	w.on( 'update', bundle );
+	w.on( 'error', function(){
+		console.log('error', arguments);
+	})
 	return bundle();
 });
 
