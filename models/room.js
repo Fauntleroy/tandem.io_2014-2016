@@ -58,12 +58,19 @@ var Room = function( data, options ){
 	this.stream.on( 'data', function( data ){
 		if( data.module === 'playlist' ){
 			switch( data.type ){
-				case 'add':
-					room.addItem( data.payload );
-				break;
-				case 'remove':
-					room.removeItem( data.payload );
-				break;
+			case 'add':
+				room.addItem( data.payload );
+			break;
+			case 'remove':
+				room.removeItem( data.payload );
+			break;
+			}
+		}
+		else if( data.module === 'player' ){
+			switch( data.type ){
+			case 'skip':
+				room.nextItem();
+			break;
 			}
 		}
 	});
@@ -292,6 +299,7 @@ Room.prototype.playItem = function( item ){
 };
 
 Room.prototype.nextItem = function(){
+	var current_item = this.data.player.item;
 	var next_item;
 	switch( this.data.player.order ){
 		case 'fifo':
