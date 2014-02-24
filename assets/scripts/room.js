@@ -13,61 +13,61 @@ var UsersView = require('./views/users.js');
 var PlaylistView = require('./views/playlist.js');
 var PlayerView = require('./views/player.js');
 
-window.quicksync = window.quicksync || {};
-var mediator = quicksync.mediator = _.extend( {}, Backbone.Events );
+window.tandem = window.tandem || {};
+var mediator = tandem.mediator = _.extend( {}, Backbone.Events );
 
 // initialize room stream
-var stream = engine('/streaming/rooms/'+ quicksync.bridge.room.id );
+var stream = engine('/streaming/rooms/'+ tandem.bridge.room.id );
 var stringify_stream = es.stringify();
 stringify_stream.pipe( stream );
-quicksync.stream = stream = es.duplex( stringify_stream, stream.pipe( es.parse() ) );
+tandem.stream = stream = es.duplex( stringify_stream, stream.pipe( es.parse() ) );
 stream.on('data',function( data ){ console.log( 'data', data ); });
 
 // authenticate user with streaming endpoint
 stream.write({
 	type: 'auth',
 	payload: {
-		id: quicksync.bridge.user.id,
-		name: quicksync.bridge.user.name,
-		token: quicksync.bridge.user.token
+		id: tandem.bridge.user.id,
+		name: tandem.bridge.user.name,
+		token: tandem.bridge.user.token
 	}
 });
 
-quicksync.messages = new Messages( null, {
+tandem.messages = new Messages( null, {
 	mediator: mediator,
 	stream: stream
 });
-quicksync.users = new Users( null, {
+tandem.users = new Users( null, {
 	mediator: mediator,
 	stream: stream
 });
-quicksync.playlist_items = new PlaylistItems( null, {
+tandem.playlist_items = new PlaylistItems( null, {
 	mediator: mediator,
 	stream: stream
 });
-quicksync.player = new Player( null, {
+tandem.player = new Player( null, {
 	mediator: mediator,
 	stream: stream
 });
 
 // Wait for DOM so views will work
 $( function(){
-	quicksync.views = {
+	tandem.views = {
 		chat: new ChatView({
 			el: '#chat',
-			collection: quicksync.messages
+			collection: tandem.messages
 		}),
 		users: new UsersView({
 			el: '#users',
-			collection: quicksync.users
+			collection: tandem.users
 		}),
 		playlist: new PlaylistView({
 			el: '#playlist',
-			collection: quicksync.playlist_items
+			collection: tandem.playlist_items
 		}),
 		player: new PlayerView({
 			el: '#player',
-			model: quicksync.player
+			model: tandem.player
 		})
 	};
 });

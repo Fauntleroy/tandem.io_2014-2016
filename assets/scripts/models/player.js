@@ -1,6 +1,6 @@
 var NO_OP = function(){};
-var VOLUME_KEY = 'quicksync_volume';
-var MUTE_KEY = 'quicksync_mute';
+var VOLUME_KEY = 'tandem_volume';
+var MUTE_KEY = 'tandem_mute';
 
 var Backbone = require('backbone');
 var _ = require('underscore');

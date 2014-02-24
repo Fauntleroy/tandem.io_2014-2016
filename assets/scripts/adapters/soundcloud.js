@@ -2,7 +2,7 @@ var $ = require('jquery');
 var _ = require('underscore');
 
 var API_URL = 'http://api.soundcloud.com';
-var SOUNDCLOUD_CLIENT_ID = quicksync.bridge.apis.soundcloud.client_id;
+var SOUNDCLOUD_CLIENT_ID = tandem.bridge.apis.soundcloud.client_id;
 var NO_OP = function(){};
 
 module.exports = {

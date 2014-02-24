@@ -1,16 +1,16 @@
 {
-  "name": "quicksync",
+  "name": "tandem.io",
   "version": "0.0.0",
   "description": "Minimal, open-source version of TK Sync",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Fauntleroy/quicksync.git"
+    "url": "https://github.com/Fauntleroy/tandem.io.git"
   },
   "author": "Timothy Kempf",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Fauntleroy/quicksync/issues"
+    "url": "https://github.com/Fauntleroy/tandem.io/issues"
   },
   "dependencies": {
     "express": "~3.4.8",
