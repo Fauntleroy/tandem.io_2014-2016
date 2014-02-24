@@ -6,8 +6,9 @@ const SOUNDCLOUD_APP_SECRET = process.env.TANDEM_SOUNDCLOUD_APP_SECRET;
 const YOUTUBE_APP_ID = process.env.TANDEM_YOUTUBE_APP_ID;
 const YOUTUBE_APP_SECRET = process.env.TANDEM_YOUTUBE_APP_SECRET;
 const YOUTUBE_API_KEY = process.env.TANDEM_YOUTUBE_API_KEY;
+const MONGO_URL = process.env.TANDEM_MONGO_URL || 'mongodb://localhost/tandem';
+const URL = process.env.TANDEM_URL || 'http://dev.tandem.io:8080';
 const ENV = process.env.NODE_ENV;
-const URL = 'http://dev.tandem.io:8080';
 const SOUNDCLOUD_API_BASE_URL = 'https://api.soundcloud.com';
 const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 const NO_OP = function(){};
@@ -37,7 +38,7 @@ var Room = require('./models/room.js')({ http_server: http_server });
 
 // Database
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/tandem');
+mongoose.connect( MONGO_URL );
 
 // Set up templates for Express
 var express_handlebars = require('express3-handlebars');
@@ -58,7 +59,7 @@ server.use( express.bodyParser() );
 server.use( express.session({
 	secret: SESSION_SECRET,
 	store: new MongoStore({
-		db: 'tandem'
+		url: MONGO_URL
 	})
 }) );
 
