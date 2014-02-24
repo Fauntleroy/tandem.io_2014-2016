@@ -230,7 +230,6 @@ server.get( '/rooms/:id', function( req, res ){
 });
 
 var renderIndex = function( req, res ){
-	console.log( 'req.session', req.session );
 	var rooms = Room.list( true );
 	res.render( 'index.hbs', {
 		rooms: rooms
