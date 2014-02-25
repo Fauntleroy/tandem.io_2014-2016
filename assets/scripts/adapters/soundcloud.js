@@ -25,10 +25,11 @@ module.exports = {
 			if( !data.streamable ) return callback( new Error('Streaming has been disabled for this track! Nooo :('), null );
 			var image = ( data.artwork_url || data.user.avatar_url );
 			image = image? image.replace('large','crop'): 'https://s3-us-west-1.amazonaws.com/syncmedia/images/null.png';
+			var stream_url = data.stream_url +'?consumer_key='+ SOUNDCLOUD_CLIENT_ID
 			var item_data = {
 				title: data.title,
 				url: url,
-				media_url: data.stream_url +'?consumer_key='+ SOUNDCLOUD_CLIENT_ID,
+				media_url: stream_url,
 				source: 'soundcloud',
 				image: image,
 				type: 'audio',
@@ -36,7 +37,17 @@ module.exports = {
 				artist: data.user.username,
 				artist_url: data.user.permalink_url
 			};
-			return callback( null, item_data );
+			// check to see if the stream_url really exists
+			$.ajax({
+				type: 'HEAD',
+				url: stream_url
+			})
+			.done( function(){
+				return callback( null, item_data );
+			})
+			.fail( function(){
+				return callback( new Error('Stream URL not found. This is a problem with the SoundCloud API.'), null );
+			});
 		})
 		.fail( function( jqxhr, textStatus, err ){
 			return callback( err, null );
