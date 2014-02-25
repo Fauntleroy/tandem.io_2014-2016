@@ -46,7 +46,9 @@
     "browserify": "~3.30.2",
     "browserify-shim": "~3.2.2",
     "gulp-less": "~1.2.1",
-    "gulp-livereload": "~1.1.1"
+    "gulp-livereload": "~1.1.1",
+    "gulp-minify-css": "~0.3.0",
+    "gulp-uglify": "~0.2.1"
   },
   "browser": {
     "jwplayer": "./assets/scripts/vendor/jwplayer/jwplayer.js"

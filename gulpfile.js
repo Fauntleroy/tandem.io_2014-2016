@@ -5,6 +5,8 @@ var watchify = require('watchify');
 var gulp = require('gulp');
 var gulp_less = require('gulp-less');
 var gulp_livereload = require('gulp-livereload');
+var gulp_uglify = require('gulp-uglify');
+var gulp_minify_css = require('gulp-minify-css');
 
 gulp.task( 'compile css', function(){
 	gulp.src('./assets/styles/index.less')
@@ -29,6 +31,17 @@ gulp.task( 'compile js', function(){
 		console.log('error', arguments);
 	})
 	return bundle();
+});
+
+gulp.task( 'minify', function(){
+	gulp.src('./assets/compiled/**/*.js')
+		.pipe( gulp_uglify() )
+		.pipe( gulp.dest('./assets/compiled') );
+	gulp.src('./assets/compiled/**/*.css')
+		.pipe( gulp_minify_css({
+			keepSpecialComments: 0
+		}))
+		.pipe( gulp.dest('./assets/compiled') );
 });
 
 gulp.task( 'watch css', function(){
