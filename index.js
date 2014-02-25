@@ -50,6 +50,7 @@ server.engine( 'hbs', handlebars );
 server.set( 'view engine', 'hbs' );
 
 // Static file serving
+server.use( express.compress() );
 server.use( express.static( __dirname + '/assets' ) );
 
 // Sessions
