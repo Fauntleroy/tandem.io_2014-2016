@@ -81,7 +81,7 @@ module.exports = Backbone.View.extend({
 			});
 			var elapsed = this.model.get('elapsed');
 			this.player.play( true );
-			if( elapsed > 0 ) this.player.seek( elapsed );
+			this.player.seek( elapsed || 0 );
 		} else {
 			this.$item.html('');
 			this.$progress.hide();
