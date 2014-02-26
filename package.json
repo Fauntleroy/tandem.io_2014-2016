@@ -51,9 +51,11 @@
     "gulp-uglify": "~0.2.1"
   },
   "browser": {
-    "jwplayer": "./assets/scripts/vendor/jwplayer/jwplayer.js"
+    "jwplayer": "./assets/scripts/vendor/jwplayer/jwplayer.js",
+    "visibility": "./assets/scripts/vendor/visibility.js"
   },
   "browserify-shim": {
-    "jwplayer": "jwplayer"
+    "jwplayer": "jwplayer",
+    "visibility": "Visibility"
   }
 }
