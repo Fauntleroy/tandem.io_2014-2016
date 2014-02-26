@@ -4,14 +4,19 @@ var $ = require('jquery');
 var engine = require('engine.io-stream');
 var es = require('event-stream');
 
+// Models & Collections
 var Messages = require('./collections/messages.js');
 var Users = require('./collections/users.js');
 var PlaylistItems = require('./collections/playlist_items.js');
 var Player = require('./models/player.js');
+var Title = require('./models/title.js');
+
+// Views
 var ChatView = require('./views/chat.js');
 var UsersView = require('./views/users.js');
 var PlaylistView = require('./views/playlist.js');
 var PlayerView = require('./views/player.js');
+var TitleView = require('./views/title.js');
 
 window.tandem = window.tandem || {};
 var mediator = tandem.mediator = _.extend( {}, Backbone.Events );
@@ -49,6 +54,10 @@ tandem.player = new Player( null, {
 	mediator: mediator,
 	stream: stream
 });
+tandem.title = new Title( null, {
+	mediator: mediator,
+	stream: stream
+});
 
 // Wait for DOM so views will work
 $( function(){
@@ -68,6 +77,9 @@ $( function(){
 		player: new PlayerView({
 			el: '#player',
 			model: tandem.player
+		}),
+		title: new TitleView({
+			model: tandem.title
 		})
 	};
 });
