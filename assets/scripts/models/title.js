@@ -1,6 +1,6 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
-var Visibility = require('visibilityjs');
+var Visibility = require('visibilityjs/lib/visibility.core');
 
 module.exports = Backbone.Model.extend({
 	defaults: {
