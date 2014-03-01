@@ -48,14 +48,13 @@
     "gulp-less": "~1.2.1",
     "gulp-livereload": "~1.1.1",
     "gulp-minify-css": "~0.3.0",
-    "gulp-uglify": "~0.2.1"
+    "gulp-uglify": "~0.2.1",
+    "visibilityjs": "~1.2.0"
   },
   "browser": {
-    "jwplayer": "./assets/scripts/vendor/jwplayer/jwplayer.js",
-    "visibility": "./assets/scripts/vendor/visibility.js"
+    "jwplayer": "./assets/scripts/vendor/jwplayer/jwplayer.js"
   },
   "browserify-shim": {
-    "jwplayer": "jwplayer",
-    "visibility": "Visibility"
+    "jwplayer": "jwplayer"
   }
 }
