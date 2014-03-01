@@ -59,6 +59,7 @@ var Room = function( data, options ){
 		if( data.module === 'playlist' ){
 			switch( data.type ){
 			case 'add':
+				data.payload.user = data.user;
 				room.addItem( data.payload );
 			break;
 			case 'remove':
