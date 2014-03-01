@@ -49,7 +49,7 @@
     "gulp-livereload": "~1.1.1",
     "gulp-minify-css": "~0.3.0",
     "gulp-uglify": "~0.2.1",
-    "visibilityjs": "git+https://github.com/ai/visibilityjs.git"
+    "visibilityjs": "~1.2.0"
   },
   "browser": {
     "jwplayer": "./assets/scripts/vendor/jwplayer/jwplayer.js"
