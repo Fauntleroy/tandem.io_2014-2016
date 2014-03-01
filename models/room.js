@@ -122,6 +122,10 @@ var Room = function( data, options ){
 								id: id,
 								name: name
 							};
+							// attach item data to skip events
+							if( data.type === 'skip' ){
+								data.item = room.data.player.item;
+							}
 							this.queue( data );
 						}))
 						.pipe( room.stream )
