@@ -41,6 +41,9 @@ module.exports = Backbone.Collection.extend({
 				case 'play':
 					this.onPlay( data.payload );
 				break;
+				case 'skip':
+					this.onSkip( data.user, data.item );
+				break;
 			}
 		}
 	},
@@ -73,6 +76,14 @@ module.exports = Backbone.Collection.extend({
 	onPlay: function( item ){
 		var message = {
 			type: 'play',
+			item: item
+		};
+		this.add( message );
+	},
+	onSkip: function( user, item ){
+		var message = {
+			type: 'skip',
+			user: user,
 			item: item
 		};
 		this.add( message );
