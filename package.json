@@ -27,7 +27,8 @@
     "express-expose": "~0.3.3",
     "event-stream": "~3.1.0",
     "node-uuid": "~1.4.1",
-    "engine.io-stream": "~0.4.3"
+    "engine.io-stream": "~0.4.3",
+    "socket.io": "git+https://github.com/LearnBoost/socket.io.git"
   },
   "devDependencies": {
     "jquery": "~2.1.0",
@@ -49,7 +50,8 @@
     "gulp-livereload": "~1.1.1",
     "gulp-minify-css": "~0.3.0",
     "gulp-uglify": "~0.2.1",
-    "visibilityjs": "~1.2.0"
+    "visibilityjs": "~1.2.0",
+    "socket.io-client": "git+https://github.com/LearnBoost/socket.io-client.git"
   },
   "browser": {
     "jwplayer": "./assets/scripts/vendor/jwplayer/jwplayer.js"

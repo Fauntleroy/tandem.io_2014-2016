@@ -13,17 +13,18 @@ const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 const NO_OP = function(){};
 
 var http = require('http');
-var es = require('event-stream');
+var socket_io = require('socket.io');
 var _ = require('underscore');
 var request = require('request');
 var express = require('express');
 var expose = require('express-expose');
 var server = express();
 var http_server = http.createServer( server );
+var io = socket_io( http_server );
 
 var generateAuthToken = require('./utils/generateAuthToken.js');
 
-var Room = require('./models/room.js')({ http_server: http_server });
+var Room = require('./models/room.js')({ io: io });
 
 // Database
 var mongoose = require('mongoose');

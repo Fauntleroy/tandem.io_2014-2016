@@ -1,15 +1,12 @@
 const PLAYER_TICK_INTERVAL_SECONDS = 3;
 const PLAYER_TICK_INTERVAL = PLAYER_TICK_INTERVAL_SECONDS * 1000;
+const AUTH_TIMEOUT = 15 * 1000;
 const NO_OP = function(){};
 
-var Stream = require('stream');
-
-var es = require('event-stream');
 var _ = require('underscore');
 var uuid = require('node-uuid');
-var EngineServer = require('engine.io-stream');
 
-var http_server;
+var io;
 var rooms = [];
 
 var generateAuthToken = require('../utils/generateAuthToken.js');
@@ -20,6 +17,7 @@ var Room = function( data, options ){
 
 	// give the room an id
 	this.id = uuid.v4();
+	var namespace = this.namespace = 'rooms:'+ this.id;
 
 	// set up default data
 	this.data = {
@@ -35,149 +33,64 @@ var Room = function( data, options ){
 	// extend data with passed in data
 	this.data = _.extend( this.data, data );
 
-	// create stream for all room data
-	this.stream = new Stream.Duplex({ objectMode: true });
-	this.stream._read = function(){
-	};
-	this.stream._write = function( chunk, encoding, next ){
-		this.push( chunk );
-		next();
-	};
-
-	this.stream.on( 'data', function( data ){
-		if( data.module === 'playlist' ){
-			switch( data.type ){
-			case 'add':
-				data.payload.user = data.user;
-				room.addItem( data.payload );
-			break;
-			case 'remove':
-				room.removeItem( data.payload );
-			break;
-			}
-		}
-		else if( data.module === 'player' ){
-			switch( data.type ){
-			case 'skip':
-				room.nextItem();
-			break;
-			case 'order':
-				room.setOrder( data.payload );
-			break;
-			}
-		}
-	});
-
-	// set up engine.io streams
-	// this is where user connections are made
-	var engine = EngineServer( function( stream ){
-		var sid = stream.transport.sid;
-		// stringify outgoing messages
-		// parse incoming messages
-		var stringify_stream = es.stringify();
-		stringify_stream.pipe( stream );
-		stream = es.duplex( stringify_stream, stream.pipe( es.parse() ) );
-		// check user validity
-		// close user connection if no auth sent in time
-		var revokeAuth = function( reason ){
-			reason = reason || 'Authentication error';
-			stream.write({
-				module: 'notifications',
-				type: 'error',
-				payload: {
-					message: reason
-				}
-			});
-			stream.end();
-		};
-		var checkAuth = function( id, name, token ){
-			return generateAuthToken( id, name ) === token;
-		};
+	// listen for user connections
+	io.of( namespace ).on( 'connection', function( socket ){
+		var sid = socket.sid;
+		// start an auth timer
+		// disconnect user if they do not connect within time limit
 		var auth_timeout = setTimeout( function(){
-			revokeAuth('Authentication timed out');
-		}, 15 * 1000 );
-		stream.once( 'data', function( data ){
-			if( data.type === 'auth' ){
-				var id = data.payload.id;
-				var name = data.payload.name;
-				var token = data.payload.token;
-				if( checkAuth( id, name, token ) ){
-					clearTimeout( auth_timeout );
-					// stream connection stream into room stream
-					// stream room stream into connection stream
-					stream
-						// attach user data
-						.pipe( es.through( function( data ){
-							data.user = {
-								id: id,
-								name: name
-							};
-							// attach item data to skip events
-							if( data.type === 'skip' ){
-								data.item = room.data.player.item;
-							}
-							this.queue( data );
-						}))
-						.pipe( room.stream )
-						.pipe( stream );
-					// send existing presences
-					stream.write({
-						module: 'presences',
-						type: 'list',
-						payload: {
-							users: room.data.users
-						}
-					});
-					// user join/leave
-					var presence = {
-						id: id,
-						name: name,
-						sid: sid
-					};
-					var presences = room.addPresence( presence );
-					// if there's only one presence this is a new user
-					if( presences === 1 ){
-						room.stream.write({
-							module: 'presences',
-							type: 'join',
-							payload: {
-								user: presence
-							}
-						});
-					}
-					stream.on('close', function(){
-						var presences = room.removePresence( presence );
-						// if there are no presences this user has left
-						if( presences === 0 ){
-							room.stream.write({
-								module: 'presences',
-								type: 'leave',
-								payload: {
-									user: presence
-								}
-							});
-						}
-					});
-					// send existing playlist
-					stream.write({
-						module: 'playlist',
-						type: 'list',
-						payload: room.data.playlist
-					});
-					// send existing player
-					stream.write({
-						module: 'player',
-						type: 'state',
-						payload: room.data.player
-					});
-				}
-				else {
-					revokeAuth();
-				}
+			socket.close();
+		}, AUTH_TIMEOUT );
+		socket.once( 'auth', function( data, cb ){
+			var id = data.id,
+			var name = data.name;
+			var token = data.token;
+			var is_authentic = ( generateAuthToken( id, name ) === token );
+			if( !is_authentic ){
+				cb( new Error('Authentication failed') );
+				socket.close();
+				return;
 			}
+			// disable auth timer
+			clearTimeout( auth_timeout );
+
+			// send current presence list
+			socket.emit( 'presences:list', room.data.users );
+			// add connection to presences
+			var presence = {
+				id: id,
+				name: name,
+				sid: sid
+			};
+			room.addPresence( presence );
+			socket.on( 'disconnect', function(){
+				room.removePresence( presence );
+			});
+
+			// send existing playlist
+			socket.emit( 'playlist:list', room.data.playlist );
+			// send existing player
+			socket.emit( 'player:state', room.data.player );
+
+			// listen for commands from the user
+			socket.on( 'chat:message', function( message ){
+				io.of( namespace ).emit( 'chat:message', message );
+			});
+			socket.on( 'playlist:add', function( item ){
+				room.addItem( item );
+			});
+			socket.on( 'playlist:remove', function( id ){
+				room.removeItem( id );
+			});
+			socket.on( 'player:skip', function(){
+				room.nextItem();
+			});
+			socket.on( 'player:order', function( order ){
+				room.setOrder( order );
+			});
+
 		});
 	});
-	engine.attach( http_server, '/streaming/rooms/'+ room.id );
 
 	// add room instance to rooms collection
 	rooms.push( room );
@@ -213,7 +126,6 @@ Room.prototype.addPresence = function( presence ){
 	// if id exists, add sid to sids array
 	if( existing_user ){
 		existing_user.sids.push( presence.sid );
-		sessions = existing_user.sids.length;
 	}
 	// if id does not exist, add new user to users array
 	else {
@@ -222,9 +134,9 @@ Room.prototype.addPresence = function( presence ){
 			name: presence.name,
 			sids: [ presence.sid ]
 		});
-		sessions = 1;
+		io.of( this.namespace ).emit( 'presences:join', presence );
 	}
-	return sessions;
+	return;
 };
 
 // remove a user presence
@@ -239,27 +151,23 @@ Room.prototype.removePresence = function( presence ){
 	// if sids.length === 0 remove user from users array
 	if( existing_user.sids.length === 0 ){
 		this.data.users = _.without( this.data.users, existing_user );
+		io.of( this.namespace ).emit( 'presences:leave', presence );
 	}
-	return existing_user.sids.length;
+	return;
 };
 
 Room.prototype.addItem = function( item ){
 	item.id = uuid.v4();
 	this.data.playlist.push( item );
+	io.of( this.namespace ).emit( 'playlist:add', item );
 	if( !this.data.player.item ) this.nextItem();
 	return item;
 };
 
-Room.prototype.removeItem = function( id, write_to_stream ){
+Room.prototype.removeItem = function( id ){
 	var item = _.findWhere( this.data.playlist, { id: id } );
 	this.data.playlist = _.without( this.data.playlist, item );
-	if( write_to_stream ){
-		this.stream.write({
-			module: 'playlist',
-			type: 'remove',
-			payload: id
-		});
-	}
+	io.of( this.namespace ).emit( 'playlist:remove', item );
 	return item;
 };
 
@@ -280,19 +188,11 @@ Room.prototype.playItem = function( item ){
 				this.nextItem();
 			}
 			else {
-				this.stream.write({
-					module: 'player',
-					type: 'elapsed',
-					payload: this.data.player.elapsed
-				});
+				io.of( this.namespace ).emit( 'player:elapsed', this.data.player.elapsed );
 			}
 		}.bind( this ), PLAYER_TICK_INTERVAL );
 	}
-	this.stream.write({
-		module: 'player',
-		type: 'play',
-		payload: item
-	});
+	io.of( this.namespace ).emit( 'player:play', item );
 };
 
 Room.prototype.nextItem = function(){
@@ -307,7 +207,7 @@ Room.prototype.nextItem = function(){
 		break;
 	}
 	if( next_item ){
-		this.removeItem( next_item.id, true );
+		this.removeItem( next_item.id );
 	}
 	this.playItem( next_item );
 };
@@ -317,11 +217,12 @@ Room.prototype.setOrder = function( order ){
 	var orders = ['fifo','shuffle'];
 	if( orders.indexOf( order ) < 0 ) return new Error('Invalid order '+ order);
 	this.data.player.order = order;
+	io.of( this.namespace ).emit( 'player:order', order );
 	return order;
 }
 
 // export a function so we can pass in http_server instance
 module.exports = function( config ){
-	http_server = config.http_server;
+	io = config.io;
 	return Room;
 };
