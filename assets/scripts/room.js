@@ -26,10 +26,12 @@ var mediator = tandem.mediator = _.extend( {}, Backbone.Events );
 var socket = io.connect( '/rooms/'+ tandem.bridge.room.id );
 
 // authenticate user with streaming endpoint
-socket.emit( 'auth', {
-	id: tandem.bridge.user.id,
-	name: tandem.bridge.user.name,
-	token: tandem.bridge.user.token
+socket.on( 'connect', function(){
+	socket.emit( 'auth', {
+		id: tandem.bridge.user.id,
+		name: tandem.bridge.user.name,
+		token: tandem.bridge.user.token
+	});
 });
 
 tandem.messages = new Messages( null, {

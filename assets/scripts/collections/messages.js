@@ -3,6 +3,7 @@ var Backbone = require('backbone');
 
 module.exports = Backbone.Collection.extend({
 	initialize: function( models, config ){
+		_.bindAll( this, 'onMessage', 'onJoin', 'onLeave', 'onPlay', 'onSkip' );
 		this.mediator = config.mediator;
 		this.socket = config.socket;
 		this.listenTo( this.socket, 'chat:message', this.onMessage );

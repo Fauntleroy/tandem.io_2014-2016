@@ -9,7 +9,7 @@ module.exports = Backbone.Model.extend({
 		playing: null
 	},
 	initialize: function( data, config ){
-		_( this ).bindAll( 'updateVisibility', 'clearUnread' );
+		_( this ).bindAll( 'updateUnread', 'updatePlaying', 'updateVisibility', 'clearUnread' );
 		this.mediator = config.mediator;
 		this.socket = config.socket;
 		this.listenTo( this.socket, 'player:play', this.updatePlaying );

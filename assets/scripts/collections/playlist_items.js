@@ -7,7 +7,7 @@ var adapters = require('../adapters');
 
 module.exports = Backbone.Collection.extend({
 	initialize: function( models, config ){
-		_( this ).bindAll( 'addItem' );
+		_.bindAll( this, 'addItem', 'onList', 'onAdd', 'onRemove' );
 		this.mediator = config.mediator;
 		this.socket = config.socket;
 		this.listenTo( this.mediator, 'search:add', this.addItem );

@@ -17,7 +17,7 @@ var Room = function( data, options ){
 
 	// give the room an id
 	this.id = uuid.v4();
-	var namespace = this.namespace = 'rooms/'+ this.id;
+	var namespace = this.namespace = '/rooms/'+ this.id;
 
 	// set up default data
 	this.data = {
@@ -35,20 +35,24 @@ var Room = function( data, options ){
 
 	// listen for user connections
 	io.of( namespace ).on( 'connection', function( socket ){
-		var sid = socket.sid;
+		var sid = socket.id;
 		// start an auth timer
 		// disconnect user if they do not connect within time limit
 		var auth_timeout = setTimeout( function(){
-			socket.close();
+			socket.disconnect();
 		}, AUTH_TIMEOUT );
 		socket.once( 'auth', function( data, cb ){
 			var id = data.id;
 			var name = data.name;
 			var token = data.token;
+			var user = {
+				id: id,
+				name: name
+			};
 			var is_authentic = ( generateAuthToken( id, name ) === token );
 			if( !is_authentic ){
 				cb( new Error('Authentication failed') );
-				socket.close();
+				socket.disconnect();
 				return;
 			}
 			// disable auth timer
@@ -73,10 +77,15 @@ var Room = function( data, options ){
 			socket.emit( 'player:state', room.data.player );
 
 			// listen for commands from the user
-			socket.on( 'chat:message', function( message ){
+			socket.on( 'chat:message', function( content ){
+				var message = {
+					content: content,
+					user: user
+				};
 				io.of( namespace ).emit( 'chat:message', message );
 			});
 			socket.on( 'playlist:add', function( item ){
+				item.user = user;
 				room.addItem( item );
 			});
 			socket.on( 'playlist:remove', function( id ){

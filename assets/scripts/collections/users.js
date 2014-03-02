@@ -5,7 +5,7 @@ var User = require('../models/user.js');
 module.exports = Backbone.Collection.extend({
 	model: User,
 	initialize: function( data, config ){
-		_( this ).bindAll( 'onList', 'onJoin', 'onLeave' );
+		_.bindAll( this, 'onList', 'onJoin', 'onLeave' );
 		this.mediator = config.mediator;
 		this.socket = config.socket;
 		this.listenTo( this.socket, 'presences:list', this.onList );
