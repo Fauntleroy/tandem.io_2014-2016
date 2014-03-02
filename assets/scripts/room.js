@@ -1,8 +1,7 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = require('jquery');
-var engine = require('engine.io-stream');
-var es = require('event-stream');
+var io = require('socket.io-client');
 
 // Models & Collections
 var Messages = require('./collections/messages.js');
@@ -23,42 +22,35 @@ var SearchView = require('./views/search.js');
 window.tandem = window.tandem || {};
 var mediator = tandem.mediator = _.extend( {}, Backbone.Events );
 
-// initialize room stream
-var stream = engine('/streaming/rooms/'+ tandem.bridge.room.id );
-var stringify_stream = es.stringify();
-stringify_stream.pipe( stream );
-tandem.stream = stream = es.duplex( stringify_stream, stream.pipe( es.parse() ) );
-stream.on('data',function( data ){ console.log( 'data', data ); });
+// initialize room socket
+var socket = io.connect( '/rooms/'+ tandem.bridge.room.id );
 
 // authenticate user with streaming endpoint
-stream.write({
-	type: 'auth',
-	payload: {
-		id: tandem.bridge.user.id,
-		name: tandem.bridge.user.name,
-		token: tandem.bridge.user.token
-	}
+socket.emit( 'auth', {
+	id: tandem.bridge.user.id,
+	name: tandem.bridge.user.name,
+	token: tandem.bridge.user.token
 });
 
 tandem.messages = new Messages( null, {
 	mediator: mediator,
-	stream: stream
+	socket: socket
 });
 tandem.users = new Users( null, {
 	mediator: mediator,
-	stream: stream
+	socket: socket
 });
 tandem.playlist_items = new PlaylistItems( null, {
 	mediator: mediator,
-	stream: stream
+	socket: socket
 });
 tandem.player = new Player( null, {
 	mediator: mediator,
-	stream: stream
+	socket: socket
 });
 tandem.title = new Title( null, {
 	mediator: mediator,
-	stream: stream
+	socket: socket
 });
 tandem.search_results = new SearchResults( null, {
 	mediator: mediator

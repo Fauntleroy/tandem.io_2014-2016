@@ -9,31 +9,13 @@ module.exports = Backbone.Model.extend({
 		playing: null
 	},
 	initialize: function( data, config ){
-		_( this ).bindAll( 'processStream', 'updateVisibility', 'clearUnread' );
+		_( this ).bindAll( 'updateVisibility', 'clearUnread' );
 		this.mediator = config.mediator;
-		this.stream = config.stream;
-		this.stream.on( 'data', this.processStream );
+		this.socket = config.socket;
+		this.listenTo( this.socket, 'player:play', this.updatePlaying );
+		this.listenTo( this.socket, 'player:state', this.updatePlaying );
+		this.listenTo( this.socket, 'chat:messsage', this.updateUnread );
 		Visibility.change( this.updateVisibility );
-	},
-	// Ensures stream data is properly routed
-	processStream: function( data ){
-		if( data.module === 'player' ){
-			switch( data.type ){
-			case 'play':
-				this.updatePlaying( data.payload );
-			break;
-			case 'state':
-				this.updatePlaying( data.payload.item );
-			break;
-			}
-		}
-		else if( data.module === 'chat' ){
-			switch( data.type ){
-			case 'message':
-				this.updateUnread();
-			break;
-			}
-		}
 	},
 	isHidden: function(){
 		return Visibility.hidden();
@@ -43,6 +25,8 @@ module.exports = Backbone.Model.extend({
 		this.set( 'unread', this.get('unread') + 1 );
 	},
 	updatePlaying: function( item ){
+		// if this is from player:state, we need to select just the item
+		item = item.item || item;
 		this.set( 'playing', item ? item.title : null );
 	},
 	updateVisibility: function( e, state ){

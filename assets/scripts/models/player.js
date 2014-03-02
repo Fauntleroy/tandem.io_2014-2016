@@ -4,7 +4,6 @@ var MUTE_KEY = 'tandem_mute';
 
 var Backbone = require('backbone');
 var _ = require('underscore');
-var es = require('event-stream');
 var store = require('store');
 
 module.exports = Backbone.Model.extend({
@@ -16,44 +15,19 @@ module.exports = Backbone.Model.extend({
 		mute: store.get( MUTE_KEY ) || false
 	},
 	initialize: function( data, config ){
-		_( this ).bindAll( 'processStream',
-			'onState', 'onPlay', 'onElapsed',
+		_( this ).bindAll( 'onState', 'onPlay', 'onElapsed',
 			'sendSkip',
 			'storeVolume', 'storeMute' );
-		this.on( 'change:volume', this.storeVolume );
-		this.on( 'change:mute', this.storeMute );
 		this.mediator = config.mediator;
-		// setup stream
-		var write_stream = es.through( this.preprocessStream );
-		write_stream.pipe( config.stream );
-		this.stream = es.duplex( write_stream, config.stream );
-		this.stream.on( 'data', this.processStream );
+		this.socket = config.socket;
 		// attach to instance for mocking in test
 		this.store = store;
-	},
-	// Modify data object before sending to stream
-	preprocessStream: function( data ){
-		data.module = 'player';
-		this.queue( data );
-	},
-	// Ensures stream data is properly routed
-	processStream: function( data ){
-		if( data.module === 'player' ){
-			switch( data.type ){
-			case 'state':
-				this.onState( data.payload );
-			break;
-			case 'play':
-				this.onPlay( data.payload );
-			break;
-			case 'elapsed':
-				this.onElapsed( data.payload );
-			break;
-			case 'order':
-				this.onOrder( data.payload );
-			break;
-			}
-		}
+		this.on( 'change:volume', this.storeVolume );
+		this.on( 'change:mute', this.storeMute );
+		this.listenTo( this.socket, 'player:state', this.onState );
+		this.listenTo( this.socket, 'player:play', this.onPlay );
+		this.listenTo( this.socket, 'player:elapsed', this.onElapsed );
+		this.listenTo( this.socket, 'player:order', this.onOrder );
 	},
 	// act on player event from server
 	onState: function( player ){
@@ -74,16 +48,11 @@ module.exports = Backbone.Model.extend({
 	},
 	// send a skip command to server
 	sendSkip: function(){
-		this.stream.write({
-			type: 'skip'
-		});
+		this.socket.emit('player:skip');
 	},
 	// send order to server
 	sendOrder: function( order ){
-		this.stream.write({
-			type: 'order',
-			payload: order
-		});
+		this.socket.emit( 'player:order', order );
 	},
 	// store volume data locally
 	storeVolume: function( player, volume ){

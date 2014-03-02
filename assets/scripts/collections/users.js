@@ -5,26 +5,12 @@ var User = require('../models/user.js');
 module.exports = Backbone.Collection.extend({
 	model: User,
 	initialize: function( data, config ){
-		_( this ).bindAll( 'processStream', 'onList', 'onJoin', 'onLeave' );
+		_( this ).bindAll( 'onList', 'onJoin', 'onLeave' );
 		this.mediator = config.mediator;
-		this.stream = config.stream;
-		this.stream.on( 'data', this.processStream );
-	},
-	// Ensures stream data is properly routed
-	processStream: function( data ){
-		if( data.module === 'presences' ){
-			switch( data.type ){
-			case 'list':
-				this.onList( data.payload.users );
-			break;
-			case 'join':
-				this.onJoin( data.payload.user );
-			break;
-			case 'leave':
-				this.onLeave( data.payload.user );
-			break;
-			}
-		}
+		this.socket = config.socket;
+		this.listenTo( this.socket, 'presences:list', this.onList );
+		this.listenTo( this.socket, 'presences:join', this.onJoin );
+		this.listenTo( this.socket, 'presences:leave', this.onLeave );
 	},
 	// populate users collection
 	onList: function( users ){
