@@ -17,7 +17,7 @@ var Room = function( data, options ){
 
 	// give the room an id
 	this.id = uuid.v4();
-	var namespace = this.namespace = 'rooms:'+ this.id;
+	var namespace = this.namespace = 'rooms/'+ this.id;
 
 	// set up default data
 	this.data = {
@@ -42,7 +42,7 @@ var Room = function( data, options ){
 			socket.close();
 		}, AUTH_TIMEOUT );
 		socket.once( 'auth', function( data, cb ){
-			var id = data.id,
+			var id = data.id;
 			var name = data.name;
 			var token = data.token;
 			var is_authentic = ( generateAuthToken( id, name ) === token );
