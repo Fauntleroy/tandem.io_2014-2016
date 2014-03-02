@@ -1,5 +1,4 @@
 const PORT = 8080;
-const TOKEN_SECRET = process.env.TANDEM_TOKEN_SECRET;
 const SESSION_SECRET = process.env.TANDEM_SESSION_SECRET;
 const SOUNDCLOUD_APP_ID = process.env.TANDEM_SOUNDCLOUD_APP_ID;
 const SOUNDCLOUD_APP_SECRET = process.env.TANDEM_SOUNDCLOUD_APP_SECRET;
@@ -14,7 +13,6 @@ const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 const NO_OP = function(){};
 
 var http = require('http');
-var crypto = require('crypto');
 var es = require('event-stream');
 var _ = require('underscore');
 var request = require('request');
@@ -23,16 +21,7 @@ var expose = require('express-expose');
 var server = express();
 var http_server = http.createServer( server );
 
-// generate auth token for use with streaming endpoints
-// pass any data we need attached to message objects
-var generateAuthToken = function( id, name ){
-	var hmac = crypto.createHmac( 'sha256', TOKEN_SECRET );
-	hmac.setEncoding('hex');
-	hmac.write( id );
-	hmac.write( name );
-	hmac.end();
-	return hmac.read();
-};
+var generateAuthToken = require('./utils/generateAuthToken.js');
 
 var Room = require('./models/room.js')({ http_server: http_server });
 

@@ -1,10 +1,8 @@
-const TOKEN_SECRET = process.env.TANDEM_TOKEN_SECRET;
 const PLAYER_TICK_INTERVAL_SECONDS = 3;
 const PLAYER_TICK_INTERVAL = PLAYER_TICK_INTERVAL_SECONDS * 1000;
 const NO_OP = function(){};
 
 var Stream = require('stream');
-var crypto = require('crypto');
 
 var es = require('event-stream');
 var _ = require('underscore');
@@ -14,16 +12,7 @@ var EngineServer = require('engine.io-stream');
 var http_server;
 var rooms = [];
 
-// generate auth token for use with streaming endpoints
-// pass any data we need attached to message objects
-var generateAuthToken = function( id, name ){
-	var hmac = crypto.createHmac( 'sha256', TOKEN_SECRET );
-	hmac.setEncoding('hex');
-	hmac.write( id );
-	hmac.write( name );
-	hmac.end();
-	return hmac.read();
-};
+var generateAuthToken = require('../utils/generateAuthToken.js');
 
 var Room = function( data, options ){
 
