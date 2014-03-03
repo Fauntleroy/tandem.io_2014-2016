@@ -84,6 +84,13 @@ var Room = function( data, options ){
 				};
 				io.of( namespace ).emit( 'chat:message', message );
 			});
+			socket.on( 'chat:emote', function( content ){
+				var message = {
+					content: content,
+					user: user
+				};
+				io.of( namespace ).emit( 'chat:emote', message );
+			});
 			socket.on( 'playlist:add', function( item ){
 				item.user = user;
 				room.addItem( item );

@@ -3,10 +3,11 @@ var Backbone = require('backbone');
 
 module.exports = Backbone.Collection.extend({
 	initialize: function( models, config ){
-		_.bindAll( this, 'onMessage', 'onJoin', 'onLeave', 'onPlay', 'onSkip' );
+		_.bindAll( this, 'onMessage', 'onEmote', 'onJoin', 'onLeave', 'onPlay', 'onSkip' );
 		this.mediator = config.mediator;
 		this.socket = config.socket;
 		this.listenTo( this.socket, 'chat:message', this.onMessage );
+		this.listenTo( this.socket, 'chat:emote', this.onEmote );
 		this.listenTo( this.socket, 'presences:join', this.onJoin );
 		this.listenTo( this.socket, 'presences:leave', this.onLeave );
 		this.listenTo( this.socket, 'player:play', this.onPlay );
@@ -15,8 +16,15 @@ module.exports = Backbone.Collection.extend({
 	sendMessage: function( message ){
 		this.socket.emit( 'chat:message', message );
 	},
+	sendEmote: function( message ){
+		this.socket.emit( 'chat:emote', message );
+	},
 	onMessage: function( message ){
 		message.type = 'chat';
+		this.add( message );
+	},
+	onEmote: function( message ){
+		message.type = 'emote';
 		this.add( message );
 	},
 	onJoin: function( user ){

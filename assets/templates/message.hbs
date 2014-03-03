@@ -5,6 +5,12 @@
 	{{/user}}
 	<span>{{content}}</span>
 {{/equal}}
+{{#equal type "emote"}}
+	{{#user}}
+	<span class="user" data-user-id="{{id}}"><strong class="name">{{name}}</strong></span>
+	{{/user}}
+	<span>{{content}}</span>
+{{/equal}}
 {{#equal type "join"}}
 	<i class="fa fa-chevron-right"></i>
 	{{#user}}

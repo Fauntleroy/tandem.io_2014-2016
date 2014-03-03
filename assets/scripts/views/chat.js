@@ -30,7 +30,13 @@ module.exports = Backbone.View.extend({
 		e.preventDefault();
 		var message = $.trim( this.$message.val() );
 		if( message ){
-			this.collection.sendMessage( message );
+			var emote_bits = /^\/me\s(.*)$/.exec( message );
+			if( emote_bits ){
+				this.collection.sendEmote( emote_bits[1] );
+			}
+			else {
+				this.collection.sendMessage( message );
+			}
 			this.$message.val('');
 		}
 	},
