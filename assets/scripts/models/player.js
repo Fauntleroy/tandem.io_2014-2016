@@ -3,6 +3,7 @@ var VOLUME_KEY = 'tandem_volume';
 var MUTE_KEY = 'tandem_mute';
 
 var Backbone = require('backbone');
+var $ = require('jquery');
 var _ = require('underscore');
 var store = require('store');
 
@@ -61,6 +62,20 @@ module.exports = Backbone.Model.extend({
 	// send a like to server
 	sendLike: function(){
 		this.socket.emit('player:like');
+		var item = this.get('item');
+		switch( item.source ){
+		case 'youtube':
+		break;
+		case 'soundcloud':
+			$.ajax({
+				url: '/api/v1/proxy/soundcloud/me/favorites/'+ item.original_id,
+				type: 'PUT',
+				success: function(){
+					console.log('success',arguments);
+				}
+			});
+		break;
+		}
 	},
 	// send order to server
 	sendOrder: function( order ){

@@ -27,6 +27,7 @@ module.exports = {
 			image = image? image.replace('large','crop'): 'https://s3-us-west-1.amazonaws.com/syncmedia/images/null.png';
 			var stream_url = data.stream_url +'?consumer_key='+ SOUNDCLOUD_CLIENT_ID
 			var item_data = {
+				original_id: data.id,
 				title: data.title,
 				url: url,
 				media_url: stream_url,
@@ -82,6 +83,7 @@ module.exports = {
 					? image.replace('large','crop')
 					: 'https://s3-us-west-1.amazonaws.com/syncmedia/images/null.png';
 				var result = {
+					original_id: item.id,
 					title: item.title,
 					url: item.permalink_url,
 					description: item.description,

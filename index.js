@@ -172,18 +172,20 @@ server.delete( '/api/v1/rooms/:id', function( req, res ){
 	});
 });
 
-server.get( /^\/api\/v1\/proxy\/soundcloud\/(.+)$/, function( req, res ){
+server.all( /^\/api\/v1\/proxy\/soundcloud\/(.+)$/, function( req, res ){
+	console.log( req.user );
 	var query = _.extend( req.query, {
 		oauth_token: req.user.soundcloud_access_token
 	});
 	var endpoint = req.params[0];
 	request({
 		url: SOUNDCLOUD_API_BASE_URL +'/'+ endpoint,
-		qs: query
+		qs: query,
+		method: req.method
 	}).pipe( res );
 });
 
-server.get( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
+server.all( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
 	var query = _.extend( req.query, {
 		key: YOUTUBE_API_KEY
 	});
@@ -193,7 +195,8 @@ server.get( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
 		qs: query,
 		headers: {
 			'Authorization': 'Bearer '+ req.user.youtube_access_token
-		}
+		},
+		method: req.method
 	}).pipe( res );
 });
 
