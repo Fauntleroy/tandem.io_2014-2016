@@ -10,6 +10,7 @@ var io;
 var rooms = [];
 
 var generateAuthToken = require('../utils/generateAuthToken.js');
+var likeMessage = require('../utils/likeMessage.js');
 
 var Room = function( data, options ){
 
@@ -24,7 +25,8 @@ var Room = function( data, options ){
 		id: this.id,
 		name: 'Default Room Name',
 		player: {
-			order: 'fifo'
+			order: 'fifo',
+			likers: []
 		},
 		users: [],
 		playlist: []
@@ -100,6 +102,9 @@ var Room = function( data, options ){
 			});
 			socket.on( 'player:skip', function(){
 				room.nextItem( user );
+			});
+			socket.on( 'player:like', function(){
+				room.likeItem( user );
 			});
 			socket.on( 'player:order', function( order ){
 				room.setOrder( order );
@@ -191,6 +196,7 @@ Room.prototype.playItem = function( item ){
 	// reset timer
 	if( this.player_interval ) clearInterval( this.player_interval );
 	this.data.player.elapsed = 0;
+	this.data.player.likers = [];
 	// clear player if we're playing nothing
 	if( !item ){
 		this.data.player.item = null;
@@ -232,6 +238,20 @@ Room.prototype.nextItem = function( user ){
 		});
 	}
 	this.playItem( next_item );
+};
+
+Room.prototype.likeItem = function( user ){
+	var current_item = this.data.player.item;
+	if( !current_item ) return new Error('No item in player');
+	var likers = this.data.player.likers;
+	var already_liked = !!_.findWhere( likers, { id: user.id } );
+	if( already_liked ) return new Error('User already liked item');
+	likers.push( user );
+	io.of( this.namespace ).emit( 'player:like', {
+		user: user,
+		message: likeMessage(),
+		likers: likers
+	});
 };
 
 Room.prototype.setOrder = function( order ){

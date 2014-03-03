@@ -11,15 +11,17 @@ module.exports = Backbone.Model.extend({
 		elapsed: 0,
 		duration: 0,
 		item: null,
+		likers: [],
 		volume: store.get( VOLUME_KEY ) || 75,
 		mute: store.get( MUTE_KEY ) || false
 	},
 	initialize: function( data, config ){
-		_( this ).bindAll( 'onState', 'onPlay', 'onElapsed', 'onOrder',
-			'sendSkip',
+		_( this ).bindAll( 'onState', 'onPlay', 'onElapsed', 'onLike', 'onOrder',
+			'sendSkip', 'sendLike',
 			'storeVolume', 'storeMute' );
 		this.mediator = config.mediator;
 		this.socket = config.socket;
+		this.user_id = config.user_id;
 		// attach to instance for mocking in test
 		this.store = store;
 		this.on( 'change:volume', this.storeVolume );
@@ -27,6 +29,7 @@ module.exports = Backbone.Model.extend({
 		this.listenTo( this.socket, 'player:state', this.onState );
 		this.listenTo( this.socket, 'player:play', this.onPlay );
 		this.listenTo( this.socket, 'player:elapsed', this.onElapsed );
+		this.listenTo( this.socket, 'player:like', this.onLike );
 		this.listenTo( this.socket, 'player:order', this.onOrder );
 	},
 	// act on player event from server
@@ -36,11 +39,16 @@ module.exports = Backbone.Model.extend({
 	// act on load events from the server
 	onPlay: function( playlist_item ){
 		this.set( 'elapsed', 0 );
+		this.set( 'likers', [] );
 		this.set( 'item', playlist_item );
 	},
 	// act on elapsed events from the server
 	onElapsed: function( elapsed ){
 		this.set( 'elapsed', elapsed );
+	},
+	// act on like events from the server
+	onLike: function( data ){
+		this.set( 'likers', data.likers );
 	},
 	// act on order events from server
 	onOrder: function( order ){
@@ -49,6 +57,10 @@ module.exports = Backbone.Model.extend({
 	// send a skip command to server
 	sendSkip: function(){
 		this.socket.emit('player:skip');
+	},
+	// send a like to server
+	sendLike: function(){
+		this.socket.emit('player:like');
 	},
 	// send order to server
 	sendOrder: function( order ){

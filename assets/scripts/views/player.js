@@ -18,16 +18,18 @@ var player_item_template = require('../../templates/player_item.hbs');
 module.exports = Backbone.View.extend({
 	events: {
 		'click li.skip a': 'clickSkip',
+		'click li.like a': 'clickLike',
 		'change li.order select': 'changeOrder',
 		'click li.volume a[href="#mute"]': 'clickMute',
 		'mousedown li.volume .level': 'mousedownVolume'
 	},
 	initialize: function(){
 		_( this ).bindAll( 'render', 'renderElapsed', 'renderOrder', 'renderItem', 'renderMute', 'renderVolume',
-			'clickSkip', 'changeOrder', 'clickMute', 'mousedownVolume', 'mousemoveVolume', 'mouseupVolume',
+			'clickSkip', 'clickLike', 'changeOrder', 'clickMute', 'mousedownVolume', 'mousemoveVolume', 'mouseupVolume',
 			'calculateVolume', 'checkSync' );
 		this.render();
 		this.listenTo( this.model, 'change:elapsed', this.checkSync );
+		this.listenTo( this.model, 'change:likers', this.renderLikers );
 		this.listenTo( this.model, 'change:order', this.renderOrder );
 		this.listenTo( this.model, 'change:item', this.renderItem );
 		this.listenTo( this.model, 'change:volume', this.renderVolume );
@@ -44,6 +46,9 @@ module.exports = Backbone.View.extend({
 		this.$duration_bar = this.$progress.find('div.bars span.duration');
 		this.$controls = this.$el.find('ul.controls');
 		this.$skip = this.$controls.find('li.skip a');
+		this.$like = this.$controls.find('li.like a');
+		this.$like_heart = this.$like.find('i');
+		this.$likes = this.$controls.find('li.like .likes');
 		this.$order = this.$controls.find('li.order select[name="order"]');
 		this.$volume = this.$controls.find('li.volume');
 		this.$mute = this.$volume.find('a[href="#mute"]');
@@ -63,6 +68,16 @@ module.exports = Backbone.View.extend({
 		var elapsed = parseInt( e.position, 10 );
 		this.$elapsed.text( secondsToTime( elapsed ) );
 		this.$elapsed_bar.css( 'width', ( ( e.position / e.duration ) * 100 ) +'%' );
+	},
+	// render current item's likes
+	renderLikers: function( player, likers ){
+		this.$likes.text( likers.length );
+		console.log('likers',likers);
+		console.log('userid',this.model.user_id);
+		var is_liked = !!_.findWhere( likers, { id: this.model.user_id });
+		this.$like_heart
+		.toggleClass( 'fa-heart', is_liked )
+		.toggleClass( 'fa-heart-o', !is_liked );
 	},
 	// render player order
 	renderOrder: function( player, order ){
@@ -104,6 +119,13 @@ module.exports = Backbone.View.extend({
 	clickSkip: function( e ){
 		e.preventDefault();
 		this.model.sendSkip( function( err ){
+			if( err ) alert( err );
+		});
+	},
+	// like the current item
+	clickLike: function( e ){
+		e.preventDefault();
+		this.model.sendLike( function( err ){
 			if( err ) alert( err );
 		});
 	},

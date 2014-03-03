@@ -12,6 +12,10 @@
 	<li class="skip">
 		<a href="#skip">Skip <i class="fa fa-forward"></i></a>
 	</li>
+	<li class="like">
+		<a href="#like"><span>Like</span> <i class="fa fa-heart-o"></i></a>
+		<var class="likes">{{#if likers}}{{length likers}}{{/if}}</var>
+	</li>
 	<li class="volume {{#if mute}}muted{{/if}}">
 		<a href="#mute"><span>{{#if mute}}Unmute{{else}}Mute{{/if}}</span> <i class="fa fa-volume-off"></i></a>
 		<span class="level"><var style="width: {{volume}}%;"></var></span>
