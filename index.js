@@ -223,7 +223,8 @@ server.get( '/rooms/:id', function( req, res ){
 		}
 	}, 'tandem.bridge.apis' );
 	res.render( 'room.hbs', {
-		room: room
+		room: room,
+		user: user
 	});
 });
 

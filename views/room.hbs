@@ -9,10 +9,20 @@
 </head>
 <body id="page-room">
 	<h1>{{room.id}}</h1>
+	{{#user}}
 	<div id="auth">
-		<a href="/auth/soundcloud">Soundcloud Auth</a>
-		<a href="/auth/youtube">Youtube Auth</a>
+		{{#if soundcloud_id}}
+		SoundCloud Linked
+		{{else}}
+		<a href="/auth/soundcloud">SoundCloud Auth</a>
+		{{/if}}
+		{{#if youtube_id}}
+		YouTube Linked
+		{{else}}
+		<a href="/auth/youtube">YouTube Auth</a>
+		{{/if}}
 	</div>
+	{{/user}}
 	<div id="search"></div>
 	<div id="social">
 		<div id="users"></div>
