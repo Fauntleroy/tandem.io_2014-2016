@@ -20,7 +20,7 @@ var express = require('express');
 var expose = require('express-expose');
 var server = express();
 var http_server = http.createServer( server );
-var io = socket_io( http_server );
+var io = socket_io.listen( http_server );
 
 var generateAuthToken = require('./utils/generateAuthToken.js');
 
