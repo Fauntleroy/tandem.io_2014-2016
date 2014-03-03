@@ -15,7 +15,7 @@ module.exports = Backbone.Model.extend({
 		mute: store.get( MUTE_KEY ) || false
 	},
 	initialize: function( data, config ){
-		_( this ).bindAll( 'onState', 'onPlay', 'onElapsed',
+		_( this ).bindAll( 'onState', 'onPlay', 'onElapsed', 'onOrder',
 			'sendSkip',
 			'storeVolume', 'storeMute' );
 		this.mediator = config.mediator;
