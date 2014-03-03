@@ -9,11 +9,11 @@ module.exports = Backbone.Model.extend({
 		playing: null
 	},
 	initialize: function( data, config ){
-		_( this ).bindAll( 'updateUnread', 'updatePlaying', 'updateVisibility', 'clearUnread' );
+		_( this ).bindAll( 'updateUnread', 'updatePlaying', 'updatePlayingFromState', 'updateVisibility', 'clearUnread' );
 		this.mediator = config.mediator;
 		this.socket = config.socket;
 		this.listenTo( this.socket, 'player:play', this.updatePlaying );
-		this.listenTo( this.socket, 'player:state', this.updatePlaying );
+		this.listenTo( this.socket, 'player:state', this.updatePlayingFromState );
 		this.listenTo( this.socket, 'chat:messsage', this.updateUnread );
 		Visibility.change( this.updateVisibility );
 	},
@@ -24,9 +24,11 @@ module.exports = Backbone.Model.extend({
 		if( !this.isHidden() ) return;
 		this.set( 'unread', this.get('unread') + 1 );
 	},
+	updatePlayingFromState: function( state ){
+		this.updatePlaying( state.item );
+	},
 	updatePlaying: function( item ){
 		// if this is from player:state, we need to select just the item
-		item = item.item || item;
 		this.set( 'playing', item ? item.title : null );
 	},
 	updateVisibility: function( e, state ){
