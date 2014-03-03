@@ -92,7 +92,7 @@ var Room = function( data, options ){
 				room.removeItem( id );
 			});
 			socket.on( 'player:skip', function(){
-				room.nextItem();
+				room.nextItem( user );
 			});
 			socket.on( 'player:order', function( order ){
 				room.setOrder( order );
@@ -204,7 +204,7 @@ Room.prototype.playItem = function( item ){
 	io.of( this.namespace ).emit( 'player:play', item );
 };
 
-Room.prototype.nextItem = function(){
+Room.prototype.nextItem = function( user ){
 	var current_item = this.data.player.item;
 	var next_item;
 	switch( this.data.player.order ){
@@ -217,6 +217,12 @@ Room.prototype.nextItem = function(){
 	}
 	if( next_item ){
 		this.removeItem( next_item.id );
+	}
+	if( user ){
+		io.of( this.namespace ).emit( 'player:skip', {
+			item: current_item,
+			user: user
+		});
 	}
 	this.playItem( next_item );
 };

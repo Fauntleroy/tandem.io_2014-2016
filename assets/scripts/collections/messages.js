@@ -40,11 +40,11 @@ module.exports = Backbone.Collection.extend({
 		};
 		this.add( message );
 	},
-	onSkip: function( user, item ){
+	onSkip: function( data ){
 		var message = {
 			type: 'skip',
-			user: user,
-			item: item
+			user: data.user,
+			item: data.item
 		};
 		this.add( message );
 	}
