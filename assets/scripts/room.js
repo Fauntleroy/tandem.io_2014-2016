@@ -49,7 +49,7 @@ tandem.playlist_items = new PlaylistItems( null, {
 tandem.player = new Player( null, {
 	mediator: mediator,
 	socket: socket,
-	user_id: tandem.bridge.user.id
+	user: tandem.bridge.user
 });
 tandem.title = new Title( null, {
 	mediator: mediator,

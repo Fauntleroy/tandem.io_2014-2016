@@ -72,7 +72,7 @@ module.exports = Backbone.View.extend({
 	// render current item's likes
 	renderLikers: function( player, likers ){
 		this.$likes.text( likers.length );
-		var is_liked = !!_.findWhere( likers, { id: this.model.user_id });
+		var is_liked = !!_.findWhere( likers, { id: this.model.user.id });
 		this.$like_heart
 		.toggleClass( 'fa-heart', is_liked )
 		.toggleClass( 'fa-heart-o', !is_liked );

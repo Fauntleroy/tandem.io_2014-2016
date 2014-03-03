@@ -22,7 +22,7 @@ module.exports = Backbone.Model.extend({
 			'storeVolume', 'storeMute' );
 		this.mediator = config.mediator;
 		this.socket = config.socket;
-		this.user_id = config.user_id;
+		this.user = config.user;
 		// attach to instance for mocking in test
 		this.store = store;
 		this.on( 'change:volume', this.storeVolume );
@@ -67,13 +67,15 @@ module.exports = Backbone.Model.extend({
 		case 'youtube':
 		break;
 		case 'soundcloud':
-			$.ajax({
-				url: '/api/v1/proxy/soundcloud/me/favorites/'+ item.original_id,
-				type: 'PUT',
-				success: function(){
-					console.log('success',arguments);
-				}
-			});
+			if( this.user.soundcloud_id ){
+				$.ajax({
+					url: '/api/v1/proxy/soundcloud/me/favorites/'+ item.original_id,
+					type: 'PUT',
+					success: function(){
+						console.log('success',arguments);
+					}
+				});
+			}
 		break;
 		}
 	},

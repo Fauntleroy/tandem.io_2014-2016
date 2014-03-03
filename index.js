@@ -212,7 +212,7 @@ server.post( '/rooms', function( req, res ){
 
 server.get( '/rooms/:id', function( req, res ){
 	var user = req.session.passport.user || {};
-	user = _.pick( user, 'id', 'name' );
+	user = _.pick( user, 'id', 'name', 'youtube_id', 'soundcloud_id' );
 	user.token = generateAuthToken( user.id, user.name );
 	var room = Room.findById( req.params.id, true );
 	res.expose( room, 'tandem.bridge.room' );
