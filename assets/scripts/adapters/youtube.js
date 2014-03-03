@@ -29,6 +29,7 @@ module.exports = {
 			if( data.data.accessControl.embed != 'allowed' ) return callback( new Error('Embedding has been disabled for this video! How Stingy :('), null );
 			if( data.data.category === 'Movies' ) return callback( new Error('Full movies can&apos;t be synced at this time.'), null );
 			var item_data = {
+				original_id: data.data.id,
 				title: data.data.title,
 				url: YOUTUBE_WATCH_URL + id,
 				media_url: YOUTUBE_WATCH_URL + id,
