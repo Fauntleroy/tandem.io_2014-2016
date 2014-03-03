@@ -61,8 +61,9 @@ module.exports = Backbone.Model.extend({
 	},
 	// send a like to server
 	sendLike: function(){
-		this.socket.emit('player:like');
 		var item = this.get('item');
+		if( !item ) return;
+		this.socket.emit('player:like');
 		switch( item.source ){
 		case 'youtube':
 		break;
