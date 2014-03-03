@@ -72,8 +72,6 @@ module.exports = Backbone.View.extend({
 	// render current item's likes
 	renderLikers: function( player, likers ){
 		this.$likes.text( likers.length );
-		console.log('likers',likers);
-		console.log('userid',this.model.user_id);
 		var is_liked = !!_.findWhere( likers, { id: this.model.user_id });
 		this.$like_heart
 		.toggleClass( 'fa-heart', is_liked )
