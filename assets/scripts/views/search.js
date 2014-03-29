@@ -67,7 +67,7 @@ module.exports = Backbone.View.extend({
 	// add a result to the playlist
 	clickAdd: function( e ){
 		e.preventDefault();
-		var $button = $( e.target );
+		var $button = $( e.currentTarget );
 		var url = $button.attr('value');
 		this.collection.addResult( url );
 	},
