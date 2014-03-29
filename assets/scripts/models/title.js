@@ -14,7 +14,7 @@ module.exports = Backbone.Model.extend({
 		this.socket = config.socket;
 		this.listenTo( this.socket, 'player:play', this.updatePlaying );
 		this.listenTo( this.socket, 'player:state', this.updatePlayingFromState );
-		this.listenTo( this.socket, 'chat:messsage', this.updateUnread );
+		this.listenTo( this.socket, 'chat:message', this.updateUnread );
 		Visibility.change( this.updateVisibility );
 	},
 	isHidden: function(){
