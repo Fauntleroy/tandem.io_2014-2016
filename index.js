@@ -100,13 +100,14 @@ passport.use( new SoundcloudStrategy({
 }));
 
 // Youtube login
-var passport_youtube = require('passport-youtube');
-var YoutubeStrategy = passport_youtube.Strategy;
+var passport_google = require('passport-google-oauth');
+var GoogleStrategy = passport_google.OAuth2Strategy;
 
-passport.use( new YoutubeStrategy({
+passport.use( new GoogleStrategy({
 	clientID: YOUTUBE_APP_ID,
 	clientSecret: YOUTUBE_APP_SECRET,
 	callbackURL: URL +'/auth/youtube/callback',
+	profileURL: 'https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true',
 	passReqToCallback: true
 }, function( req, access_token, refresh_token, params, profile, done ){
 	var user = {
@@ -130,11 +131,12 @@ server.get( '/auth/soundcloud/callback', passport.authenticate( 'soundcloud', {
 	failureRedirect: '/?err=soundcloud-login-failed'
 }));
 
-server.get( '/auth/youtube', passport.authenticate( 'youtube', {
-	scope: 'https://www.googleapis.com/auth/youtube'
+server.get( '/auth/youtube', passport.authenticate( 'google', {
+	scope: 'https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+	accessType: 'offline'
 }));
 
-server.get( '/auth/youtube/callback', passport.authenticate( 'youtube', {
+server.get( '/auth/youtube/callback', passport.authenticate( 'google', {
 	successRedirect: '/',
 	failureRedirect: '/?err=youtube-login-failed'
 }));
@@ -173,7 +175,6 @@ server.delete( '/api/v1/rooms/:id', function( req, res ){
 });
 
 server.all( /^\/api\/v1\/proxy\/soundcloud\/(.+)$/, function( req, res ){
-	console.log( req.user );
 	var query = _.extend( req.query, {
 		oauth_token: req.user.soundcloud_access_token
 	});
