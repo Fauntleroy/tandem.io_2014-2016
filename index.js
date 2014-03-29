@@ -216,6 +216,7 @@ server.all( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
 	request({
 		url: YOUTUBE_API_BASE_URL +'/'+ endpoint,
 		qs: query,
+		json: req.body,
 		headers: {
 			'Authorization': 'Bearer '+ req.user.youtube_access_token
 		},
