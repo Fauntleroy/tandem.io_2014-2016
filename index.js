@@ -88,9 +88,7 @@ passport.use( new SoundcloudStrategy({
 }, function( req, access_token, refresh_token, params, profile, done ){
 	var user = {
 		soundcloud_id: profile.id,
-		soundcloud_access_token: access_token,
-		soundcloud_access_token_expiry: Date.now() + ( params.expires_in * 1000 ),
-		soundcloud_refresh_token: refresh_token
+		soundcloud_access_token: access_token
 	};
 	// if we already have a user session, merge them
 	if( req.user ){
@@ -146,7 +144,9 @@ passport.use( new GoogleStrategy({
 }));
 
 // Routes
-server.get( '/auth/soundcloud',	passport.authenticate('soundcloud') );
+server.get( '/auth/soundcloud',	passport.authenticate( 'soundcloud', {
+	scope: 'non-expiring'
+}));
 
 server.get( '/auth/soundcloud/callback', passport.authenticate( 'soundcloud', {
 	successRedirect: '/',
