@@ -50,7 +50,7 @@ server.use( express.bodyParser() );
 server.use( express.session({
 	secret: SESSION_SECRET,
 	cookie: {
-		maxAge: new Date( Date.now() + 1000 * 60 * 60 * 24 * 14 ) // 2 weeks from now
+		maxAge: 1000 * 60 * 60 * 24 * 14 // 2 weeks from now
 	},
 	store: new MongoStore({
 		url: MONGO_URL
