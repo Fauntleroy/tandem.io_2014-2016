@@ -53,7 +53,7 @@ module.exports = Backbone.View.extend({
 		this.$volume = this.$controls.find('li.volume');
 		this.$mute = this.$volume.find('a[href="#mute"]');
 		this.$volume_level = this.$volume.find('.level');
-		this.$volume_bar = this.$volume_level.children('var');
+		this.$volume_bar = this.$volume_level.children('.current');
 		this.$item = this.$el.find('div.item');
 		this.player = jwplayer('jwplayer').setup({
 			flashplayer: '/scripts/vendor/jwplayer/jwplayer.flash.swf',

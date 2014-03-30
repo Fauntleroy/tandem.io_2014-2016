@@ -18,7 +18,10 @@
 	</li>
 	<li class="volume {{#if mute}}muted{{/if}}">
 		<a href="#mute"><span>{{#if mute}}Unmute{{else}}Mute{{/if}}</span> <i class="fa fa-volume-off"></i></a>
-		<span class="level"><var style="width: {{volume}}%;"></var></span>
+		<span class="level">
+			<var class="max"></var>
+			<var class="current" style="width: {{volume}}%;"></var>
+		</span>
 	</li>
 </ul>
 <div class="item"></div>

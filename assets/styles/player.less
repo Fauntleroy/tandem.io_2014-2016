@@ -82,17 +82,44 @@
 
 			.level {
 				.user-select(none);
+				position: relative;
 				cursor: pointer;
 				display: inline-block;
 				width: 100px;
 				height: 20px;
-				background: #ccc;
 
-				> var {
+				.max {
 					display: block;
+					position: absolute;
+					z-index: 1;
+					top: 0;
+					left: 0;
 					width: 0;
+					height: 0;
+					border-style: solid;
+					border-width: 0 0 20px 100px;
+					border-color: transparent transparent #ccc transparent;
+				}
+
+				.current {
+					display: block;
+					overflow: hidden;
+					position: absolute;
+					z-index: 2;
+					top: 0;
+					left: 0;
+					width: 100px;
 					height: 20px;
-					background: #000;
+
+					&:before {
+						content: '';
+						display:block;
+						width: 0;
+						height: 0;
+						border-style: solid;
+						border-width: 0 0 20px 100px;
+						border-color: transparent transparent #000 transparent;
+					}
 				}
 			}
 		}
