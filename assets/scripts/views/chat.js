@@ -6,6 +6,7 @@ handlebars_helper.help( Handlebars );
 
 var chat_template = require('../../templates/chat.hbs');
 var message_template = require('../../templates/message.hbs');
+var message_line_template = require('../../templates/message_line.hbs');
 
 module.exports = Backbone.View.extend({
 	events: {
@@ -23,7 +24,16 @@ module.exports = Backbone.View.extend({
 		this.$message = this.$('[name="message"]');
 	},
 	addMessage: function( message ){
-		this.$messages.prepend( message_template( message.toJSON() ) );
+		var $top_message = this.$messages.children(':first');
+		var top_user_id = $top_message.find('span.user').data('user-id');
+		// append this message to an existing message block
+		if( top_user_id === message.get('user').id && $top_message.is('.chat') ){
+			$top_message.find('.content').append( message_line_template( message.toJSON() ) );
+		}
+		// prepend a new message block
+		else {
+			this.$messages.prepend( message_template( message.toJSON() ) );
+		}
 	},
 	// send a new message when the form is submitted and a message exists
 	submitMessage: function( e ){
