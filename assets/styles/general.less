@@ -2,15 +2,18 @@ body {
 	font-family: Lato, sans-serif;
 }
 
+@blue: rgb( 0, 200, 255 );
+
 a {
-	color: rgb( 0, 200, 255 );
+	color: @blue;
 	text-decoration: none;
 
-	&:hover {
-		color: rgb( 0, 175, 225 );
+	&:hover,
+	&:hover:visited {
+		color: darken( @blue, 20% );
 	}
 
 	&:visited {
-		color: rgb( 95, 110, 205 );
+		color: desaturate( lighten( @blue, 15% ), 40% );
 	}
 }
