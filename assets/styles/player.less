@@ -62,11 +62,22 @@
 	ul.controls {
 		.list-reset;
 		padding: 10px;
+		text-align: center;
 
 		> li {
-			margin: 0;
+			margin: 0 5px;
 			padding: 0;
 			display: inline-block;
+		}
+
+		/* Control groupings */
+		li.order,
+		li.skip {
+			float: left;
+		}
+
+		li.volume {
+			float: right;
 		}
 
 		li.volume {
