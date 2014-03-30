@@ -14,6 +14,7 @@ const NO_OP = function(){};
 
 var http = require('http');
 var socket_io = require('socket.io');
+var async = require('async');
 var _ = require('underscore');
 var request = require('request');
 var express = require('express');
@@ -88,9 +89,7 @@ passport.use( new SoundcloudStrategy({
 }, function( req, access_token, refresh_token, params, profile, done ){
 	var user = {
 		soundcloud_id: profile.id,
-		soundcloud_access_token: access_token,
-		soundcloud_access_token_expiry: Date.now() + ( params.expires_in * 1000 ),
-		soundcloud_refresh_token: refresh_token
+		soundcloud_access_token: access_token
 	};
 	// if we already have a user session, merge them
 	if( req.user ){
@@ -146,7 +145,9 @@ passport.use( new GoogleStrategy({
 }));
 
 // Routes
-server.get( '/auth/soundcloud',	passport.authenticate('soundcloud') );
+server.get( '/auth/soundcloud',	passport.authenticate( 'soundcloud', {
+	scope: 'non-expiring'
+}));
 
 server.get( '/auth/soundcloud/callback', passport.authenticate( 'soundcloud', {
 	successRedirect: '/',
@@ -155,7 +156,8 @@ server.get( '/auth/soundcloud/callback', passport.authenticate( 'soundcloud', {
 
 server.get( '/auth/youtube', passport.authenticate( 'google', {
 	scope: 'https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
-	accessType: 'offline'
+	accessType: 'offline',
+	approvalPrompt: 'force'
 }));
 
 server.get( '/auth/youtube/callback', passport.authenticate( 'google', {
@@ -208,20 +210,58 @@ server.all( /^\/api\/v1\/proxy\/soundcloud\/(.+)$/, function( req, res ){
 	}).pipe( res );
 });
 
-server.all( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
-	var query = _.extend( req.query, {
-		key: YOUTUBE_API_KEY
-	});
-	var endpoint = req.params[0];
+// use refresh_token to get a new access_token
+var refreshYouTubeToken = function( refresh_token, cb ){
 	request({
-		url: YOUTUBE_API_BASE_URL +'/'+ endpoint,
-		qs: query,
-		json: req.body,
-		headers: {
-			'Authorization': 'Bearer '+ req.user.youtube_access_token
+		url: 'https://accounts.google.com/o/oauth2/token',
+		form: {
+			client_id: YOUTUBE_APP_ID,
+			client_secret: YOUTUBE_APP_SECRET,
+			refresh_token: refresh_token,
+			grant_type: 'refresh_token'
 		},
-		method: req.method
-	}).pipe( res );
+		method: 'POST'
+	}, function( err, res, body ){
+		if( err ) return cb( err, null );
+		body = JSON.parse( body );
+		if( body.error ) return cb( new Error( body.error +' '+ body.error_description ), null );
+		cb( null, body.access_token, body.expires_in );
+	});
+};
+
+server.all( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
+	if( !req.user.youtube_access_token ) return res.json( 500, { error: 'Error: Missing access token' });
+	async.waterfall([ function checkToken( next ){
+		if( Date.now() > req.user.youtube_access_token_expiry ){
+			refreshYouTubeToken( req.user.youtube_refresh_token, function( err, access_token, expires_in ){
+				if( err ) return next( err, null );
+				req.user.youtube_access_token = access_token;
+				req.user.youtube_access_token_expiry = Date.now() + ( expires_in * 1000 );
+				next( null, access_token );
+			});
+		}
+		else {
+			next( null, req.user.youtube_access_token );
+		}
+	}, function makeRequest( access_token, next ){
+		var query = _.extend( req.query, {
+			key: YOUTUBE_API_KEY
+		});
+		var endpoint = req.params[0];
+		var proxied_request = request({
+			url: YOUTUBE_API_BASE_URL +'/'+ endpoint,
+			qs: query,
+			json: !_.isEmpty( req.body ) ? req.body : null,
+			headers: {
+				'Authorization': 'Bearer '+ access_token
+			},
+			method: req.method
+		});
+		next( null, proxied_request );
+	}], function( err, proxied_request ){
+		if( err ) return res.json( 500, { error: err.toString() });
+		proxied_request.pipe( res );
+	});
 });
 
 server.get( '/logout', function( req, res ){

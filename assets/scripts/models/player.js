@@ -61,8 +61,15 @@ module.exports = Backbone.Model.extend({
 	},
 	// send a like to server
 	sendLike: function(){
+		// don't do anything if the user has already liked this item
+		var is_liked = !!_.findWhere( this.get('likers'), {
+			id: this.user.id
+		});
+		if( is_liked ) return;
+		// don't do anything if there is no item in the player
 		var item = this.get('item');
 		if( !item ) return;
+		console.log( this.get('likers'), this.user );
 		this.socket.emit('player:like');
 		switch( item.source ){
 		case 'youtube':
