@@ -156,7 +156,8 @@ server.get( '/auth/soundcloud/callback', passport.authenticate( 'soundcloud', {
 
 server.get( '/auth/youtube', passport.authenticate( 'google', {
 	scope: 'https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
-	accessType: 'offline'
+	accessType: 'offline',
+	approvalPrompt: 'force'
 }));
 
 server.get( '/auth/youtube/callback', passport.authenticate( 'google', {
@@ -222,11 +223,14 @@ var refreshYouTubeToken = function( refresh_token, cb ){
 		method: 'POST'
 	}, function( err, res, body ){
 		if( err ) return cb( err, null );
+		body = JSON.parse( body );
+		if( body.error ) return cb( new Error( body.error +' '+ body.error_description ), null );
 		cb( null, body.access_token, body.expires_in );
 	});
 };
 
 server.all( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
+	if( !req.user.youtube_access_token ) return res.json( 500, { error: 'Error: Missing access token' });
 	async.waterfall([ function checkToken( next ){
 		if( Date.now() > req.user.youtube_access_token_expiry ){
 			refreshYouTubeToken( req.user.youtube_refresh_token, function( err, access_token, expires_in ){
@@ -255,7 +259,7 @@ server.all( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
 		});
 		next( null, proxied_request );
 	}], function( err, proxied_request ){
-		if( err ) return res.json( 500, err );
+		if( err ) return res.json( 500, { error: err.toString() });
 		proxied_request.pipe( res );
 	});
 });
