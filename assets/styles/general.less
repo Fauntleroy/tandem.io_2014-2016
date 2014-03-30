@@ -17,3 +17,17 @@ a {
 		color: desaturate( lighten( @blue, 15% ), 40% );
 	}
 }
+
+textarea,
+input[type="text"],
+input[type="search"] {
+	border: #ccc 2px solid;
+	border-radius: 5px;
+	padding: 5px;
+	box-sizing: border-box;
+
+	&:focus {
+		outline: none;
+		border-color: @blue;
+	}
+}
