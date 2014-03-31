@@ -28,7 +28,7 @@ module.exports = Backbone.View.extend({
 		var top_user_id = $top_message.find('span.user').data('user-id');
 		var user = message.get('user') || {};
 		// append this message to an existing message block
-		if( top_user_id === user.id && $top_message.is('.chat') ){
+		if( top_user_id === user.id && $top_message.is('.chat') && message.get('type') === 'chat' ){
 			$top_message.find('.content').append( message_line_template( message.toJSON() ) );
 		}
 		// prepend a new message block
