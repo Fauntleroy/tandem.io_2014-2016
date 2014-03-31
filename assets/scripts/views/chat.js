@@ -1,5 +1,15 @@
+var EMOJI_URL = 'http://tandem.io.s3.amazonaws.com/emoji';
+var EMOJI_CONFIG = {
+	url: EMOJI_URL,
+	attr: {
+		class: 'emoji'
+	}
+};
+
 var Backbone = require('backbone');
-var $ = Backbone.$ = require('jquery');
+var $ = jQuery = Backbone.$ = require('jquery');
+require('../vendor/jquery.links.js');
+require('../vendor/jquery.emojify.js');
 var Handlebars = require('hbsfy/runtime');
 var handlebars_helper = require('handlebars-helper');
 handlebars_helper.help( Handlebars );
@@ -29,11 +39,21 @@ module.exports = Backbone.View.extend({
 		var user = message.get('user') || {};
 		// append this message to an existing message block
 		if( top_user_id === user.id && $top_message.is('.chat') && message.get('type') === 'chat' ){
-			$top_message.find('.content').append( message_line_template( message.toJSON() ) );
+			var $message_line = $( message_line_template( message.toJSON() ) );
+			$message_line
+			.links()
+			.emojify( EMOJI_CONFIG );
+			$top_message.find('.content').append( $message_line );
 		}
 		// prepend a new message block
 		else {
-			this.$messages.prepend( message_template( message.toJSON() ) );
+			var $message = $( message_template( message.toJSON() ) );
+			if( message.get('type') === 'chat' ){
+				$message.find('.content')
+				.links()
+				.emojify( EMOJI_CONFIG );
+			}
+			this.$messages.prepend( $message );
 		}
 	},
 	// send a new message when the form is submitted and a message exists
