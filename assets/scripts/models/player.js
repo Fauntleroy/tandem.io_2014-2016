@@ -69,7 +69,6 @@ module.exports = Backbone.Model.extend({
 		// don't do anything if there is no item in the player
 		var item = this.get('item');
 		if( !item ) return;
-		console.log( this.get('likers'), this.user );
 		this.socket.emit('player:like');
 		switch( item.source ){
 		case 'youtube':
