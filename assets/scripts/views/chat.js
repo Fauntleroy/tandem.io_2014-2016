@@ -37,8 +37,9 @@ module.exports = Backbone.View.extend({
 		var $top_message = this.$messages.children(':first');
 		var top_user_id = $top_message.find('span.user').data('user-id');
 		var user = message.get('user') || {};
+		var type = message.get('type');
 		// append this message to an existing message block
-		if( top_user_id === user.id && $top_message.is('.chat') && message.get('type') === 'chat' ){
+		if( top_user_id === user.id && $top_message.is('.chat') && type === 'chat' ){
 			var $message_line = $( message_line_template( message.toJSON() ) );
 			$message_line
 			.links()
@@ -48,7 +49,7 @@ module.exports = Backbone.View.extend({
 		// prepend a new message block
 		else {
 			var $message = $( message_template( message.toJSON() ) );
-			if( message.get('type') === 'chat' ){
+			if( type === 'chat' || type === 'emote' ){
 				$message.find('.content')
 				.links()
 				.emojify( EMOJI_CONFIG );
