@@ -10,6 +10,14 @@
 		clear: both;
 		padding-top: 10px;
 
+		&:empty {
+			text-align: center;
+			
+			&:before {
+				content: 'The playlist is empty, add something to get started!';
+			}
+		}
+
 		> li {
 			position: relative;
 			clear: both;
