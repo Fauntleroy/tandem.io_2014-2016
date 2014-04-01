@@ -1,3 +1,5 @@
+.keyframes(~'slidein, 0% { margin-top: -10px; opacity: 0; } 100% { margin-top: 0; opacity: 1; }');
+
 #chat {
 
 	form {
@@ -13,6 +15,7 @@
 		padding: 5px;
 
 		> li {
+			.animation( slidein 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94) );
 			clear: both;
 			padding: 5px;
 		}
@@ -23,7 +26,9 @@
 				padding-top: 7px;
 
 				> p {
-					margin: 3px 0;
+					margin: 0;
+					padding: 1px 0 2px 0;
+					.animation( slidein 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94) );
 				}
 			}
 		}
@@ -33,7 +38,7 @@
 		}
 
 		li.play {
-			margin: 10px 0;
+			padding: 10px 5px;
 
 			h3 {
 				margin: 2px 0;
