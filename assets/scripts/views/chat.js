@@ -1,4 +1,3 @@
-var EMOJI = ['cat','dog','smile'];
 var EMOJI_URL = 'http://tandem.io.s3.amazonaws.com/emoji';
 var EMOJI_CONFIG = {
 	url: EMOJI_URL,
@@ -12,6 +11,7 @@ var $ = jQuery = Backbone.$ = require('jquery');
 require('../vendor/jquery.links.js');
 require('../vendor/jquery.emojify.js');
 require('../vendor/jquery.textcomplete.js');
+var emojis = $.fn.emojify.emojis;
 var _ = require('underscore');
 var Handlebars = require('hbsfy/runtime');
 var handlebars_helper = require('handlebars-helper');
@@ -39,7 +39,7 @@ module.exports = Backbone.View.extend({
 		this.$message.textcomplete([{
 			match: /\B:([\-+\w]*)$/,
 			search: function( value, callback ){
-				var matched_emoji = _.filter( EMOJI, function( emoji ){
+				var matched_emoji = _.filter( emojis, function( emoji ){
 					return emoji.indexOf( value ) === 0;
 				});
 				callback( matched_emoji );
