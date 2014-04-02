@@ -1,3 +1,4 @@
+var EMOJI = ['cat','dog','smile'];
 var EMOJI_URL = 'http://tandem.io.s3.amazonaws.com/emoji';
 var EMOJI_CONFIG = {
 	url: EMOJI_URL,
@@ -10,6 +11,8 @@ var Backbone = require('backbone');
 var $ = jQuery = Backbone.$ = require('jquery');
 require('../vendor/jquery.links.js');
 require('../vendor/jquery.emojify.js');
+require('../vendor/jquery.textcomplete.js');
+var _ = require('underscore');
 var Handlebars = require('hbsfy/runtime');
 var handlebars_helper = require('handlebars-helper');
 handlebars_helper.help( Handlebars );
@@ -17,6 +20,7 @@ handlebars_helper.help( Handlebars );
 var chat_template = require('../../templates/chat.hbs');
 var message_template = require('../../templates/message.hbs');
 var message_line_template = require('../../templates/message_line.hbs');
+var emoji_autocomplete_template = require('../../templates/emoji_autocomplete.hbs');
 
 module.exports = Backbone.View.extend({
 	events: {
@@ -32,6 +36,23 @@ module.exports = Backbone.View.extend({
 		this.$messages = this.$('.messages');
 		this.$new_message = this.$('.new_message');
 		this.$message = this.$('[name="message"]');
+		this.$message.textcomplete([{
+			match: /\B:([\-+\w]*)$/,
+			search: function( value, callback ){
+				var matched_emoji = _.filter( EMOJI, function( emoji ){
+					return emoji.indexOf( value ) === 0;
+				});
+				callback( matched_emoji );
+				console.log( 'value', value );
+			},
+			template: emoji_autocomplete_template,
+			replace: function( value ){
+				console.log( 'replace value', value );
+				return ':'+ value +':';
+			},
+			index: 1,
+			maxCount: 7
+		}]);
 	},
 	addMessage: function( message ){
 		var $top_message = this.$messages.children(':first');
