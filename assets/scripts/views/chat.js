@@ -11,7 +11,7 @@ var $ = jQuery = Backbone.$ = require('jquery');
 require('../vendor/jquery.links.js');
 require('../vendor/jquery.emojify.js');
 require('../vendor/jquery.textcomplete.js');
-var emojis = $.fn.emojify.emojis;
+var emojis = $.fn.emojify.emojis; // pull emoji list from plugin
 var _ = require('underscore');
 var Handlebars = require('hbsfy/runtime');
 var handlebars_helper = require('handlebars-helper');
@@ -36,6 +36,8 @@ module.exports = Backbone.View.extend({
 		this.$messages = this.$('.messages');
 		this.$new_message = this.$('.new_message');
 		this.$message = this.$('[name="message"]');
+		// autocomplete :emoji: strings in chat textarea
+		// uses list of emoji from $.emojify plugin
 		this.$message.textcomplete([{
 			match: /\B:([\-+\w]*)$/,
 			search: function( value, callback ){
@@ -43,11 +45,9 @@ module.exports = Backbone.View.extend({
 					return emoji.indexOf( value ) === 0;
 				});
 				callback( matched_emoji );
-				console.log( 'value', value );
 			},
 			template: emoji_autocomplete_template,
 			replace: function( value ){
-				console.log( 'replace value', value );
 				return ':'+ value +':';
 			},
 			index: 1,
