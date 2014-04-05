@@ -16,6 +16,10 @@ module.exports = Backbone.Collection.extend({
 	},
 	sendMessage: function( message ){
 		this.socket.emit( 'chat:message', message );
+		// trigger a `like` in the player
+		if( message === '++' || message === '<3' ){
+			this.mediator.trigger('player:like');
+		}
 	},
 	sendEmote: function( message ){
 		this.socket.emit( 'chat:emote', message );

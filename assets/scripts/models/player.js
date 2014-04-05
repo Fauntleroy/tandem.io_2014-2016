@@ -32,6 +32,7 @@ module.exports = Backbone.Model.extend({
 		this.listenTo( this.socket, 'player:elapsed', this.onElapsed );
 		this.listenTo( this.socket, 'player:like', this.onLike );
 		this.listenTo( this.socket, 'player:order', this.onOrder );
+		this.listenTo( this.mediator, 'player:like', this.sendLike );
 	},
 	// act on player event from server
 	onState: function( player ){
