@@ -39,7 +39,7 @@ module.exports = Backbone.View.extend({
 		// autocomplete :emoji: strings in chat textarea
 		// uses list of emoji from $.emojify plugin
 		this.$message.textcomplete([{
-			match: /\B:([\-+\w]*)$/,
+			match: /(?:^|\s):([\-+\w]*)$/,
 			search: function( value, callback ){
 				var matched_emoji = _.filter( emojis, function( emoji ){
 					return emoji.indexOf( value ) === 0;
