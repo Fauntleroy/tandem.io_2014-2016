@@ -1,9 +1,13 @@
 var Backbone = require('backbone');
 var $ = Backbone.$ = require('jquery');
 var _ = require('underscore');
+var Handlebars = require('hbsfy/runtime');
 
 var users_template = require('../../templates/users.hbs');
 var user_template = require('../../templates/user.hbs');
+var _user_template = require('../../templates/_user.hbs');
+
+Handlebars.registerPartial( 'user', _user_template );
 
 module.exports = Backbone.View.extend({
 	initialize: function(){

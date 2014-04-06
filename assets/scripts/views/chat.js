@@ -21,6 +21,9 @@ var chat_template = require('../../templates/chat.hbs');
 var message_template = require('../../templates/message.hbs');
 var message_line_template = require('../../templates/message_line.hbs');
 var emoji_autocomplete_template = require('../../templates/emoji_autocomplete.hbs');
+var _user_template = require('../../templates/_user.hbs');
+
+Handlebars.registerPartial( 'user', _user_template );
 
 module.exports = Backbone.View.extend({
 	events: {
