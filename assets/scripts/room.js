@@ -30,6 +30,7 @@ socket.on( 'connect', function(){
 	socket.emit( 'auth', {
 		id: tandem.bridge.user.id,
 		name: tandem.bridge.user.name,
+		avatar: tandem.bridge.user.avatar,
 		token: tandem.bridge.user.token
 	});
 });

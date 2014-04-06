@@ -1,7 +1,10 @@
 <li class="{{type}}">
 {{#equal type "chat"}}
 	{{#user}}
-	<span class="user" data-user-id="{{id}}"><strong class="name">{{name}}</strong></span>
+	<span class="user" data-user-id="{{id}}">
+		<img class="avatar" src="{{avatar}}" />
+		<strong class="name">{{name}}</strong>
+	</span>
 	{{/user}}
 	<div class="content">{{content}}</div>
 {{/equal}}

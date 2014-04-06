@@ -46,12 +46,14 @@ var Room = function( data, options ){
 		socket.once( 'auth', function( data, cb ){
 			var id = data.id;
 			var name = data.name;
+			var avatar = data.avatar;
 			var token = data.token;
 			var user = {
 				id: id,
-				name: name
+				name: name,
+				avatar: avatar
 			};
-			var is_authentic = ( generateAuthToken( id, name ) === token );
+			var is_authentic = ( generateAuthToken( id, name, avatar ) === token );
 			if( !is_authentic ){
 				cb( new Error('Authentication failed') );
 				socket.disconnect();
@@ -66,6 +68,7 @@ var Room = function( data, options ){
 			var presence = {
 				id: id,
 				name: name,
+				avatar: avatar,
 				sid: sid
 			};
 			room.addPresence( presence );
@@ -153,6 +156,7 @@ Room.prototype.addPresence = function( presence ){
 		this.data.users.push({
 			id: presence.id,
 			name: presence.name,
+			avatar: presence.avatar,
 			sids: [ presence.sid ]
 		});
 		io.of( this.namespace ).emit( 'presences:join', presence );
