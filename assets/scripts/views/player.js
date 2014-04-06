@@ -14,6 +14,9 @@ var jwplayer = require('jwplayer');
 var secondsToTime = require('../utils/secondsToTime.js');
 var player_template = require('../../templates/player.hbs');
 var player_item_template = require('../../templates/player_item.hbs');
+var _user_template = require('../../templates/_user.hbs');
+
+Handlebars.registerPartial( 'user', _user_template );
 
 module.exports = Backbone.View.extend({
 	events: {
