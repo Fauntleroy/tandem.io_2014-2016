@@ -9,6 +9,9 @@ Handlebars.registerHelper( 'secondsToTime', secondsToTime );
 
 var playlist_template = require('../../templates/playlist.hbs');
 var playlist_item_template = require('../../templates/playlist_item.hbs');
+var _user_template = require('../../templates/_user.hbs');
+
+Handlebars.registerPartial( 'user', _user_template );
 
 module.exports = Backbone.View.extend({
 	events: {
