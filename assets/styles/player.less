@@ -18,6 +18,12 @@
 	color: #fff;
 	background: #151515;
 
+	a {
+		&:hover {
+			color: lighten( @blue, 10% );
+		}
+	}
+
 	div.progress {
 		.box-sizing(border-box);
 		position: relative;
@@ -94,6 +100,16 @@
 		li.order,
 		li.skip {
 			float: left;
+		}
+
+		li.like {
+			> a {
+				.transition( color 250ms );
+
+				&.liked {
+					color: @heartred;
+				}
+			}
 		}
 
 		li.volume {
