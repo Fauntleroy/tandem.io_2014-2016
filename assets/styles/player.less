@@ -15,12 +15,13 @@
 }
 
 #player {
+	color: #fff;
+	background: #151515;
 
 	div.progress {
 		.box-sizing(border-box);
 		position: relative;
 		width: 100%;
-		margin-top: 10px;
 
 		> var.elapsed {
 			float: left;
@@ -28,7 +29,7 @@
 			font-size: 75%;
 			font-style: normal;
 			font-weight: bold;
-			color: #000;
+			color: #fff;
 		}
 
 		> span.duration {
@@ -36,32 +37,32 @@
 			margin-right: 15px;
 			font-size: 75%;
 			font-style: normal;
-			color: #aaa;
+			color: #666;
 		}
 
 		> div.bars {
 			position: absolute;
-			top: 6px;
+			top: 7px;
 			right: 60px;
 			left: 60px;
-			height: 3px;
+			height: 2px;
 
 			> * {
 				position: absolute;
-				height: 3px;
+				height: 2px;
 			}
 
 			> var.elapsed {
 				display: block;
 				z-index: 3;
-				background: #000;
+				background: #fff;
 			}
 
 			> span.duration {
 				display: block;
 				z-index: 1;
 				width: 100%;
-				background: #ccc;
+				background: #333;
 			}
 		}
 
@@ -128,7 +129,7 @@
 					height: 0;
 					border-style: solid;
 					border-width: 0 0 20px 100px;
-					border-color: transparent transparent #ccc transparent;
+					border-color: transparent transparent #333 transparent;
 				}
 
 				.current {
@@ -148,7 +149,7 @@
 						height: 0;
 						border-style: solid;
 						border-width: 0 0 20px 100px;
-						border-color: transparent transparent #000 transparent;
+						border-color: transparent transparent #fff transparent;
 					}
 				}
 			}
@@ -156,7 +157,7 @@
 	}
 
 	div.item {
-		padding: 0 15px 5px 15px;
+		padding: 10px 15px 15px 15px;
 
 		h3 {
 			margin: 2px 0;
