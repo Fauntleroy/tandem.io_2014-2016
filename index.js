@@ -179,6 +179,14 @@ server.get( '/auth/youtube', passport.authenticate( 'google', {
 	approvalPrompt: 'force'
 }));
 
+server.get( '/auth/youtube/unlink', function( req, res ){
+	if( !req.user.youtube ) res.redirect('/');
+	User.unlinkProvider( req.user.id, 'youtube', function( err ){
+		req.user.youtube = null;
+		res.redirect('/');
+	});
+});
+
 server.get( '/auth/youtube/callback', passport.authenticate( 'google', {
 	successRedirect: '/',
 	failureRedirect: '/?err=youtube-login-failed'
