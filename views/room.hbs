@@ -11,13 +11,15 @@
 	<h1 id="title">{{room.id}}</h1>
 	{{#user}}
 	<div id="auth">
-		{{#if soundcloud_id}}
-		SoundCloud Account Linked
+		{{#if soundcloud}}
+		SoundCloud Account Linked 
+		<a href="/auth/soundcloud/unlink">Unlink</a>
 		{{else}}
 		<a href="/auth/soundcloud">Link SoundCloud Account</a>
 		{{/if}}
-		{{#if youtube_id}}
+		{{#if youtube}}
 		YouTube Account Linked
+		<a href="/auth/youtube/unlink">Unlink</a>
 		{{else}}
 		<a href="/auth/youtube">Link YouTube Account</a>
 		{{/if}}

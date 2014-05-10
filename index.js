@@ -29,6 +29,7 @@ var Room = require('./models/room.js')({ io: io });
 
 // Database
 var mongoose = require('mongoose');
+var User = require('./db/models/user.js');
 mongoose.connect( MONGO_URL );
 
 // Set up templates for Express
@@ -87,15 +88,20 @@ passport.use( new SoundcloudStrategy({
 	callbackURL: URL +'/auth/soundcloud/callback',
 	passReqToCallback: true
 }, function( req, access_token, refresh_token, params, profile, done ){
-	var user = {
-		soundcloud_id: profile.id,
-		soundcloud_access_token: access_token
+	var auth_data = {
+		provider: 'soundcloud',
+		client_id: profile.id,
+		access_token: access_token
 	};
-	// if we already have a user session, merge them
-	if( req.user ){
-		user = _.extend( req.user, user );
-	}
-	done( null, user );
+	User.findOrCreate( auth_data, req.user, function( err, user ){
+		if( err ) return done( err, null );
+		var user_json = user.toJSON();
+		// if we already have a user session, merge them
+		if( req.user ){
+			user_json = _.extend( req.user, user_json );
+		}
+		done( null, user_json );
+	});
 }));
 
 // Youtube login
@@ -127,20 +133,25 @@ passport.use( new GoogleStrategy({
 	profileURL: 'https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true',
 	passReqToCallback: true
 }, function( req, access_token, refresh_token, params, profile, done ){
-	var user = {
-		youtube_id: profile.id,
-		youtube_access_token: access_token,
-		youtube_access_token_expiry: Date.now() + ( params.expires_in * 1000 ),
-		youtube_refresh_token: refresh_token
-	};
-	// get ID of user's likes playlist
 	getLikesID( access_token, function( err, likes_id ){
-		user.youtube_likes_id = likes_id;
-		// if we already have a user session, merge them
-		if( req.user ){
-			user = _.extend( req.user, user );
-		}
-		done( null, user );
+		if( err ) return done( err, null );
+		var auth_data = {
+			provider: 'youtube',
+			client_id: profile.id,
+			access_token: access_token,
+			access_token_expiry: Date.now() + ( params.expires_in * 1000 ),
+			refresh_token: refresh_token,
+			likes_id: likes_id
+		};
+		User.findOrCreate( auth_data, req.user, function( err, user ){
+			if( err ) return done( err, null );
+			var user_json = user.toJSON();
+			// if we already have a user session, merge them
+			if( req.user ){
+				user_json = _.extend( req.user, user_json );
+			}
+			done( null, user_json );
+		});
 	});
 }));
 
@@ -154,11 +165,27 @@ server.get( '/auth/soundcloud/callback', passport.authenticate( 'soundcloud', {
 	failureRedirect: '/?err=soundcloud-login-failed'
 }));
 
+server.get( '/auth/soundcloud/unlink', function( req, res ){
+	if( !req.user.soundcloud ) res.redirect('/');
+	User.unlinkProvider( req.user.id, 'soundcloud', function( err ){
+		req.user.soundcloud = null;
+		res.redirect('/');
+	});
+});
+
 server.get( '/auth/youtube', passport.authenticate( 'google', {
 	scope: 'https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
 	accessType: 'offline',
 	approvalPrompt: 'force'
 }));
+
+server.get( '/auth/youtube/unlink', function( req, res ){
+	if( !req.user.youtube ) res.redirect('/');
+	User.unlinkProvider( req.user.id, 'youtube', function( err ){
+		req.user.youtube = null;
+		res.redirect('/');
+	});
+});
 
 server.get( '/auth/youtube/callback', passport.authenticate( 'google', {
 	successRedirect: '/',
@@ -199,8 +226,10 @@ server.delete( '/api/v1/rooms/:id', function( req, res ){
 });
 
 server.all( /^\/api\/v1\/proxy\/soundcloud\/(.+)$/, function( req, res ){
+	if( !req.user.soundcloud ) return res.json( 500, { error: 'Error: User has no SoundCloud credentials' });
+	if( !req.user.soundcloud.access_token ) return res.json( 500, { error: 'Error: Missing access token' });
 	var query = _.extend( req.query, {
-		oauth_token: req.user.soundcloud_access_token
+		oauth_token: req.user.soundcloud.access_token
 	});
 	var endpoint = req.params[0];
 	request({
@@ -230,18 +259,19 @@ var refreshYouTubeToken = function( refresh_token, cb ){
 };
 
 server.all( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
-	if( !req.user.youtube_access_token ) return res.json( 500, { error: 'Error: Missing access token' });
+	if( !req.user.youtube ) return res.json( 500, { error: 'Error: User has no YouTube credentials' });
+	if( !req.user.youtube.access_token ) return res.json( 500, { error: 'Error: Missing access token' });
 	async.waterfall([ function checkToken( next ){
-		if( Date.now() > req.user.youtube_access_token_expiry ){
-			refreshYouTubeToken( req.user.youtube_refresh_token, function( err, access_token, expires_in ){
+		if( Date.now() > req.user.youtube.access_token_expiry ){
+			refreshYouTubeToken( req.user.youtube.refresh_token, function( err, access_token, expires_in ){
 				if( err ) return next( err, null );
-				req.user.youtube_access_token = access_token;
-				req.user.youtube_access_token_expiry = Date.now() + ( expires_in * 1000 );
+				req.user.youtube.access_token = access_token;
+				req.user.youtube.access_token_expiry = Date.now() + ( expires_in * 1000 );
 				next( null, access_token );
 			});
 		}
 		else {
-			next( null, req.user.youtube_access_token );
+			next( null, req.user.youtube.access_token );
 		}
 	}, function makeRequest( access_token, next ){
 		var query = _.extend( req.query, {
@@ -276,7 +306,7 @@ server.post( '/rooms', function( req, res ){
 
 server.get( '/rooms/:id', function( req, res ){
 	var user = req.session.passport.user || {};
-	user = _.pick( user, 'id', 'name', 'avatar', 'youtube_id', 'youtube_likes_id', 'soundcloud_id' );
+	user = _.pick( user, 'id', 'name', 'avatar', 'youtube', 'soundcloud' );
 	user.token = generateAuthToken( user.id, user.name, user.avatar );
 	var room = Room.findById( req.params.id, true );
 	res.expose( room, 'tandem.bridge.room' );
