@@ -29,6 +29,7 @@ var Room = require('./models/room.js')({ io: io });
 
 // Database
 var mongoose = require('mongoose');
+var User = require('./db/models/user.js');
 mongoose.connect( MONGO_URL );
 
 // Set up templates for Express
