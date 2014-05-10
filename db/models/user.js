@@ -29,14 +29,12 @@ user_schema.statics.findOrCreate = function( auth, user_data, cb ){
 	cb = cb || NO_OP;
 	var User = this;
 	var find_params = {};
-	console.log('auth',auth);
 	find_params[auth.provider +'.client_id'] = auth.client_id;
 	this.findOne( find_params, function( err, user ){
 		// find a user and return it
 		if( user ) return cb( null, user );
 		// update an existing user
 		if( user_data.id && user_data.id.match( MONGO_ID_REGEX ) ){
-			console.log('update existing user',user_data.id);
 			User.findById( user_data.id, function( err, user ){
 				if( err ) return cb( err, null );
 				user[auth.provider] = auth;

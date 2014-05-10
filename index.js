@@ -96,7 +96,6 @@ passport.use( new SoundcloudStrategy({
 	User.findOrCreate( auth_data, req.user, function( err, user ){
 		if( err ) return done( err, null );
 		var user_json = user.toJSON();
-		console.log( 'user_json', user_json );
 		// if we already have a user session, merge them
 		if( req.user ){
 			user_json = _.extend( req.user, user_json );
@@ -146,13 +145,11 @@ passport.use( new GoogleStrategy({
 		};
 		User.findOrCreate( auth_data, req.user, function( err, user ){
 			if( err ) return done( err, null );
-			console.log( 'user', user );
 			var user_json = user.toJSON();
 			// if we already have a user session, merge them
 			if( req.user ){
 				user_json = _.extend( req.user, user_json );
 			}
-			console.log( 'user_json', user_json );
 			done( null, user_json );
 		});
 	});
