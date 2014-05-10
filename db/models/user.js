@@ -30,7 +30,7 @@ user_schema.statics.findOrCreate = function( auth, user_data, cb ){
 	var User = this;
 	var find_params = {};
 	console.log('auth',auth);
-	find_params[auth.provider +'.client_id'] = auth.id;
+	find_params[auth.provider +'.client_id'] = auth.client_id;
 	this.findOne( find_params, function( err, user ){
 		// find a user and return it
 		if( user ) return cb( null, user );

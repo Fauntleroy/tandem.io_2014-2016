@@ -88,15 +88,21 @@ passport.use( new SoundcloudStrategy({
 	callbackURL: URL +'/auth/soundcloud/callback',
 	passReqToCallback: true
 }, function( req, access_token, refresh_token, params, profile, done ){
-	var user = {
-		soundcloud_id: profile.id,
-		soundcloud_access_token: access_token
+	var auth_data = {
+		provider: 'soundcloud',
+		client_id: profile.id,
+		access_token: access_token
 	};
-	// if we already have a user session, merge them
-	if( req.user ){
-		user = _.extend( req.user, user );
-	}
-	done( null, user );
+	User.findOrCreate( auth_data, req.user, function( err, user ){
+		if( err ) return done( err, null );
+		var user_json = user.toJSON();
+		console.log( 'user_json', user_json );
+		// if we already have a user session, merge them
+		if( req.user ){
+			user_json = _.extend( req.user, user_json );
+		}
+		done( null, user_json );
+	});
 }));
 
 // Youtube login
