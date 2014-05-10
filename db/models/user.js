@@ -53,6 +53,19 @@ user_schema.statics.findOrCreate = function( auth, user_data, cb ){
 	});
 };
 
+// find user specified by `id`
+// delete provider's data from db
+user_schema.statics.unlinkProvider = function( user_id, provider, cb ){
+	cb = cb || NO_OP;
+	var User = this;
+	if( !user_id.match( MONGO_ID_REGEX ) ) return cb( new Error('Invalid user ID') );
+	this.findById( user_id, function( err, user ){
+		if( err ) return cb( err );
+		user[provider] = null;
+		user.save( cb );
+	});
+};
+
 // add an auth to an existing user
 user_schema.methods.addAuth = function( auth ){
 

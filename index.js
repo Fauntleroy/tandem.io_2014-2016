@@ -165,6 +165,14 @@ server.get( '/auth/soundcloud/callback', passport.authenticate( 'soundcloud', {
 	failureRedirect: '/?err=soundcloud-login-failed'
 }));
 
+server.get( '/auth/soundcloud/unlink', function( req, res ){
+	if( !req.user.soundcloud ) res.redirect('/');
+	User.unlinkProvider( req.user.id, 'soundcloud', function( err ){
+		req.user.soundcloud = null;
+		res.redirect('/');
+	});
+});
+
 server.get( '/auth/youtube', passport.authenticate( 'google', {
 	scope: 'https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
 	accessType: 'offline',
