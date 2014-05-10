@@ -213,8 +213,10 @@ server.delete( '/api/v1/rooms/:id', function( req, res ){
 });
 
 server.all( /^\/api\/v1\/proxy\/soundcloud\/(.+)$/, function( req, res ){
+	if( !req.user.soundcloud ) return res.json( 500, { error: 'Error: User has no SoundCloud credentials' });
+	if( !req.user.soundcloud.access_token ) return res.json( 500, { error: 'Error: Missing access token' });
 	var query = _.extend( req.query, {
-		oauth_token: req.user.soundcloud_access_token
+		oauth_token: req.user.soundcloud.access_token
 	});
 	var endpoint = req.params[0];
 	request({

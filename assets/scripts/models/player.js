@@ -95,15 +95,16 @@ module.exports = Backbone.Model.extend({
 			});
 		break;
 		case 'soundcloud':
-			if( this.user.soundcloud_id ){
-				$.ajax({
-					url: '/api/v1/proxy/soundcloud/me/favorites/'+ item.original_id,
-					type: 'PUT',
-					success: function(){
-						console.log('success',arguments);
-					}
-				});
-			}
+			// ensure necessary data exists
+			if( !this.user.soundcloud ) return;
+			if( !this.user.soundcloud.client_id ) return;
+			$.ajax({
+				url: '/api/v1/proxy/soundcloud/me/favorites/'+ item.original_id,
+				type: 'PUT',
+				success: function(){
+					console.log('success',arguments);
+				}
+			});
 		break;
 		}
 	},
