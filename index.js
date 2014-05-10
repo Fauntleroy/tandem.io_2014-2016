@@ -284,7 +284,7 @@ server.post( '/rooms', function( req, res ){
 
 server.get( '/rooms/:id', function( req, res ){
 	var user = req.session.passport.user || {};
-	user = _.pick( user, 'id', 'name', 'avatar', 'youtube_id', 'youtube_likes_id', 'soundcloud_id' );
+	user = _.pick( user, 'id', 'name', 'avatar', 'youtube', 'soundcloud' );
 	user.token = generateAuthToken( user.id, user.name, user.avatar );
 	var room = Room.findById( req.params.id, true );
 	res.expose( room, 'tandem.bridge.room' );
