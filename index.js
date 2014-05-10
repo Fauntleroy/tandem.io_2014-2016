@@ -128,20 +128,27 @@ passport.use( new GoogleStrategy({
 	profileURL: 'https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true',
 	passReqToCallback: true
 }, function( req, access_token, refresh_token, params, profile, done ){
-	var user = {
-		youtube_id: profile.id,
-		youtube_access_token: access_token,
-		youtube_access_token_expiry: Date.now() + ( params.expires_in * 1000 ),
-		youtube_refresh_token: refresh_token
-	};
-	// get ID of user's likes playlist
 	getLikesID( access_token, function( err, likes_id ){
-		user.youtube_likes_id = likes_id;
-		// if we already have a user session, merge them
-		if( req.user ){
-			user = _.extend( req.user, user );
-		}
-		done( null, user );
+		if( err ) return done( err, null );
+		var auth_data = {
+			provider: 'youtube',
+			client_id: profile.id,
+			access_token: access_token,
+			access_token_expiry: Date.now() + ( params.expires_in * 1000 ),
+			refresh_token: refresh_token,
+			likes_id: likes_id
+		};
+		User.findOrCreate( auth_data, req.user, function( err, user ){
+			if( err ) return done( err, null );
+			console.log( 'user', user );
+			var user_json = user.toJSON();
+			// if we already have a user session, merge them
+			if( req.user ){
+				user_json = _.extend( req.user, user_json );
+			}
+			console.log( 'user_json', user_json );
+			done( null, user_json );
+		});
 	});
 }));
 
