@@ -73,25 +73,26 @@ module.exports = Backbone.Model.extend({
 		this.socket.emit('player:like');
 		switch( item.source ){
 		case 'youtube':
-			if( this.user.youtube_id && this.user.youtube_likes_id ){
-				$.ajax({
-					url: '/api/v1/proxy/youtube/playlistItems?part=snippet',
-					data: {
-						snippet: {
-							playlistId: this.user.youtube_likes_id,
-							resourceId: {
-								kind: 'youtube#video',
-								videoId: item.original_id
-							},
-							position: 0
-						}
-					},
-					type: 'POST',
-					success: function(){
-						console.log('success',arguments);
+			// ensure necessary data exists
+			if( !this.user.youtube ) return;
+			if( !this.user.youtube.client_id || !this.user.youtube.likes_id ) return;
+			$.ajax({
+				url: '/api/v1/proxy/youtube/playlistItems?part=snippet',
+				data: {
+					snippet: {
+						playlistId: this.user.youtube.likes_id,
+						resourceId: {
+							kind: 'youtube#video',
+							videoId: item.original_id
+						},
+						position: 0
 					}
-				});
-			}
+				},
+				type: 'POST',
+				success: function(){
+					console.log('success',arguments);
+				}
+			});
 		break;
 		case 'soundcloud':
 			if( this.user.soundcloud_id ){
