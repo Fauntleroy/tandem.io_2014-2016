@@ -8,12 +8,14 @@ Minimal, open-source version of TK Sync
 
 You will need:
 
-- Node.js
-- NPM (bundled with Node.js)
-- MongoDB
+- [Node.js](http://nodejs.org/)
+- [NPM](https://www.npmjs.org/) (bundled with Node.js)
+- [MongoDB](http://www.mongodb.org/)
 - A databased named `tandem` in MongoDB
-- Gulp
+- [Gulp](http://gulpjs.com/)
 - This entry in `HOSTS`: `127.0.0.1 dev.tandem.io`
+- A properly configured [SoundCloud app](http://soundcloud.com/you/apps/new)
+- A properly configured [YouTube app](https://developers.google.com/youtube/android/player/register)
 - The following `ENV` variables set:
 
         export TANDEM_SESSION_SECRET="YOUR-SESSION-SECRET-HERE"
@@ -24,4 +26,4 @@ You will need:
         export TANDEM_YOUTUBE_API_KEY="YOUR-YOUTUBE-API-KEY-HERE"
         export TANDEM_TOKEN_SECRET="YOUR-TOKEN-SECRET-HERE"
 
-You can then run the applicaiton
+You'll then need to run `npm install` to install the application's dependencies, and finally run `gulp` inside the repo's directory to run the application's startup scripts. Once this is running, you should be able to use the application at http://dev.tandem.io:8080
