@@ -108,7 +108,6 @@ module.exports = Backbone.View.extend({
 	},
 	// update player mute states when player model's mute state changes
 	renderMute: function( model, mute ){
-		this.$mute.children('span').text( mute ? 'Unmute' : 'Mute' );
 		this.$volume.toggleClass( 'muted', mute );
 		this.player.setMute( mute );
 	},
