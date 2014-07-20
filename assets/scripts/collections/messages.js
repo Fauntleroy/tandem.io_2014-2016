@@ -6,6 +6,7 @@ module.exports = Backbone.Collection.extend({
 		_.bindAll( this, 'onMessage', 'onEmote', 'onJoin', 'onLeave', 'onPlay', 'onSkip', 'onLike' );
 		this.mediator = config.mediator;
 		this.socket = config.socket;
+		this.user = config.user;
 		this.listenTo( this.socket, 'chat:message', this.onMessage );
 		this.listenTo( this.socket, 'chat:emote', this.onEmote );
 		this.listenTo( this.socket, 'presences:join', this.onJoin );

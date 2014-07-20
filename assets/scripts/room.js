@@ -37,7 +37,8 @@ socket.on( 'connect', function(){
 
 tandem.messages = new Messages( null, {
 	mediator: mediator,
-	socket: socket
+	socket: socket,
+	user: tandem.bridge.user
 });
 tandem.users = new Users( null, {
 	mediator: mediator,

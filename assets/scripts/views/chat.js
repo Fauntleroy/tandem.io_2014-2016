@@ -62,9 +62,12 @@ module.exports = Backbone.View.extend({
 		var top_user_id = $top_message.find('span.user').data('user-id');
 		var user = message.get('user') || {};
 		var type = message.get('type');
+		// check if this user is sending the message
+		var message_data = message.toJSON();
+		message_data.self = ( user.id === this.collection.user.id );
 		// append this message to an existing message block
 		if( top_user_id === user.id && $top_message.is('.chat') && type === 'chat' ){
-			var $message_line = $( message_line_template( message.toJSON() ) );
+			var $message_line = $( message_line_template( message_data ) );
 			$message_line
 			.links()
 			.emojify( EMOJI_CONFIG );
@@ -72,7 +75,7 @@ module.exports = Backbone.View.extend({
 		}
 		// prepend a new message block
 		else {
-			var $message = $( message_template( message.toJSON() ) );
+			var $message = $( message_template( message_data ) );
 			if( type === 'chat' || type === 'emote' ){
 				$message.find('.content')
 				.links()
