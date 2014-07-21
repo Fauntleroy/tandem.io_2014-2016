@@ -3,6 +3,7 @@
 
 	form {
 		float: left;
+		margin: 0 0 10px 0;
 	}
 
 	ul.items {
@@ -12,7 +13,7 @@
 
 		&:empty {
 			text-align: center;
-			
+
 			&:before {
 				content: 'The playlist is empty, add something to get started!';
 			}
@@ -22,7 +23,7 @@
 			.animation( slidein 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94) );
 			position: relative;
 			clear: both;
-			min-height: 50px;
+			min-height: 58px;
 			margin: 0 0 10px 0;
 			padding: 0 40px 0 0;
 
@@ -43,7 +44,7 @@
 				position: absolute;
 				bottom: 0;
 				right: 0;
-				padding: 3px 4px;
+				padding: 0 5px;
 				font-size: 75%;
 				font-style: normal;
 				color: rgb( 255, 255, 255 );
@@ -53,7 +54,8 @@
 			span.image {
 				display: inline-block;
 				float: left;
-				margin-right: 10px
+				margin-right: 10px;
+				border: @notblack 4px solid;
 			}
 
 			.avatar {
@@ -68,7 +70,7 @@
 		padding: 3px 4px;
 		color: rgb( 255, 255, 255 );
 		background: @notblack;
-	
+
 		> var {
 			font-style: normal;
 		}
