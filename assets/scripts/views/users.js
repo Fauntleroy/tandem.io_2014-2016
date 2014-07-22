@@ -30,13 +30,17 @@ module.exports = Backbone.View.extend({
 	renderUsers: function(){
 		var users_view = this;
 		var users_str = this.collection.reduce( function( memo, user ){
-			return memo + user_template( user.toJSON() );
+			var user_data = user.toJSON();
+			user_data.self = ( user_data.id === users_view.collection.user.id );
+			return memo + user_template( user_data );
 		}, '' );
 		this.$users.html( users_str );
 	},
 	// render and add a message to the users ul
 	addUser: function( user ){
-		this.$users.append( user_template( user.toJSON() ) );
+		var user_data = user.toJSON();
+		user_data.self = ( user_data.id === this.collection.user.id );
+		this.$users.append( user_template( user_data ) );
 	},
 	// remove an item from the users ul
 	removeUser: function( user ){

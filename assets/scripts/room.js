@@ -42,7 +42,8 @@ tandem.messages = new Messages( null, {
 });
 tandem.users = new Users( null, {
 	mediator: mediator,
-	socket: socket
+	socket: socket,
+	user: tandem.bridge.user
 });
 tandem.playlist_items = new PlaylistItems( null, {
 	mediator: mediator,
