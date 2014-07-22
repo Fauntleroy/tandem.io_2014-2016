@@ -4,6 +4,18 @@
 	form {
 		float: left;
 		margin: 0 0 10px 0;
+
+		&.submitting {
+			> .fa-refresh {
+				display: inline-block;
+			}
+		}
+
+		> .fa-refresh {
+			display: none;
+			margin-left: 5px;
+			color: @darkgray;
+		}
 	}
 
 	ul.items {
