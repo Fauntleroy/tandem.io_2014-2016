@@ -64,6 +64,7 @@ module.exports = Backbone.View.extend({
 			file: 'http://www.youtube.com/watch?v=z8zFKSdm-Hs', // I'd love to not load anything...
 			controls: false
 		});
+		this.$el.addClass('empty');
 		this.player.onTime( this.renderElapsed );
 	},
 	// render elapsed time
@@ -88,7 +89,7 @@ module.exports = Backbone.View.extend({
 	// render item
 	renderItem: function( player, item ){
 		if( item ){
-			this.$progress.show();
+			this.$el.removeClass('empty');
 			this.$item.html( player_item_template( item ) );
 			this.$duration.text( secondsToTime( item.duration ) );
 			this.player.load({
@@ -100,8 +101,8 @@ module.exports = Backbone.View.extend({
 			this.player.play( true );
 			this.player.seek( elapsed || 0 );
 		} else {
+			this.$el.addClass('empty');
 			this.$item.html('');
-			this.$progress.hide();
 			this.$duration.text('');
 			this.player.stop();
 		}

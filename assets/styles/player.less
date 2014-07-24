@@ -19,13 +19,42 @@
 	color: #fff;
 	background: @notblack;
 
+	&.empty {
+		#players {
+			.empty {
+				display: block;
+			}
+		}
+
+		.progress {
+			display: none;
+		}
+	}
+
 	a {
 		&:hover {
 			color: lighten( @blue, 10% );
 		}
 	}
 
-	div.progress {
+	.empty {
+		z-index: 5;
+		display: none;
+		background: black;
+		color: @lightgray;
+
+		.message {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 350px;
+			height: 45px;
+			margin: -22px 0 0 -175px;
+			text-align: center;
+		}
+	}
+
+	.progress {
 		.box-sizing(border-box);
 		position: relative;
 		width: 100%;
