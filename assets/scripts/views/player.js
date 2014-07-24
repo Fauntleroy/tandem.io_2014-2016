@@ -42,6 +42,7 @@ module.exports = Backbone.View.extend({
 		this.$window = $(window);
 		this.$el.html( player_template( this.model.toJSON() ) );
 		this.$players = this.$el.find('#players');
+		this.$cover = this.$el.find('.cover');
 		this.$progress = this.$el.find('div.progress');
 		this.$elapsed = this.$progress.children('var.elapsed');
 		this.$duration = this.$progress.children('span.duration');
@@ -89,6 +90,7 @@ module.exports = Backbone.View.extend({
 	// render item
 	renderItem: function( player, item ){
 		if( item ){
+			this.$cover.css( 'background-image', 'url('+ item.image +')' );
 			this.$el.removeClass('empty');
 			this.$item.html( player_item_template( item ) );
 			this.$duration.text( secondsToTime( item.duration ) );
@@ -101,6 +103,7 @@ module.exports = Backbone.View.extend({
 			this.player.play( true );
 			this.player.seek( elapsed || 0 );
 		} else {
+			this.$cover.css( 'background-image', '' );
 			this.$el.addClass('empty');
 			this.$item.html('');
 			this.$duration.text('');

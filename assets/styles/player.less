@@ -16,6 +16,8 @@
 
 #player {
 	.shadow-level-1;
+	position: relative;
+	overflow: hidden;
 	color: #fff;
 	background: @notblack;
 
@@ -34,6 +36,30 @@
 	a {
 		&:hover {
 			color: lighten( @blue, 10% );
+		}
+	}
+
+	/* place everything above the "cover" element */
+	.meta {
+		position: relative;
+
+		> * {
+			position: relative;
+			z-index: 2;
+		}
+
+		.cover {
+			.blur( 5px );
+			content: '';
+			position: absolute;
+			top: 0px;
+			right: 0px;
+			bottom: 0px;
+			left: 0px;
+			z-index: 1;
+			opacity: 0.13;
+			background-size: cover;
+			background-position: center center;
 		}
 	}
 
@@ -99,6 +125,8 @@
 				z-index: 1;
 				width: 100%;
 				background: #333;
+			    background: rgba(25,25,25,0.75);
+			    border-bottom: rgba( 245,245,245,0.15) 1px solid;
 			}
 		}
 
@@ -114,7 +142,7 @@
 
 	ul.controls {
 		.list-reset;
-		padding: 10px;
+		padding: 10px 10px 5px 10px;
 		text-align: center;
 
 		> li {
@@ -225,7 +253,7 @@
 	}
 
 	div.item {
-		padding: 10px 15px 15px 15px;
+		padding: 5px 15px 15px 15px;
 
 		h3 {
 			margin: 2px 0;
