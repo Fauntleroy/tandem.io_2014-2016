@@ -18,7 +18,7 @@
 	.shadow-level-1;
 	position: relative;
 	overflow: hidden;
-	color: #fff;
+	color: rgba( 255, 255, 255, 0.65 );
 	background: @notblack;
 
 	&.empty {
@@ -34,8 +34,9 @@
 	}
 
 	a {
+		color: rgba( 255, 255, 255, 0.9 );
 		&:hover {
-			color: lighten( @blue, 10% );
+			color: rgba( 255, 255, 255, 1 );
 		}
 	}
 
@@ -45,7 +46,7 @@
 
 		> * {
 			position: relative;
-			z-index: 2;
+			z-index: 3;
 		}
 
 		.cover {
@@ -56,7 +57,7 @@
 			right: 0px;
 			bottom: 0px;
 			left: 0px;
-			z-index: 1;
+			z-index: 2;
 			opacity: 0.175;
 			background-size: cover;
 			background-position: center center;
@@ -82,51 +83,51 @@
 
 	.progress {
 		.box-sizing(border-box);
-		position: relative;
-		width: 100%;
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 1;
 
-		> var.elapsed {
-			float: left;
-			margin-left: 15px;
-			font-size: 75%;
-			font-style: normal;
-			font-weight: bold;
-			color: #fff;
-		}
+		.times {
+			position: absolute;
+			bottom: 10px;
+			right: 15px;
 
-		> span.duration {
-			float: right;
-			margin-right: 15px;
-			font-size: 75%;
-			font-style: normal;
-			color: #666;
+			.elapsed {
+				font-size: 75%;
+				font-style: normal;
+				font-weight: bold;
+				color: rgba( 255, 255, 255, 0.9 );
+			}
+
+			.duration {
+				font-size: 75%;
+				font-style: normal;
+			}
 		}
 
 		> div.bars {
-			position: absolute;
-			top: 7px;
-			right: 60px;
-			left: 60px;
-			height: 2px;
+			width: 100%;
+			height: 100%;
 
 			> * {
 				position: absolute;
-				height: 2px;
 			}
 
 			> var.elapsed {
+				.shadow-level-3;
 				display: block;
 				z-index: 3;
-				background: #fff;
+				height: 100%;
+				background: rgba( 255, 255, 255, 0.1 );
 			}
 
 			> span.duration {
 				display: block;
 				z-index: 1;
 				width: 100%;
-				background: #333;
-			    background: rgba(25,25,25,0.75);
-			    border-bottom: rgba( 245,245,245,0.15) 1px solid;
 			}
 		}
 
@@ -225,7 +226,7 @@
 					height: 0;
 					border-style: solid;
 					border-width: 0 0 20px 100px;
-					border-color: transparent transparent #333 transparent;
+					border-color: transparent transparent black transparent;
 				}
 
 				.current {
@@ -245,7 +246,7 @@
 						height: 0;
 						border-style: solid;
 						border-width: 0 0 20px 100px;
-						border-color: transparent transparent #fff transparent;
+						border-color: transparent transparent white transparent;
 					}
 				}
 			}
@@ -253,10 +254,11 @@
 	}
 
 	div.item {
-		padding: 5px 15px 15px 15px;
+		padding: 0 15px 15px 15px;
 
-		h3 {
-			margin: 2px 0;
+		.title {
+			margin: 5px 0;
+			line-height: 125%;
 		}
 
 		.avatar {
