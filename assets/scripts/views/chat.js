@@ -22,8 +22,10 @@ var message_template = require('../../templates/message.hbs');
 var message_line_template = require('../../templates/message_line.hbs');
 var emoji_autocomplete_template = require('../../templates/emoji_autocomplete.hbs');
 var _user_template = require('../../templates/_user.hbs');
+var _timestamp_template = require('../../templates/_timestamp.hbs');
 
 Handlebars.registerPartial( 'user', _user_template );
+Handlebars.registerPartial( 'timestamp', _timestamp_template );
 
 module.exports = Backbone.View.extend({
 	events: {
@@ -62,24 +64,26 @@ module.exports = Backbone.View.extend({
 		var top_user_id = $top_message.find('span.user').data('user-id');
 		var user = message.get('user') || {};
 		var type = message.get('type');
-		// check if this user is sending the message
 		var message_data = message.toJSON();
-		message_data.self = ( user.id === this.collection.user.id );
 		// append this message to an existing message block
+		// update timestamp
 		if( top_user_id === user.id && $top_message.is('.chat') && type === 'chat' ){
 			var $message_line = $( message_line_template( message_data ) );
 			$message_line
-			.links()
-			.emojify( EMOJI_CONFIG );
+				.links()
+				.emojify( EMOJI_CONFIG );
 			$top_message.find('.content').append( $message_line );
+			var timestamp = _timestamp_template( message_data.timestamp );
+			console.log( 'tm', $top_message, $top_message.find('.timestamp'), timestamp );
+			$top_message.find('.timestamp').replaceWith( timestamp );
 		}
 		// prepend a new message block
 		else {
 			var $message = $( message_template( message_data ) );
 			if( type === 'chat' || type === 'emote' ){
 				$message.find('.content')
-				.links()
-				.emojify( EMOJI_CONFIG );
+					.links()
+					.emojify( EMOJI_CONFIG );
 			}
 			this.$messages.prepend( $message );
 		}
