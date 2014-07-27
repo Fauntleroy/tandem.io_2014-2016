@@ -48,10 +48,4 @@ gulp.task( 'watch css', function(){
 	gulp.watch( './assets/styles/**/*.{less,css}', ['compile css'] );
 });
 
-gulp.task( 'start application', function(){
-	spawn( 'node', ['index.js'], {
-		stdio: 'inherit'
-	});
-});
-
-gulp.task( 'default', ['compile css', 'compile js', 'watch css', 'start application'] );
+gulp.task( 'default', ['compile css', 'compile js', 'watch css'] );

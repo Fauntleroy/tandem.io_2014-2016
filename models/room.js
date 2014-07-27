@@ -96,9 +96,11 @@ var Room = function( data, options ){
 				};
 				io.of( namespace ).emit( 'chat:emote', message );
 			});
-			socket.on( 'playlist:add', function( item ){
+			socket.on( 'playlist:add', function( item, callback ){
+				callback = callback || NO_OP;
 				item.user = user;
 				room.addItem( item );
+				callback( null );
 			});
 			socket.on( 'playlist:remove', function( id ){
 				room.removeItem( id );

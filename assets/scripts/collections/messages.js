@@ -1,11 +1,15 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 
+var Message = require('../models/message.js');
+
 module.exports = Backbone.Collection.extend({
+	model: Message,
 	initialize: function( models, config ){
 		_.bindAll( this, 'onMessage', 'onEmote', 'onJoin', 'onLeave', 'onPlay', 'onSkip', 'onLike' );
 		this.mediator = config.mediator;
 		this.socket = config.socket;
+		this.user = config.user;
 		this.listenTo( this.socket, 'chat:message', this.onMessage );
 		this.listenTo( this.socket, 'chat:emote', this.onEmote );
 		this.listenTo( this.socket, 'presences:join', this.onJoin );
@@ -26,6 +30,8 @@ module.exports = Backbone.Collection.extend({
 	},
 	onMessage: function( message ){
 		message.type = 'chat';
+		// check if this user is sending the message
+		message.self = ( message.user.id === this.user.id );
 		this.add( message );
 	},
 	onEmote: function( message ){

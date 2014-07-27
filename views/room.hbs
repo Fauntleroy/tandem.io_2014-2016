@@ -8,11 +8,10 @@
 	<script src="/compiled/room.js"></script>
 </head>
 <body id="page-room">
-	<h1 id="title">{{room.id}}</h1>
 	{{#user}}
 	<div id="auth">
 		{{#if soundcloud}}
-		SoundCloud Account Linked 
+		SoundCloud Account Linked
 		<a href="/auth/soundcloud/unlink">Unlink <i class="fa fa-unlink"></i></a>
 		{{else}}
 		<a href="/auth/soundcloud">Link SoundCloud Account <i class="fa fa-link"></i></a>
@@ -26,13 +25,16 @@
 	</div>
 	{{/user}}
 	<div id="search"></div>
-	<div id="social">
+	<div id="app">
+		<h1 id="title">{{room.id}}</h1>
 		<div id="users"></div>
-		<div id="chat"></div>
-	</div>
-	<div id="media">
-		<div id="player"></div>
-		<div id="playlist"></div>
+		<div id="social">
+			<div id="chat"></div>
+		</div>
+		<div id="media">
+			<div id="player"></div>
+			<div id="playlist"></div>
+		</div>
 	</div>
 </body>
 </html>

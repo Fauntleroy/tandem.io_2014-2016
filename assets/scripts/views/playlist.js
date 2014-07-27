@@ -36,6 +36,8 @@ module.exports = Backbone.View.extend({
 	render: function(){
 		this.$el.html( playlist_template() );
 		this.$form = this.$('form');
+		this.$form_elements = $( this.$form.get(0).elements );
+		this.$submit = this.$form.find('input[type="submit"]');
 		this.$url = this.$form.find('input[name="url"]');
 		this.$duration = this.$('var.duration');
 		this.$items = this.$('ul.items');
@@ -74,10 +76,14 @@ module.exports = Backbone.View.extend({
 		e.preventDefault();
 		var url = this.$url.val();
 		if( !url ) return false;
+		this.$form.addClass('submitting');
+		this.$form_elements.prop( 'disabled', true );
 		this.collection.addItem( url, function( err ){
+			this.$form.removeClass('submitting');
+			this.$form_elements.prop( 'disabled', false );
+			this.$url.val('');
 			if( err ) return alert( err );
-		});
-		this.$url.val('');
+		}.bind( this ));
 	},
 	// remove item when remove button is clicked
 	clickRemove: function( e ){

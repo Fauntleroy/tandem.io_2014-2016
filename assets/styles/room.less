@@ -5,7 +5,7 @@
 @import 'search';
 
 #page-room {
-	
+
 	span.image {
 		display: block;
 		width: 50px;
@@ -24,19 +24,44 @@
 		right: 0;
 	}
 
+	#app {
+		width: 1000px;
+		margin: 0 auto;
+	}
+
 	#title {
 		font-size: 24px;
+		text-align: center;
 	}
 
 	#social,
 	#media {
 		.box-sizing(border-box);
 		float: left;
-		width: 50%;
 	}
 
 	#social {
-		padding: 0 10px;
+		width: 340px;
+		margin-right: 20px;
+	}
+
+	#media {
+		width: 640px;
+	}
+
+	@media screen and (min-width: 1200px) and (min-height: 700px) {
+		#app {
+			width: 1180px;
+		}
+
+		#social {
+			width: 420px;
+			margin-right: 40px;
+		}
+
+		#media {
+			width: 720px;
+		}
 	}
 
 }

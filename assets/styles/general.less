@@ -1,5 +1,8 @@
-body {
-	font-family: Lato, sans-serif;
+html {
+	font: 14px/21px sans-serif;
+
+	background: @background-color;
+	color: @text-color;
 }
 
 a {
@@ -16,17 +19,50 @@ a {
 	}
 }
 
+input,
+textarea,
+select,
+button {
+	&:disabled {
+		opacity: 0.7;
+	}
+}
+
 textarea,
 input[type="text"],
 input[type="search"] {
 	.box-sizing( border-box );
-	border: #ccc 2px solid;
-	border-radius: 5px;
-	padding: 5px;
+	.shadow-inset-level-1;
+	.transition( background-color 375ms ease );
+	outline: none;
+	border: none;
+	padding: 7px 9px;
+	background: @input-background-color;
 
+	&:hover,
 	&:focus {
-		outline: none;
-		border-color: @blue;
+		.transition( background-color 125ms ease );
+		background: @input-active-background-color;
+	}
+}
+
+button {
+	.transition( background-color 375ms ease );
+	padding: 7px 9px;
+	outline: none;
+	border: none;
+	font-weight: bold;
+	color: @white;
+	background: @orange;
+
+	&:hover {
+		.transition( background-color 125ms ease );
+		background: lighten( @orange, 10% );
+	}
+
+	&:active {
+		.transition( background-color 0 ease );
+		background: lighten( @orange, 20% );
 	}
 }
 
@@ -37,11 +73,23 @@ input[type="search"] {
 	vertical-align: middle;
 }
 
+.image,
 .avatar {
-	width: 20px;
-	height: 20px;
+	.shadow-level-1;
+	.border-radius( 50% );
+	background-color: @black;
+}
+
+.image {
+	border: @notblack 4px solid;
+}
+
+.avatar {
+	width: 30px;
+	height: 30px;
 	margin: 0;
 	vertical-align: middle;
+	border: @card-background-color 2px solid;
 }
 
 /* jquery.textcomplete styles */

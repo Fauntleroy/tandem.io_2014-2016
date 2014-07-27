@@ -1,34 +1,46 @@
 <div id="players">
+	<div class="empty">
+		<h3 class="message">The player is empty! Add something to the playlist below to get started.</h3>
+	</div>
 	<div id="jwplayer"></div>
 	<img class="aspect" src="/images/16x9.png" />
 </div>
-<ul class="controls">
-	<li class="order">
-		<select name="order">
-			<option value="fifo">Normal</option>
-			<option value="shuffle">Shuffle</option>
-		</select>
-	</li>
-	<li class="skip">
-		<a href="#skip">Skip <i class="fa fa-forward"></i></a>
-	</li>
-	<li class="like">
-		<a href="#like"><span>Like</span> <i class="fa fa-heart-o"></i></a>
-		<var class="likes">{{#if likers}}{{length likers}}{{/if}}</var>
-	</li>
-	<li class="volume {{#if mute}}muted{{/if}}">
-		<a href="#mute"><span>{{#if mute}}Unmute{{else}}Mute{{/if}}</span> <i class="fa fa-volume-off"></i></a>
-		<span class="level">
-			<var class="max"></var>
-			<var class="current" style="width: {{volume}}%;"></var>
-		</span>
-	</li>
-</ul>
-<div class="progress">
-	<var class="elapsed"></var><span class="duration"></span>
-	<div class="bars">
-		<var class="elapsed"></var>
-		<span class="duration"></var>
+<div class="meta">
+	<div class="cover"></div>
+	<div class="progress">
+		<div class="times">
+			<var class="elapsed"></var>
+			<span class="duration"></span>
+		</div>
+		<div class="bars">
+			<var class="elapsed"></var>
+			<span class="duration"></var>
+		</div>
 	</div>
+	<ul class="controls">
+		<li class="order">
+			<select name="order">
+				<option value="fifo">Normal</option>
+				<option value="shuffle">Shuffle</option>
+			</select>
+		</li>
+		<li class="skip">
+			<a href="#skip"><i class="fa fa-forward"></i></a>
+		</li>
+		<li class="like">
+			<a href="#like"><i class="fa fa-heart-o"></i></a>
+			<var class="likes">{{#if likers}}{{length likers}}{{/if}}</var>
+		</li>
+		<li class="volume {{#if mute}}muted{{/if}}">
+			<a href="#mute">
+				<i class="fa fa-volume-up"></i>
+				<i class="fa fa-volume-off"></i>
+			</a>
+			<span class="level">
+				<var class="max"></var>
+				<var class="current" style="width: {{volume}}%;"></var>
+			</span>
+		</li>
+	</ul>
+	<div class="item"></div>
 </div>
-<div class="item"></div>

@@ -8,6 +8,7 @@ module.exports = Backbone.Collection.extend({
 		_.bindAll( this, 'onList', 'onJoin', 'onLeave' );
 		this.mediator = config.mediator;
 		this.socket = config.socket;
+		this.user = config.user;
 		this.listenTo( this.socket, 'presences:list', this.onList );
 		this.listenTo( this.socket, 'presences:join', this.onJoin );
 		this.listenTo( this.socket, 'presences:leave', this.onLeave );

@@ -42,9 +42,11 @@ module.exports = Backbone.View.extend({
 		this.$window = $(window);
 		this.$el.html( player_template( this.model.toJSON() ) );
 		this.$players = this.$el.find('#players');
+		this.$cover = this.$el.find('.cover');
 		this.$progress = this.$el.find('div.progress');
-		this.$elapsed = this.$progress.children('var.elapsed');
-		this.$duration = this.$progress.children('span.duration');
+		this.$times = this.$progress.children('.times');
+		this.$elapsed = this.$times.find('.elapsed');
+		this.$duration = this.$times.children('.duration');
 		this.$elapsed_bar = this.$progress.find('div.bars var.elapsed');
 		this.$duration_bar = this.$progress.find('div.bars span.duration');
 		this.$controls = this.$el.find('ul.controls');
@@ -64,6 +66,7 @@ module.exports = Backbone.View.extend({
 			file: 'http://www.youtube.com/watch?v=z8zFKSdm-Hs', // I'd love to not load anything...
 			controls: false
 		});
+		this.$el.addClass('empty');
 		this.player.onTime( this.renderElapsed );
 	},
 	// render elapsed time
@@ -88,7 +91,8 @@ module.exports = Backbone.View.extend({
 	// render item
 	renderItem: function( player, item ){
 		if( item ){
-			this.$progress.show();
+			this.$cover.css( 'background-image', 'url('+ item.image +')' );
+			this.$el.removeClass('empty');
 			this.$item.html( player_item_template( item ) );
 			this.$duration.text( secondsToTime( item.duration ) );
 			this.player.load({
@@ -100,15 +104,15 @@ module.exports = Backbone.View.extend({
 			this.player.play( true );
 			this.player.seek( elapsed || 0 );
 		} else {
+			this.$cover.css( 'background-image', '' );
+			this.$el.addClass('empty');
 			this.$item.html('');
-			this.$progress.hide();
 			this.$duration.text('');
 			this.player.stop();
 		}
 	},
 	// update player mute states when player model's mute state changes
 	renderMute: function( model, mute ){
-		this.$mute.children('span').text( mute ? 'Unmute' : 'Mute' );
 		this.$volume.toggleClass( 'muted', mute );
 		this.player.setMute( mute );
 	},
