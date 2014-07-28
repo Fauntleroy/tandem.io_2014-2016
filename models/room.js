@@ -38,83 +38,68 @@ var Room = function( data, options ){
 	// listen for user connections
 	io.of( namespace ).on( 'connection', function( socket ){
 		var sid = socket.id;
-		// start an auth timer
-		// disconnect user if they do not connect within time limit
-		var auth_timeout = setTimeout( function(){
-			socket.disconnect();
-		}, AUTH_TIMEOUT );
-		socket.once( 'auth', function( data, cb ){
-			var id = data.id;
-			var name = data.name;
-			var avatar = data.avatar;
-			var token = data.token;
-			var user = {
-				id: id,
-				name: name,
-				avatar: avatar
+		var auth_data = _.pick( socket.request._query, 'id', 'name', 'avatar', 'token' );
+		var id = auth_data.id;
+		var name = auth_data.name;
+		var avatar = auth_data.avatar;
+		var token = auth_data.token;
+		var user = {
+			id: id,
+			name: name,
+			avatar: avatar
+		};
+
+		// send current presence list
+		socket.emit( 'presences:list', room.data.users );
+		// add connection to presences
+		var presence = {
+			id: id,
+			name: name,
+			avatar: avatar,
+			sid: sid
+		};
+		room.addPresence( presence );
+		socket.on( 'disconnect', function(){
+			room.removePresence( presence );
+		});
+
+		// send existing playlist
+		socket.emit( 'playlist:list', room.data.playlist );
+		// send existing player
+		socket.emit( 'player:state', room.data.player );
+
+		// listen for commands from the user
+		socket.on( 'chat:message', function( content ){
+			var message = {
+				content: content,
+				user: user
 			};
-			var is_authentic = ( generateAuthToken( id, name, avatar ) === token );
-			if( !is_authentic ){
-				cb( new Error('Authentication failed') );
-				socket.disconnect();
-				return;
-			}
-			// disable auth timer
-			clearTimeout( auth_timeout );
-
-			// send current presence list
-			socket.emit( 'presences:list', room.data.users );
-			// add connection to presences
-			var presence = {
-				id: id,
-				name: name,
-				avatar: avatar,
-				sid: sid
+			io.of( namespace ).emit( 'chat:message', message );
+		});
+		socket.on( 'chat:emote', function( content ){
+			var message = {
+				content: content,
+				user: user
 			};
-			room.addPresence( presence );
-			socket.on( 'disconnect', function(){
-				room.removePresence( presence );
-			});
-
-			// send existing playlist
-			socket.emit( 'playlist:list', room.data.playlist );
-			// send existing player
-			socket.emit( 'player:state', room.data.player );
-
-			// listen for commands from the user
-			socket.on( 'chat:message', function( content ){
-				var message = {
-					content: content,
-					user: user
-				};
-				io.of( namespace ).emit( 'chat:message', message );
-			});
-			socket.on( 'chat:emote', function( content ){
-				var message = {
-					content: content,
-					user: user
-				};
-				io.of( namespace ).emit( 'chat:emote', message );
-			});
-			socket.on( 'playlist:add', function( item, callback ){
-				callback = callback || NO_OP;
-				item.user = user;
-				room.addItem( item );
-				callback( null );
-			});
-			socket.on( 'playlist:remove', function( id ){
-				room.removeItem( id );
-			});
-			socket.on( 'player:skip', function(){
-				room.nextItem( user );
-			});
-			socket.on( 'player:like', function(){
-				room.likeItem( user );
-			});
-			socket.on( 'player:order', function( order ){
-				room.setOrder( order );
-			});
-
+			io.of( namespace ).emit( 'chat:emote', message );
+		});
+		socket.on( 'playlist:add', function( item, callback ){
+			callback = callback || NO_OP;
+			item.user = user;
+			room.addItem( item );
+			callback( null );
+		});
+		socket.on( 'playlist:remove', function( id ){
+			room.removeItem( id );
+		});
+		socket.on( 'player:skip', function(){
+			room.nextItem( user );
+		});
+		socket.on( 'player:like', function(){
+			room.likeItem( user );
+		});
+		socket.on( 'player:order', function( order ){
+			room.setOrder( order );
 		});
 	});
 
