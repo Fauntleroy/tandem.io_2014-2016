@@ -23,16 +23,11 @@ window.tandem = window.tandem || {};
 var mediator = tandem.mediator = _.extend( {}, Backbone.Events );
 
 // initialize room socket
-var socket = io.connect( '/rooms/'+ tandem.bridge.room.id );
-
-// authenticate user with streaming endpoint
-socket.on( 'connect', function(){
-	socket.emit( 'auth', {
-		id: tandem.bridge.user.id,
-		name: tandem.bridge.user.name,
-		avatar: tandem.bridge.user.avatar,
-		token: tandem.bridge.user.token
-	});
+var socket = io.connect( '/rooms/'+ tandem.bridge.room.id, {
+	query: 'token='+ tandem.bridge.user.token
+		+'&id='+ encodeURIComponent( tandem.bridge.user.id )
+		+'&name='+ encodeURIComponent( tandem.bridge.user.name )
+		+'&avatar='+ encodeURIComponent( tandem.bridge.user.avatar )
 });
 
 tandem.messages = new Messages( null, {

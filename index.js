@@ -59,6 +59,18 @@ server.use( express.session({
 	})
 }) );
 
+// Socket.io configuration
+io.use( function( socket, next ){
+	var auth_data = _.pick( socket.request._query, 'id', 'name', 'avatar', 'token' );
+	var is_authentic = ( generateAuthToken( auth_data.id, auth_data.name, auth_data.avatar ) === auth_data.token );
+	if( !is_authentic ){
+		next( new Error('Invalid user token') );
+		return;
+	}
+	socket.auth_data = auth_data;
+	next();
+});
+
 // Pass environment to views
 server.locals.dev = ( ENV === 'development' );
 
