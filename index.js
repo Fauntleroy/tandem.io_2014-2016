@@ -10,6 +10,8 @@ const URL = process.env.TANDEM_URL || 'http://dev.tandem.io:8080';
 const ENV = process.env.NODE_ENV || 'development';
 const SOUNDCLOUD_API_BASE_URL = 'https://api.soundcloud.com';
 const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
+const SENTRY_DSN = process.env.TANDEM_SENTRY_DSN;
+const VIEWS_PATH = __dirname +'/views';
 const NO_OP = function(){};
 
 var http = require('http');
@@ -33,17 +35,16 @@ var User = require('./db/models/user.js');
 mongoose.connect( MONGO_URL );
 
 // Set up templates for Express
-var express_handlebars = require('express3-handlebars');
-var handlebars = express_handlebars({
+var express_handlebars = require('express-hbs');
+var handlebars = express_handlebars.express3({
 	extname: '.hbs',
-	defaultLayout: false,
+	defaultLayout: VIEWS_PATH +'/layouts/main.hbs',
+	partialsDir: VIEWS_PATH +'/partials',
+	layoutsDir: VIEWS_PATH +'/layouts'
 });
 server.engine( 'hbs', handlebars );
 server.set( 'view engine', 'hbs' );
-
-// Static file serving
-server.use( express.compress() );
-server.use( express.static( __dirname + '/assets' ) );
+server.set( 'views', VIEWS_PATH );
 
 // Sessions
 var MongoStore = require('connect-mongo')( express );
@@ -58,6 +59,21 @@ server.use( express.session({
 		url: MONGO_URL
 	})
 }) );
+
+// Routes
+server.use( server.router );
+
+// Compress responses
+server.use( express.compress() );
+
+// Static file serving
+server.use( express.static( __dirname + '/assets' ) );
+
+// Exception tracking
+if( SENTRY_DSN ){
+	var raven = require('raven');
+	server.use( raven.middleware.express( SENTRY_DSN ) );
+}
 
 // Socket.io configuration
 io.use( function( socket, next ){

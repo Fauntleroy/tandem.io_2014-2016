@@ -1,40 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>{{room.id}}</title>
-	<link rel="stylesheet" href="/compiled/index.css" />
-	{{#dev}}<script src="http://localhost:35729/livereload.js"></script>{{/dev}}
-	<script>{{{javascript}}}</script>
-	<script src="/compiled/room.js"></script>
-</head>
-<body id="page-room">
-	{{#user}}
-	<div id="auth">
-		{{#if soundcloud}}
-		SoundCloud Account Linked
-		<a href="/auth/soundcloud/unlink">Unlink <i class="fa fa-unlink"></i></a>
-		{{else}}
-		<a href="/auth/soundcloud">Link SoundCloud Account <i class="fa fa-link"></i></a>
-		{{/if}}
-		{{#if youtube}}
-		YouTube Account Linked
-		<a href="/auth/youtube/unlink">Unlink <i class="fa fa-unlink"></i></a>
-		{{else}}
-		<a href="/auth/youtube">Link YouTube Account <i class="fa fa-link"></i></a>
-		{{/if}}
+{{#contentFor 'head'}}
+<title>{{room.id}}</title>
+<link rel="stylesheet" href="/compiled/index.css" />
+{{#dev}}<script src="http://localhost:35729/livereload.js"></script>{{/dev}}
+<script>{{{javascript}}}</script>
+<script src="/compiled/room.js"></script>
+{{/contentFor}}
+
+{{#contentFor 'page'}}room{{/contentFor}}
+{{#user}}
+<div id="auth">
+	{{#if soundcloud}}
+	SoundCloud Account Linked
+	<a href="/auth/soundcloud/unlink">Unlink <i class="fa fa-unlink"></i></a>
+	{{else}}
+	<a href="/auth/soundcloud">Link SoundCloud Account <i class="fa fa-link"></i></a>
+	{{/if}}
+	{{#if youtube}}
+	YouTube Account Linked
+	<a href="/auth/youtube/unlink">Unlink <i class="fa fa-unlink"></i></a>
+	{{else}}
+	<a href="/auth/youtube">Link YouTube Account <i class="fa fa-link"></i></a>
+	{{/if}}
+</div>
+{{/user}}
+<div id="search"></div>
+<div id="app">
+	<h1 id="title">{{room.id}}</h1>
+	<div id="users"></div>
+	<div id="social">
+		<div id="chat"></div>
 	</div>
-	{{/user}}
-	<div id="search"></div>
-	<div id="app">
-		<h1 id="title">{{room.id}}</h1>
-		<div id="users"></div>
-		<div id="social">
-			<div id="chat"></div>
-		</div>
-		<div id="media">
-			<div id="player"></div>
-			<div id="playlist"></div>
-		</div>
+	<div id="media">
+		<div id="player"></div>
+		<div id="playlist"></div>
 	</div>
-</body>
-</html>
+</div>
