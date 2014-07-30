@@ -74,7 +74,6 @@ module.exports = Backbone.View.extend({
 				.emojify( EMOJI_CONFIG );
 			$top_message.find('.content').append( $message_line );
 			var timestamp = _timestamp_template( message_data.timestamp );
-			console.log( 'tm', $top_message, $top_message.find('.timestamp'), timestamp );
 			$top_message.find('.timestamp').replaceWith( timestamp );
 		}
 		// prepend a new message block
