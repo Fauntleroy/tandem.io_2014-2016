@@ -60,20 +60,11 @@ server.use( express.session({
 	})
 }) );
 
-// Routes
-server.use( server.router );
-
 // Compress responses
 server.use( express.compress() );
 
 // Static file serving
 server.use( express.static( __dirname + '/assets' ) );
-
-// Exception tracking
-if( SENTRY_DSN ){
-	var raven = require('raven');
-	server.use( raven.middleware.express( SENTRY_DSN ) );
-}
 
 // Socket.io configuration
 io.use( function( socket, next ){
@@ -97,6 +88,15 @@ var guestSetup = require('./middleware/guest.js');
 server.use( passport.initialize() );
 server.use( passport.session() );
 server.use( guestSetup );
+
+// Routes
+server.use( server.router );
+
+// Exception tracking
+if( SENTRY_DSN ){
+	var raven = require('raven');
+	server.use( raven.middleware.express( SENTRY_DSN ) );
+}
 
 passport.serializeUser( function( user, done ){
 	done( null, user );
