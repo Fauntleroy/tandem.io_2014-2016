@@ -1,5 +1,5 @@
 {{#contentFor 'head'}}
-<title>{{room.id}}</title>
+<title>{{room.name}}</title>
 <link rel="stylesheet" href="/compiled/index.css" />
 {{#dev}}<script src="http://localhost:35729/livereload.js"></script>{{/dev}}
 <script>{{{javascript}}}</script>
@@ -25,7 +25,7 @@
 {{/user}}
 <div id="search"></div>
 <div id="app">
-	<h1 id="title">{{room.id}}</h1>
+	<h1 id="title">{{room.name}}</h1>
 	<div id="users"></div>
 	<div id="social">
 		<div id="chat"></div>
