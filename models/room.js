@@ -11,6 +11,7 @@ var rooms = [];
 
 var generateAuthToken = require('../utils/generateAuthToken.js');
 var likeMessage = require('../utils/likeMessage.js');
+var generateRoomName = require('../utils/generateRoomName');
 
 var Room = function( data, options ){
 
@@ -23,7 +24,7 @@ var Room = function( data, options ){
 	// set up default data
 	this.data = {
 		id: this.id,
-		name: 'Default Room Name',
+		name: generateRoomName(),
 		player: {
 			order: 'fifo',
 			likers: []
