@@ -60,9 +60,6 @@ server.use( express.session({
 	})
 }) );
 
-// Routes
-server.use( server.router );
-
 // Compress responses
 server.use( express.compress() );
 
@@ -98,6 +95,9 @@ server.use( passport.initialize() );
 server.use( passport.session() );
 server.use( guestSetup );
 
+// Routing comes last
+server.use( server.router );
+
 passport.serializeUser( function( user, done ){
 	done( null, user );
 });
@@ -116,17 +116,18 @@ passport.use( new SoundcloudStrategy({
 	callbackURL: URL +'/auth/soundcloud/callback',
 	passReqToCallback: true
 }, function( req, access_token, refresh_token, params, profile, done ){
+	var user_session = req.session.passport.user;
 	var auth_data = {
 		provider: 'soundcloud',
 		client_id: profile.id,
 		access_token: access_token
 	};
-	User.findOrCreate( auth_data, req.user, function( err, user ){
+	User.findOrCreate( auth_data, user_session, function( err, user ){
 		if( err ) return done( err, null );
 		var user_json = user.toJSON();
 		// if we already have a user session, merge them
-		if( req.user ){
-			user_json = _.extend( req.user, user_json );
+		if( user_session ){
+			user_json = _.extend( user_session, user_json );
 		}
 		done( null, user_json );
 	});
@@ -163,6 +164,7 @@ passport.use( new GoogleStrategy({
 }, function( req, access_token, refresh_token, params, profile, done ){
 	getLikesID( access_token, function( err, likes_id ){
 		if( err ) return done( err, null );
+		var user_session = req.session.passport.user;
 		var auth_data = {
 			provider: 'youtube',
 			client_id: profile.id,
@@ -171,12 +173,12 @@ passport.use( new GoogleStrategy({
 			refresh_token: refresh_token,
 			likes_id: likes_id
 		};
-		User.findOrCreate( auth_data, req.user, function( err, user ){
+		User.findOrCreate( auth_data, user_session, function( err, user ){
 			if( err ) return done( err, null );
 			var user_json = user.toJSON();
 			// if we already have a user session, merge them
-			if( req.user ){
-				user_json = _.extend( req.user, user_json );
+			if( user_session ){
+				user_json = _.extend( user_session, user_json );
 			}
 			done( null, user_json );
 		});
