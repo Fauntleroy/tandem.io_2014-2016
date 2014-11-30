@@ -229,9 +229,8 @@ server.get( '/auth/soundcloud/unlink', function( req, res ){
 	.where({ id: req.user.id })
 	.exec(function( err, user ){
 		user.removeAuth( 'soundcloud', function(){
-			req.user = _.omit( req.user, function( value, key ){
-				return /^soundcloud_/.test( key );
-			});
+			req.user.soundcloud_client_id = null;
+			req.user.soundcloud_access_token = null;
 			res.redirect('/');
 		});
 	});
@@ -250,9 +249,11 @@ server.get( '/auth/youtube/unlink', function( req, res ){
 	.where({ id: req.user.id })
 	.exec(function( err, user ){
 		user.removeAuth( 'youtube', function(){
-			req.user = _.omit( req.user, function( value, key ){
-				return /^youtube_/.test( key );
-			});
+			req.user.youtube_client_id = null;
+			req.user.youtube_access_token = null;
+			req.user.youtube_refresh_token = null;
+			req.user.youtube_access_token_expiry = null;
+			req.user.youtube_likes_id = null;
 			res.redirect('/');
 		});
 	});

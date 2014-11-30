@@ -43,9 +43,20 @@ var User = Waterline.Collection.extend({
 		// remove an auth strategy from an existing user
 		removeAuth: function( auth_provider, cb ){
 			cb = cb || NO_OP;
-			this = _.omit( this, function( value, key ){
-				return (key.indexOf( auth_provider +'_' ) === 0);
-			});
+			// kind of nasty, but will probably replace with associations later
+			switch( auth_provider ){
+			case 'youtube':
+				this.youtube_client_id = null;
+				this.youtube_access_token = null;
+				this.youtube_refresh_token = null;
+				this.youtube_access_token_expiry = null;
+				this.youtube_likes_id = null;
+			break;
+			case 'soundcloud':
+				this.soundcloud_client_id = null;
+				this.soundcloud_access_token = null;
+			break;
+			}
 			this.save( cb );
 		}
 	},
