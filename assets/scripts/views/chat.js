@@ -67,7 +67,7 @@ module.exports = Backbone.View.extend({
 		var message_data = message.toJSON();
 		// append this message to an existing message block
 		// update timestamp
-		if( top_user_id === user.id && $top_message.is('.chat') && type === 'chat' ){
+		if( top_user_id == user.id && $top_message.is('.chat') && type === 'chat' ){
 			var $message_line = $( message_line_template( message_data ) );
 			$message_line
 				.links()
