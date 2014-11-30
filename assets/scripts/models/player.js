@@ -74,13 +74,12 @@ module.exports = Backbone.Model.extend({
 		switch( item.source ){
 		case 'youtube':
 			// ensure necessary data exists
-			if( !this.user.youtube ) return;
-			if( !this.user.youtube.client_id || !this.user.youtube.likes_id ) return;
+			if( !this.user.youtube_linked || !this.user.youtube_likes_id ) return;
 			$.ajax({
 				url: '/api/v1/proxy/youtube/playlistItems?part=snippet',
 				data: {
 					snippet: {
-						playlistId: this.user.youtube.likes_id,
+						playlistId: this.user.youtube_likes_id,
 						resourceId: {
 							kind: 'youtube#video',
 							videoId: item.original_id
@@ -96,8 +95,7 @@ module.exports = Backbone.Model.extend({
 		break;
 		case 'soundcloud':
 			// ensure necessary data exists
-			if( !this.user.soundcloud ) return;
-			if( !this.user.soundcloud.client_id ) return;
+			if( !this.user.soundcloud_linked ) return;
 			$.ajax({
 				url: '/api/v1/proxy/soundcloud/me/favorites/'+ item.original_id,
 				type: 'PUT',
