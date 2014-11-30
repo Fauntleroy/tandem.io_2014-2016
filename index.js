@@ -5,7 +5,7 @@ const SOUNDCLOUD_APP_SECRET = process.env.TANDEM_SOUNDCLOUD_APP_SECRET;
 const YOUTUBE_APP_ID = process.env.TANDEM_YOUTUBE_APP_ID;
 const YOUTUBE_APP_SECRET = process.env.TANDEM_YOUTUBE_APP_SECRET;
 const YOUTUBE_API_KEY = process.env.TANDEM_YOUTUBE_API_KEY;
-const MYSQL_DEFAULT_URL = process.env.TANDEM_MYSQL_DEFAULT_URL || 'mysql2://tandem:MY-SEQUELpA$$5---E3@127.0.0.1:3306/tandem';
+const MYSQL_DEFAULT_URL = process.env.TANDEM_MYSQL_DEFAULT_URL;
 const MONGO_URL = process.env.TANDEM_MONGO_URL || 'mongodb://localhost/tandem';
 const URL = process.env.TANDEM_URL || 'http://dev.tandem.io:8080';
 const ENV = process.env.NODE_ENV || 'development';
@@ -59,6 +59,10 @@ waterline_orm.initialize({
 		migrate: 'alter'
 	}
 }, function( err, models ){
+	if( err ){
+		// throwing this error just gets you misery
+		console.log( err );
+	}
 	server.models = models.collections;
 	server.connections = models.connections;
 });
