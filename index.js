@@ -5,6 +5,7 @@ const SOUNDCLOUD_APP_SECRET = process.env.TANDEM_SOUNDCLOUD_APP_SECRET;
 const YOUTUBE_APP_ID = process.env.TANDEM_YOUTUBE_APP_ID;
 const YOUTUBE_APP_SECRET = process.env.TANDEM_YOUTUBE_APP_SECRET;
 const YOUTUBE_API_KEY = process.env.TANDEM_YOUTUBE_API_KEY;
+const MYSQL_DEFAULT_URL = process.env.TANDEM_MYSQL_DEFAULT_URL || 'mysql2://tandem:MY-SEQUELpA$$5---E3@127.0.0.1:3306/tandem';
 const MONGO_URL = process.env.TANDEM_MONGO_URL || 'mongodb://localhost/tandem';
 const URL = process.env.TANDEM_URL || 'http://dev.tandem.io:8080';
 const ENV = process.env.NODE_ENV || 'development';
@@ -18,6 +19,7 @@ var http = require('http');
 var socket_io = require('socket.io');
 var async = require('async');
 var _ = require('underscore');
+var url = require('url');
 var request = require('request');
 var express = require('express');
 var expose = require('express-expose');
@@ -29,10 +31,37 @@ var generateAuthToken = require('./utils/generateAuthToken.js');
 
 var Room = require('./models/room.js')({ io: io });
 
+// parse my own connection details because waterline is broken
+var parsed_mysql_connection_url = url.parse( MYSQL_DEFAULT_URL );
+
 // Database
-var mongoose = require('mongoose');
+var Waterline = require('waterline');
+var waterline_mysql_adapter = require('sails-mysql');
 var User = require('./db/models/user.js');
-mongoose.connect( MONGO_URL );
+var waterline_orm = new Waterline();
+waterline_orm.loadCollection( User );
+waterline_orm.initialize({
+	adapters: {
+		default: waterline_mysql_adapter,
+		mysql: waterline_mysql_adapter
+	},
+	connections: {
+		mysql: {
+			adapter: 'mysql',
+			host: parsed_mysql_connection_url.hostname,
+			port: parsed_mysql_connection_url.port,
+			user: parsed_mysql_connection_url.auth.split(':')[0],
+			password: parsed_mysql_connection_url.auth.split(':')[1],
+			database: parsed_mysql_connection_url.path.substring(1)
+		}
+	},
+	defaults: {
+		migrate: 'alter'
+	}
+}, function( err, models ){
+	server.models = models.collections;
+	server.connections = models.connections;
+});
 
 // Set up templates for Express
 var express_handlebars = require('express-hbs');
@@ -118,11 +147,10 @@ passport.use( new SoundcloudStrategy({
 }, function( req, access_token, refresh_token, params, profile, done ){
 	var user_session = req.session.passport.user;
 	var auth_data = {
-		provider: 'soundcloud',
-		client_id: profile.id,
-		access_token: access_token
+		soundcloud_client_id: profile.id,
+		soundcloud_access_token: access_token
 	};
-	User.findOrCreate( auth_data, user_session, function( err, user ){
+	server.models.user.updateOrCreate( auth_data, user_session, function( err, user ){
 		if( err ) return done( err, null );
 		var user_json = user.toJSON();
 		// if we already have a user session, merge them
@@ -164,16 +192,15 @@ passport.use( new GoogleStrategy({
 }, function( req, access_token, refresh_token, params, profile, done ){
 	getLikesID( access_token, function( err, likes_id ){
 		if( err ) return done( err, null );
-		var user_session = req.session.passport.user;
+		var user_session = _.extend( {}, req.session.passport.user );
 		var auth_data = {
-			provider: 'youtube',
-			client_id: profile.id,
-			access_token: access_token,
-			access_token_expiry: Date.now() + ( params.expires_in * 1000 ),
-			refresh_token: refresh_token,
-			likes_id: likes_id
+			youtube_client_id: profile.id,
+			youtube_access_token: access_token,
+			youtube_access_token_expiry: Date.now() + ( params.expires_in * 1000 ),
+			youtube_refresh_token: refresh_token,
+			youtube_likes_id: likes_id
 		};
-		User.findOrCreate( auth_data, user_session, function( err, user ){
+		server.models.user.updateOrCreate( auth_data, user_session, function( err, user ){
 			if( err ) return done( err, null );
 			var user_json = user.toJSON();
 			// if we already have a user session, merge them
@@ -197,9 +224,14 @@ server.get( '/auth/soundcloud/callback', passport.authenticate( 'soundcloud', {
 
 server.get( '/auth/soundcloud/unlink', function( req, res ){
 	if( !req.user.soundcloud ) res.redirect('/');
-	User.unlinkProvider( req.user.id, 'soundcloud', function( err ){
-		req.user.soundcloud = null;
-		res.redirect('/');
+	server.models.user
+	.findOne()
+	.where({ id: req.user.id })
+	.exec(function( err, user ){
+		user.removeAuth( 'soundcloud', function(){
+			req.user.soundcloud = null;
+			res.redirect('/');
+		});
 	});
 });
 
@@ -211,9 +243,14 @@ server.get( '/auth/youtube', passport.authenticate( 'google', {
 
 server.get( '/auth/youtube/unlink', function( req, res ){
 	if( !req.user.youtube ) res.redirect('/');
-	User.unlinkProvider( req.user.id, 'youtube', function( err ){
-		req.user.youtube = null;
-		res.redirect('/');
+	server.models.user
+	.findOne()
+	.where({ id: req.user.id })
+	.exec(function( err, user ){
+		user.removeAuth( 'youtube', function(){
+			req.user.youtube = null;
+			res.redirect('/');
+		});
 	});
 });
 

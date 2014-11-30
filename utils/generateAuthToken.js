@@ -10,7 +10,7 @@ module.exports = function( id, name, avatar ){
 	if( !avatar ) return new Error('avatar must be defined');
 	var hmac = crypto.createHmac( 'sha256', TOKEN_SECRET );
 	hmac.setEncoding('hex');
-	hmac.write( id );
+	hmac.write( id.toString() ); // "registered" users have numerical ids
 	hmac.write( name );
 	hmac.write( avatar );
 	hmac.end();
