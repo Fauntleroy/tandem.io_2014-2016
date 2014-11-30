@@ -38,7 +38,7 @@ var User = Waterline.Collection.extend({
 		soundcloud_access_token: {
 			type: 'string'
 		},
-		
+
 		//// instance methods
 		// remove an auth strategy from an existing user
 		removeAuth: function( auth_provider, cb ){
@@ -65,10 +65,6 @@ var User = Waterline.Collection.extend({
 		var where_params = _.pick( auth_data, function( value, key ){
 			return /_client_id$/.test( key );
 		});
-		var test = {
-			hey: true,
-			nothey: false
-		};
 		this
 		.findOne()
 		.where( where_params )
