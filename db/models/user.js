@@ -25,7 +25,7 @@ var User = Waterline.Collection.extend({
 		youtube_refresh_token: {
 			type: 'string'
 		},
-		youtube_refresh_token_expiry: {
+		youtube_access_token_expiry: {
 			type: 'integer'
 		},
 		youtube_likes_id: {
@@ -38,6 +38,8 @@ var User = Waterline.Collection.extend({
 		soundcloud_access_token: {
 			type: 'string'
 		},
+		
+		//// instance methods
 		// remove an auth strategy from an existing user
 		removeAuth: function( auth_provider, cb ){
 			cb = cb || NO_OP;
@@ -47,6 +49,14 @@ var User = Waterline.Collection.extend({
 			this.save( cb );
 		}
 	},
+
+	//// lifecycle events
+	beforeCreate: function( values, next ){
+		delete values.id; // delete the guest id before creating
+		next();
+	},
+
+	//// class methods
 	// find and update an existing user
 	// or create a new user
 	updateOrCreate: function( auth_data, user_data, cb ){
@@ -77,15 +87,16 @@ var User = Waterline.Collection.extend({
 					if( err ){
 						return cb( err );
 					}
+					if( !user ){
+						return User.create( _.extend( user_data, auth_data ), cb );
+					}
 					user = _.extend( user, auth_data );
 					user.save( cb );
 				});
 			}
 			// otherwise, we're making a new user
 			else {
-				var combined_user_data = _.extend( user_data, auth_data );
-				delete combined_user_data.id;
-				User.create( combined_user_data, cb );
+				User.create( _.extend( user_data, auth_data ), cb );
 			}
 		});
 	}
