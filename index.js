@@ -223,13 +223,15 @@ server.get( '/auth/soundcloud/callback', passport.authenticate( 'soundcloud', {
 }));
 
 server.get( '/auth/soundcloud/unlink', function( req, res ){
-	if( !req.user.soundcloud ) res.redirect('/');
+	if( !req.user.soundcloud_client_id ) res.redirect('/');
 	server.models.user
 	.findOne()
 	.where({ id: req.user.id })
 	.exec(function( err, user ){
 		user.removeAuth( 'soundcloud', function(){
-			req.user.soundcloud = null;
+			req.user = _.omit( req.user, function( value, key ){
+				return /^soundcloud_/.test( key );
+			});
 			res.redirect('/');
 		});
 	});
@@ -242,13 +244,15 @@ server.get( '/auth/youtube', passport.authenticate( 'google', {
 }));
 
 server.get( '/auth/youtube/unlink', function( req, res ){
-	if( !req.user.youtube ) res.redirect('/');
+	if( !req.user.youtube_client_id ) res.redirect('/');
 	server.models.user
 	.findOne()
 	.where({ id: req.user.id })
 	.exec(function( err, user ){
 		user.removeAuth( 'youtube', function(){
-			req.user.youtube = null;
+			req.user = _.omit( req.user, function( value, key ){
+				return /^youtube_/.test( key );
+			});
 			res.redirect('/');
 		});
 	});
@@ -293,10 +297,10 @@ server.delete( '/api/v1/rooms/:id', function( req, res ){
 });
 
 server.all( /^\/api\/v1\/proxy\/soundcloud\/(.+)$/, function( req, res ){
-	if( !req.user.soundcloud ) return res.json( 500, { error: 'Error: User has no SoundCloud credentials' });
-	if( !req.user.soundcloud.access_token ) return res.json( 500, { error: 'Error: Missing access token' });
+	if( !req.user.soundcloud_client_id ) return res.json( 500, { error: 'Error: User has no SoundCloud credentials' });
+	if( !req.user.soundcloud_access_token ) return res.json( 500, { error: 'Error: Missing access token' });
 	var query = _.extend( req.query, {
-		oauth_token: req.user.soundcloud.access_token
+		oauth_token: req.user.soundcloud_access_token
 	});
 	var endpoint = req.params[0];
 	request({
@@ -326,19 +330,19 @@ var refreshYouTubeToken = function( refresh_token, cb ){
 };
 
 server.all( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
-	if( !req.user.youtube ) return res.json( 500, { error: 'Error: User has no YouTube credentials' });
-	if( !req.user.youtube.access_token ) return res.json( 500, { error: 'Error: Missing access token' });
+	if( !req.user.youtube_client_id ) return res.json( 500, { error: 'Error: User has no YouTube credentials' });
+	if( !req.user.youtube_access_token ) return res.json( 500, { error: 'Error: Missing access token' });
 	async.waterfall([ function checkToken( next ){
-		if( Date.now() > req.user.youtube.access_token_expiry ){
-			refreshYouTubeToken( req.user.youtube.refresh_token, function( err, access_token, expires_in ){
+		if( Date.now() > req.user.youtube_access_token_expiry ){
+			refreshYouTubeToken( req.user.youtube_refresh_token, function( err, access_token, expires_in ){
 				if( err ) return next( err, null );
-				req.user.youtube.access_token = access_token;
-				req.user.youtube.access_token_expiry = Date.now() + ( expires_in * 1000 );
+				req.user.youtube_access_token = access_token;
+				req.user.youtube_access_token_expiry = Date.now() + ( expires_in * 1000 );
 				next( null, access_token );
 			});
 		}
 		else {
-			next( null, req.user.youtube.access_token );
+			next( null, req.user.youtube_access_token );
 		}
 	}, function makeRequest( access_token, next ){
 		var query = _.extend( req.query, {
@@ -373,11 +377,14 @@ server.post( '/rooms', function( req, res ){
 
 server.get( '/rooms/:id', function( req, res ){
 	var user = req.session.passport.user || {};
-	user = _.pick( user, 'id', 'name', 'avatar', 'youtube', 'soundcloud' );
-	user.token = generateAuthToken( user.id, user.name, user.avatar );
+	var user_data = _.pick( user, 'id', 'name', 'avatar', 'youtube_likes_id' );
+	user_data.id = user_data.id.toString();
+	user_data.youtube_linked = !!user.youtube_client_id;
+	user_data.soundcloud_linked = !!user.soundcloud_client_id;
+	user_data.token = generateAuthToken( user_data.id, user_data.name, user_data.avatar );
 	var room = Room.findById( req.params.id, true );
 	res.expose( room, 'tandem.bridge.room' );
-	res.expose( user, 'tandem.bridge.user' );
+	res.expose( user_data, 'tandem.bridge.user' );
 	res.expose( {
 		soundcloud: {
 			client_id: SOUNDCLOUD_APP_ID
@@ -385,7 +392,7 @@ server.get( '/rooms/:id', function( req, res ){
 	}, 'tandem.bridge.apis' );
 	res.render( 'room.hbs', {
 		room: room,
-		user: user
+		user: user_data
 	});
 });
 
