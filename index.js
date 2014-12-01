@@ -7,7 +7,6 @@ const YOUTUBE_APP_SECRET = process.env.TANDEM_YOUTUBE_APP_SECRET;
 const YOUTUBE_API_KEY = process.env.TANDEM_YOUTUBE_API_KEY;
 const MYSQL_DEFAULT_URL = process.env.TANDEM_MYSQL_DEFAULT_URL;
 const REDIS_URL = process.env.TANDEM_REDIS_URL || 'redis://localhost/tandem';
-const MONGO_URL = process.env.TANDEM_MONGO_URL || 'mongodb://localhost/tandem';
 const URL = process.env.TANDEM_URL || 'http://dev.tandem.io:8080';
 const ENV = process.env.NODE_ENV || 'development';
 const SOUNDCLOUD_API_BASE_URL = 'https://api.soundcloud.com';
