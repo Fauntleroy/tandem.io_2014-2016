@@ -57,5 +57,8 @@
   },
   "browserify-shim": {
     "jwplayer": "jwplayer"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
 }
