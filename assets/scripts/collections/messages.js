@@ -31,7 +31,7 @@ module.exports = Backbone.Collection.extend({
 	onMessage: function( message ){
 		message.type = 'chat';
 		// check if this user is sending the message
-		message.self = ( message.user.id === this.user.id );
+		message.self = ( message.user.id == this.user.id );
 		this.add( message );
 	},
 	onEmote: function( message ){
