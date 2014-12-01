@@ -31,9 +31,7 @@
     "sails-mysql": "^0.10.7",
     "socket.io": "~1.0.x",
     "underscore": "^1.7.0",
-    "waterline": "^0.10.14"
-  },
-  "devDependencies": {
+    "waterline": "^0.10.14",
     "backbone": "~1.1.0",
     "browserify": "^6.3.3",
     "browserify-shim": "^3.8.0",
