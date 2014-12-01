@@ -10,13 +10,23 @@ var gulp_livereload = require('gulp-livereload');
 var gulp_uglify = require('gulp-uglify');
 var gulp_minify_css = require('gulp-minify-css');
 
-gulp.task( 'compile css', function(){
-	var css_stream = gulp.src('./assets/styles/index.less')
+var generateCssStream = function(){
+	var stream = gulp.src('./assets/styles/index.less')
 		.pipe( gulp_less({
 			paths: [ path.join( __dirname, 'assets', 'styles' ) ]
 		}))
-		.pipe( gulp.dest('./assets/compiled') )
-		css_stream.pipe( gulp_livereload() );
+		.pipe( gulp.dest('./assets/compiled') );
+	return stream;
+}
+
+gulp.task( 'compile css', function(){
+	generateCssStream();
+});
+
+gulp.task( 'compile and watch css', function(){
+	var stream = generateCssStream();
+	stream.pipe( gulp_livereload() );
+	gulp.watch( './assets/styles/**/*.{less,css}', ['compile css'] );
 });
 
 var generateBrowserifyBundler = function(){
@@ -64,8 +74,5 @@ gulp.task( 'minify', function(){
 		.pipe( gulp.dest('./assets/compiled') );
 });
 
-gulp.task( 'watch css', function(){
-	gulp.watch( './assets/styles/**/*.{less,css}', ['compile css'] );
-});
-
-gulp.task( 'default', ['compile css', 'compile js', 'watch css'] );
+gulp.task( 'compile', ['compile css', 'compile js'] );
+gulp.task( 'default', ['compile and watch css', 'compile and watch js'] );

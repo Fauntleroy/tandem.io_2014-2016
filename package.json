@@ -60,6 +60,7 @@
     "jwplayer": "jwplayer"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "postinstall": "gulp compile"
   }
 }
