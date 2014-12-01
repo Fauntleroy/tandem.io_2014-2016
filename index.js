@@ -5,7 +5,7 @@ const SOUNDCLOUD_APP_SECRET = process.env.TANDEM_SOUNDCLOUD_APP_SECRET;
 const YOUTUBE_APP_ID = process.env.TANDEM_YOUTUBE_APP_ID;
 const YOUTUBE_APP_SECRET = process.env.TANDEM_YOUTUBE_APP_SECRET;
 const YOUTUBE_API_KEY = process.env.TANDEM_YOUTUBE_API_KEY;
-const MYSQL_DEFAULT_URL = process.env.TANDEM_MYSQL_DEFAULT_URL || process.env.CLEARDB_DATABASE_URL;
+const MYSQL_URL = process.env.TANDEM_MYSQL_URL || process.env.CLEARDB_DATABASE_URL;
 const REDIS_URL = process.env.TANDEM_REDIS_URL || process.env.REDISTOGO_URL || 'redis://localhost';
 const URL = process.env.TANDEM_URL || 'http://dev.tandem.io:8080';
 const ENV = process.env.NODE_ENV || 'development';
@@ -32,7 +32,7 @@ var generateAuthToken = require('./utils/generateAuthToken.js');
 var Room = require('./models/room.js')({ io: io });
 
 // parse my own connection details because waterline is broken
-var parsed_mysql_connection_url = url.parse( MYSQL_DEFAULT_URL );
+var parsed_mysql_connection_url = url.parse( MYSQL_URL );
 
 // Database
 var Waterline = require('waterline');
