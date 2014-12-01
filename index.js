@@ -22,8 +22,9 @@ var _ = require('underscore');
 var url = require('url');
 var request = require('request');
 var express = require('express');
-var expose = require('express-expose');
 var server = express();
+var expose = require('express-expose')
+expose(server);
 var http_server = http.createServer( server );
 var io = socket_io.listen( http_server );
 
