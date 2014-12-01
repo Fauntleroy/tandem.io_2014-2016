@@ -6,6 +6,7 @@ const YOUTUBE_APP_ID = process.env.TANDEM_YOUTUBE_APP_ID;
 const YOUTUBE_APP_SECRET = process.env.TANDEM_YOUTUBE_APP_SECRET;
 const YOUTUBE_API_KEY = process.env.TANDEM_YOUTUBE_API_KEY;
 const MYSQL_DEFAULT_URL = process.env.TANDEM_MYSQL_DEFAULT_URL;
+const REDIS_URL = process.env.TANDEM_REDIS_URL || 'redis://localhost/tandem';
 const MONGO_URL = process.env.TANDEM_MONGO_URL || 'mongodb://localhost/tandem';
 const URL = process.env.TANDEM_URL || 'http://dev.tandem.io:8080';
 const ENV = process.env.NODE_ENV || 'development';
@@ -80,17 +81,23 @@ server.set( 'view engine', 'hbs' );
 server.set( 'views', VIEWS_PATH );
 
 // Sessions
-var MongoStore = require('connect-mongo')( express );
+var express_session = require('express-session');
+var RedisStore = require('connect-redis')( express_session );
+var parsed_redis_connection_url = url.parse( REDIS_URL );
 server.use( express.cookieParser() );
 server.use( express.bodyParser() );
-server.use( express.session({
+server.use( express_session({
 	secret: SESSION_SECRET,
 	cookie: {
 		maxAge: 1000 * 60 * 60 * 24 * 14 // 2 weeks from now
 	},
-	store: new MongoStore({
-		url: MONGO_URL
-	})
+	store: new RedisStore({
+		host: parsed_redis_connection_url.hostname,
+		port: parsed_redis_connection_url.port,
+		pass: (parsed_redis_connection_url.auth || '').split(':')[1]
+	}),
+	resave: false,
+	saveUninitialized: false
 }) );
 
 // Compress responses
