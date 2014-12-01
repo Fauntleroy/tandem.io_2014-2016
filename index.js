@@ -52,7 +52,7 @@ waterline_orm.initialize({
 			port: parsed_mysql_connection_url.port,
 			user: parsed_mysql_connection_url.auth.split(':')[0],
 			password: parsed_mysql_connection_url.auth.split(':')[1],
-			database: parsed_mysql_connection_url.path.substring(1)
+			database: parsed_mysql_connection_url.pathname.substring(1)
 		}
 	},
 	defaults: {
