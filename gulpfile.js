@@ -17,7 +17,7 @@ var generateCssStream = function(){
 		}))
 		.pipe( gulp.dest('./assets/compiled') );
 	return stream;
-}
+};
 
 gulp.task( 'compile css', function(){
 	generateCssStream();
@@ -30,10 +30,9 @@ gulp.task( 'compile and watch css', function(){
 });
 
 var generateBrowserifyBundler = function(){
-	var args = _.extend( {
-		transform: ['hbsfy', 'browserify-shim']
-	}, watchify.args );
-	var bundler = browserify( './assets/scripts/room.js', args );
+	var bundler = browserify( './assets/scripts/room.js', watchify.args );
+	bundler.transform('hbsfy');
+	bundler.transform('browserify-shim');
 	return bundler;
 };
 
