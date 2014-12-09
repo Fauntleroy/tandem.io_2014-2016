@@ -1,3 +1,7 @@
+if( process.env.NEW_RELIC_LICENSE_KEY ){
+	require('newrelic');
+}
+
 const PORT = process.env.PORT || 8080;
 const SESSION_SECRET = process.env.TANDEM_SESSION_SECRET;
 const SOUNDCLOUD_APP_ID = process.env.TANDEM_SOUNDCLOUD_APP_ID;
