@@ -19,8 +19,10 @@ var parsed_mysql_connection_url = url.parse( MYSQL_URL );
 var Waterline = require('waterline');
 var waterline_mysql_adapter = require('sails-mysql');
 var User = require('./db/models/user.js');
+var Room = require('./db/models/room.js');
 var waterline_orm = new Waterline();
 waterline_orm.loadCollection( User );
+waterline_orm.loadCollection( Room );
 waterline_orm.initialize({
 	adapters: {
 		default: waterline_mysql_adapter,

@@ -1,7 +1,7 @@
 const NO_OP = function(){};
 const ENV = process.env.NODE_ENV || 'development';
 const SENTRY_DSN = process.env.TANDEM_SENTRY_DSN;
-const VIEWS_PATH = __dirname +'/views';
+const VIEWS_PATH = __dirname +'/../views';
 const REDIS_URL = process.env.TANDEM_REDIS_URL || process.env.REDISTOGO_URL || 'redis://localhost';
 const SESSION_SECRET = process.env.TANDEM_SESSION_SECRET;
 const SOUNDCLOUD_APP_ID = process.env.TANDEM_SOUNDCLOUD_APP_ID;
@@ -364,14 +364,13 @@ server.get( '/rooms/:id', function( req, res ){
 	});
 });
 
-var renderIndex = function( req, res ){
-	var rooms = Room.list( true );
-	res.render( 'index.hbs', {
-		rooms: rooms
+server.get( '/', function( req, res ){
+	var rooms = server.models.room.list( function( err, rooms ){
+		if( err ) throw err;
+		res.render( 'index.hbs', {
+			rooms: rooms
+		});
 	});
-};
-
-server.get( '/', renderIndex );
-server.get( '/rooms/:id', renderIndex );
+});
 
 module.exports = server;
