@@ -1,3 +1,4 @@
+var React = require('react');
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = require('jquery');
@@ -9,7 +10,6 @@ var Users = require('./collections/users.js');
 var PlaylistItems = require('./collections/playlist_items.js');
 var Player = require('./models/player.js');
 var Title = require('./models/title.js');
-var SearchResults = require('./collections/search_results.js');
 
 // Views
 var ChatView = require('./views/chat.js');
@@ -17,7 +17,9 @@ var UsersView = require('./views/users.js');
 var PlaylistView = require('./views/playlist.js');
 var PlayerView = require('./views/player.js');
 var TitleView = require('./views/title.js');
-var SearchView = require('./views/search.js');
+
+// Reach Components
+var Search = require('./components/Search.jsx');
 
 window.tandem = window.tandem || {};
 var mediator = tandem.mediator = _.extend( {}, Backbone.Events );
@@ -53,9 +55,6 @@ tandem.title = new Title( null, {
 	mediator: mediator,
 	socket: socket
 });
-tandem.search_results = new SearchResults( null, {
-	mediator: mediator
-});
 
 // Wait for DOM so views will work
 $( function(){
@@ -78,10 +77,7 @@ $( function(){
 		}),
 		title: new TitleView({
 			model: tandem.title
-		}),
-		search: new SearchView({
-			el: '#search',
-			collection: tandem.search_results
 		})
 	};
+	tandem.searchComponent = React.render( <Search mediator={mediator} />, document.getElementById('search') );
 });

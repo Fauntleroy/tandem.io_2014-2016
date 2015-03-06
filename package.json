@@ -61,5 +61,14 @@
   "scripts": {
     "start": "node index.js",
     "postinstall": "gulp compile"
+  },
+  "devDependencies": {
+    "classnames": "^1.1.4",
+    "flux": "^2.0.1",
+    "jsonp": "^0.1.0",
+    "keymirror": "^0.1.1",
+    "lodash": "^3.3.1",
+    "react": "^0.12.2",
+    "reactify": "^1.0.0"
   }
 }
