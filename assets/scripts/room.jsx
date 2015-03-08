@@ -6,18 +6,17 @@ var io = require('socket.io-client');
 
 // Models & Collections
 var Messages = require('./collections/messages.js');
-var Users = require('./collections/users.js');
 var PlaylistItems = require('./collections/playlist_items.js');
 var Title = require('./models/title.js');
 
 // Views
 var ChatView = require('./views/chat.js');
-var UsersView = require('./views/users.js');
 var PlaylistView = require('./views/playlist.js');
 var TitleView = require('./views/title.js');
 
 // Reach Components
 var Search = require('./components/Search.jsx');
+var Users = require('./components/Users.jsx');
 var Player = require('./components/Player.jsx');
 
 window.tandem = window.tandem || {};
@@ -32,11 +31,6 @@ var socket = io.connect( '/rooms/'+ tandem.bridge.room.id, {
 });
 
 tandem.messages = new Messages( null, {
-	mediator: mediator,
-	socket: socket,
-	user: tandem.bridge.user
-});
-tandem.users = new Users( null, {
 	mediator: mediator,
 	socket: socket,
 	user: tandem.bridge.user
@@ -57,10 +51,6 @@ $( function(){
 			el: '#chat',
 			collection: tandem.messages
 		}),
-		users: new UsersView({
-			el: '#users',
-			collection: tandem.users
-		}),
 		playlist: new PlaylistView({
 			el: '#playlist',
 			collection: tandem.playlist_items
@@ -70,5 +60,6 @@ $( function(){
 		})
 	};
 	tandem.searchComponent = React.render( <Search mediator={mediator} />, document.getElementById('search') );
+	tandem.usersComponent = React.render( <Users />, document.getElementById('users') );
 	tandem.playerComponent = React.render( <Player />, document.getElementById('player') );
 });

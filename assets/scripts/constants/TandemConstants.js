@@ -2,8 +2,6 @@ var keyMirror = require('keymirror');
 
 var constants = {
 	ActionTypes: keyMirror({
-		ADD_USER: null,
-		REMOVE_USER: null,
 		ADD_MESSAGE: null,
 		RECEIVE_MESSAGE: null,
 		ADD_PLAYLIST_ITEM: null,
@@ -14,6 +12,10 @@ var constants = {
 		START_SEARCH: null,
 		SWITCH_SEARCH_SOURCE: null,
 		RECEIVE_RESULTS: null,
+		// Users Actions
+		USERS_RECEIVE_STATE: null,
+		USERS_RECEIVE_JOIN: null,
+		USERS_RECEIVE_LEAVE: null,
 		// Player Actions
 		PLAYER_SET_ELAPSED_TIME: null,
 		PLAYER_SKIP_ITEM: null,
