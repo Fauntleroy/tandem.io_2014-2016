@@ -8,18 +8,17 @@ var io = require('socket.io-client');
 var Messages = require('./collections/messages.js');
 var Users = require('./collections/users.js');
 var PlaylistItems = require('./collections/playlist_items.js');
-var Player = require('./models/player.js');
 var Title = require('./models/title.js');
 
 // Views
 var ChatView = require('./views/chat.js');
 var UsersView = require('./views/users.js');
 var PlaylistView = require('./views/playlist.js');
-var PlayerView = require('./views/player.js');
 var TitleView = require('./views/title.js');
 
 // Reach Components
 var Search = require('./components/Search.jsx');
+var Player = require('./components/Player.jsx');
 
 window.tandem = window.tandem || {};
 var mediator = tandem.mediator = _.extend( {}, Backbone.Events );
@@ -46,11 +45,6 @@ tandem.playlist_items = new PlaylistItems( null, {
 	mediator: mediator,
 	socket: socket
 });
-tandem.player = new Player( null, {
-	mediator: mediator,
-	socket: socket,
-	user: tandem.bridge.user
-});
 tandem.title = new Title( null, {
 	mediator: mediator,
 	socket: socket
@@ -71,13 +65,10 @@ $( function(){
 			el: '#playlist',
 			collection: tandem.playlist_items
 		}),
-		player: new PlayerView({
-			el: '#player',
-			model: tandem.player
-		}),
 		title: new TitleView({
 			model: tandem.title
 		})
 	};
 	tandem.searchComponent = React.render( <Search mediator={mediator} />, document.getElementById('search') );
+	tandem.playerComponent = React.render( <Player />, document.getElementById('player') );
 });

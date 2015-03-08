@@ -14,7 +14,7 @@
 	}
 }
 
-#player {
+.player {
 	.shadow-level-1;
 	position: relative;
 	overflow: hidden;
@@ -123,6 +123,7 @@
 				z-index: 3;
 				height: 100%;
 				background-color: rgba( 255, 255, 255, 0.1 );
+				.transition( width 1000ms linear );
 			}
 
 			> span.duration {
@@ -163,12 +164,14 @@
 		}
 
 		li.like {
-			> a {
-				.transition( color 250ms );
-
-				&.liked {
+			&.liked {
+				> a {
 					color: @heartred;
 				}
+			}
+
+			> a {
+				.transition( color 250ms );
 			}
 		}
 
