@@ -1,16 +1,5 @@
-var querystring = require('querystring');
-var io = require('socket.io-client');
-
-var PlayerServerActionCreator = require('../actions/PlayerServerActionCreator');
-
-var socket = io.connect( '/rooms/'+ tandem.bridge.room.id, {
-	query: querystring.stringify({
-		token: tandem.bridge.user.token,
-		id: tandem.bridge.user.id,
-		name: tandem.bridge.user.name,
-		avatar: tandem.bridge.user.avatar
-	})
-});
+var TandemSocketConnection = require('./_TandemSocketConnection.js');
+var PlayerServerActionCreator = require('../actions/PlayerServerActionCreator.js');
 
 var _onReceiveState = function( state ){
 	PlayerServerActionCreator.receiveState( state );
@@ -36,22 +25,22 @@ var _onReceiveOrder = function( order ){
 	PlayerServerActionCreator.receiveSetOrder( order );
 };
 
-socket.on( 'player:state', _onReceiveState );
-socket.on( 'player:play', _onReceivePlay );
-socket.on( 'player:elapsed', _onReceiveElapsedTime );
-socket.on( 'player:skip', _onReceiveSkip );
-socket.on( 'player:like', _onReceiveLike );
-socket.on( 'player:order', _onReceiveOrder );
+TandemSocketConnection.on( 'player:state', _onReceiveState );
+TandemSocketConnection.on( 'player:play', _onReceivePlay );
+TandemSocketConnection.on( 'player:elapsed', _onReceiveElapsedTime );
+TandemSocketConnection.on( 'player:skip', _onReceiveSkip );
+TandemSocketConnection.on( 'player:like', _onReceiveLike );
+TandemSocketConnection.on( 'player:order', _onReceiveOrder );
 
 var TandemSocketUtils = {
 	setOrder: function( order ){
-		socket.emit( 'player:order', order );
+		TandemSocketConnection.emit( 'player:order', order );
 	},
 	skipItem: function(){
-		socket.emit( 'player:skip' );
+		TandemSocketConnection.emit( 'player:skip' );
 	},
 	likeItem: function(){
-		socket.emit( 'player:like' );
+		TandemSocketConnection.emit( 'player:like' );
 	}
 };
 

@@ -69,6 +69,9 @@
     "keymirror": "^0.1.1",
     "lodash": "^3.3.1",
     "react": "^0.12.2",
-    "reactify": "^1.0.0"
+    "reactify": "^1.0.0",
+    "socket.io": "^1.0.6",
+    "socket.io-client": "^1.0.6",
+    "xhr": "^2.0.1"
   }
 }

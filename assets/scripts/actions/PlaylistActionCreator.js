@@ -1,0 +1,45 @@
+var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
+var TandemPlaylistSocketUtils = require('../utils/TandemPlaylistSocketUtils.js');
+var YoutubeAPIUtils = require('../utils/YoutubeAPIUtils.js');
+var SoundcloudAPIUtils = require('../utils/SoundcloudAPIUtils.js');
+var TandemConstants = require('../constants/TandemConstants.js');
+var ActionTypes = TandemConstants.ActionTypes;
+
+var PlaylistActionCreator = {
+	addItem: function( item ){
+		TandemDispatcher.handleViewAction({
+			type: ActionTypes.PLAYLIST_ADD_ITEM,
+			item: item
+		});
+		TandemPlaylistSocketUtils.addItem( item );
+	},
+	// TODO Is this the right place to do this?
+	addItemFromUrl: function( url, source ){
+		switch( source ){
+			case 'youtube':
+				YoutubeAPIUtils.getItemFromUrl( url, function( err, item ){
+					PlaylistActionCreator.addItem( item );
+				});
+			break;
+			case 'soundcloud':
+				SoundcloudAPIUtils.getItemFromUrl( url, function( err, item ){
+					PlaylistActionCreator.addItem( item );
+				});
+			break;
+		}
+		TandemDispatcher.handleViewAction({
+			type: ActionTypes.PLAYLIST_ADD_ITEM_FROM_URL,
+			url: url,
+			source: source
+		});
+	},
+	removeItem: function( item_id ){
+		TandemDispatcher.handleViewAction({
+			type: ActionTypes.PLAYLIST_REMOVE_ITEM,
+			item_id: item_id
+		});
+		TandemPlaylistSocketUtils.removeItem( item_id );
+	}
+};
+
+module.exports = PlaylistActionCreator;
