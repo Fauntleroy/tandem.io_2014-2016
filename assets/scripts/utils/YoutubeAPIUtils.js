@@ -44,7 +44,8 @@ var _processYoutubeResults = function( results ){
 			image: result.thumbnail.hqDefault,
 			duration: result.duration,
 			plays: result.viewCount,
-			embeddable: result.accessControl.embed === 'allowed'
+			embeddable: result.accessControl.embed === 'allowed',
+			source: 'youtube'
 		};
 		return processed_result;
 	});

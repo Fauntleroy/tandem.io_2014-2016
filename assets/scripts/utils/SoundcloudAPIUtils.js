@@ -47,7 +47,8 @@ var _processSoundcloudResults = function( results ){
 			image: image,
 			duration: result.duration / 1000,
 			plays: result.playback_count,
-			embeddable: result.streamable
+			embeddable: result.streamable,
+			source: 'soundcloud'
 		};
 		return processed_result;
 	});

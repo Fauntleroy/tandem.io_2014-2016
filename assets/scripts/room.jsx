@@ -34,7 +34,7 @@ $( function(){
 			model: tandem.title
 		})
 	};
-	tandem.searchComponent = React.render( <Search mediator={mediator} />, document.getElementById('search') );
+	tandem.searchComponent = React.render( <Search />, document.getElementById('search') );
 	tandem.usersComponent = React.render( <Users />, document.getElementById('users') );
 	tandem.chatComponent = React.render( <Chat />, document.getElementById('chat') );
 	tandem.playerComponent = React.render( <Player />, document.getElementById('player') );

@@ -3,6 +3,8 @@ var cx = require('classnames');
 
 var secondsToTime = require('../utils/secondsToTime.js');
 
+var PlaylistActionCreator = require('../actions/PlaylistActionCreator.js');
+
 var SearchResult = React.createClass({
 	render: function(){
 		var result = this.props.result;
@@ -33,8 +35,8 @@ var SearchResult = React.createClass({
 	},
 	_onAddClick: function( event ){
 		event.preventDefault();
-		this.props.mediator.trigger( 'search:add', this.props.result.url );
-		console.log('PlaylistActionCreator.addItem(this.props) goes here');
+		var result = this.props.result;
+		PlaylistActionCreator.addItemFromUrl( result.url, result.source );
 	}
 });
 

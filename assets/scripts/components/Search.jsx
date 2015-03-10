@@ -7,7 +7,6 @@ var SearchActionCreator = require('../actions/SearchActionCreator.js');
 var SearchResultsStore = require('../stores/SearchResultsStore.js');
 
 var CHANGE_EVENT = 'change';
-var SEARCH_EVENT = 'playlist:search';
 
 var _getStateFromStore = function(){
 	return {
@@ -19,10 +18,9 @@ var _getStateFromStore = function(){
 };
 
 var _generateResults = function( results ){
-	var mediator = this.props.mediator;
 	var results_jsx = results.map( function( result ){
 		return (
-			<SearchResult result={result} mediator={mediator} />
+			<SearchResult result={result} />
 		);
 	});
 	return results_jsx;
@@ -34,11 +32,9 @@ var Search = React.createClass({
 	},
 	componentDidMount: function(){
 		SearchResultsStore.on( CHANGE_EVENT, this._onChange );
-		this.props.mediator.on( SEARCH_EVENT, this._onSearch );
 	},
 	componentWillUnmount: function(){
-	    SearchResultsStore.removeListener( CHANGE_EVENT, this._onChange );
-	    this.props.mediator.removeListener( SEARCH_EVENT, this._onSearch );
+		SearchResultsStore.removeListener( CHANGE_EVENT, this._onChange );
 	},
 	render: function(){
 		var search_classes = cx({
