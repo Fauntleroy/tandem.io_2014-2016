@@ -17,6 +17,6 @@ TandemSocketConnection.on( 'presences:list', _onState );
 TandemSocketConnection.on( 'presences:join', _onJoin );
 TandemSocketConnection.on( 'presences:leave', _onLeave );
 
-var TandemSocketUtils = {};
+var TandemPlayerSocketUtils = {};
 
-module.exports = TandemSocketUtils;
+module.exports = TandemPlayerSocketUtils;

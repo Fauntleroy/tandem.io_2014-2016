@@ -1,5 +1,5 @@
 var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var TandemSocketUtils = require('../utils/TandemSocketUtils.js');
+var TandemPlayerSocketUtils = require('../utils/TandemPlayerSocketUtils.js');
 var TandemConstants = require('../constants/TandemConstants.js');
 var ActionTypes = TandemConstants.ActionTypes;
 
@@ -15,19 +15,19 @@ var action_creators = {
 			type: ActionTypes.PLAYER_SET_ORDER,
 			order: order
 		});
-		TandemSocketUtils.setOrder( order );
+		TandemPlayerSocketUtils.setOrder( order );
 	},
 	skipItem: function(){
 		TandemDispatcher.handleViewAction({
 			type: ActionTypes.PLAYER_SKIP_ITEM
 		});
-		TandemSocketUtils.skipItem();
+		TandemPlayerSocketUtils.skipItem();
 	},
 	likeItem: function(){
 		TandemDispatcher.handleViewAction({
 			type: ActionTypes.PLAYER_LIKE_ITEM
 		});
-		TandemSocketUtils.likeItem();
+		TandemPlayerSocketUtils.likeItem();
 	},
 	mute: function( toggle ){
 		TandemDispatcher.handleViewAction({

@@ -32,7 +32,7 @@ TandemSocketConnection.on( 'player:skip', _onReceiveSkip );
 TandemSocketConnection.on( 'player:like', _onReceiveLike );
 TandemSocketConnection.on( 'player:order', _onReceiveOrder );
 
-var TandemSocketUtils = {
+var TandemPlayerSocketUtils = {
 	setOrder: function( order ){
 		TandemSocketConnection.emit( 'player:order', order );
 	},
@@ -44,4 +44,4 @@ var TandemSocketUtils = {
 	}
 };
 
-module.exports = TandemSocketUtils;
+module.exports = TandemPlayerSocketUtils;
