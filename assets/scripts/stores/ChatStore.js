@@ -42,6 +42,13 @@ ChatStore.dispatchToken = TandemDispatcher.register( function( payload ){
 			});
 			ChatStore.emit( CHANGE_EVENT );
 		break;
+		case ActionTypes.PLAYER_RECEIVE_ITEM:
+			_addMessage({
+				type: 'play',
+				item: action.item
+			});
+			ChatStore.emit( CHANGE_EVENT );
+		break;
 		case ActionTypes.USERS_RECEIVE_JOIN:
 			_addMessage({
 				type: 'join',

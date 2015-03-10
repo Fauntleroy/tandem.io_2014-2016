@@ -4,6 +4,7 @@ var uuid = require('node-uuid');
 var ChatMessage = require('./chat/ChatMessage.jsx');
 var ChatMessageEmote = require('./chat/ChatMessageEmote.jsx');
 var ChatMessageLike = require('./chat/ChatMessageLike.jsx');
+var ChatMessagePlay = require('./chat/ChatMessagePlay.jsx');
 var ChatMessageJoin = require('./chat/ChatMessageJoin.jsx');
 var ChatMessageLeave = require('./chat/ChatMessageLeave.jsx');
 var ChatActionCreator = require('../actions/ChatActionCreator.js');
@@ -28,6 +29,9 @@ var _generateMessages = function( messages ){
 			break;
 			case 'like':
 				return <ChatMessageLike key={message.uuid} message={message} />;
+			break;
+			case 'play':
+				return <ChatMessagePlay key={message.uuid} message={message} />;
 			break;
 			case 'join':
 				return <ChatMessageJoin key={message.uuid} message={message} />;
