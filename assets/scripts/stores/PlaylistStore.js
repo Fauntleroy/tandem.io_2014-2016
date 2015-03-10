@@ -10,6 +10,12 @@ var CHANGE_EVENT = 'change';
 
 var _items = [];
 
+var _removeItem = function( item_id ){
+	_items = reject( _items, function( item ){
+		return item.id === item_id;
+	});
+};
+
 var PlaylistStore = assign( {}, EventEmitter.prototype, {
 	getItems: function(){
 		return _items;
@@ -28,9 +34,7 @@ PlaylistStore.dispatchToken = TandemDispatcher.register( function( payload ){
 			PlaylistStore.emit( CHANGE_EVENT );
 		break;
 		case ActionTypes.PLAYLIST_RECEIVE_REMOVE_ITEM:
-			_items = reject( items, function( item ){
-				return item.id = action.item.id;
-			});
+			_removeItem( action.item.id );
 			PlaylistStore.emit( CHANGE_EVENT );
 		break;
 	}
