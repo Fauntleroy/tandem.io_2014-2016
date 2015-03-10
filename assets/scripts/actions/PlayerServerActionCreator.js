@@ -28,11 +28,11 @@ var PlayerServerActionCreator = {
 			user: user
 		});
 	},
-	receiveLikeItem: function( likers, liker, like_message ){
+	receiveLikeItem: function( likers, user, like_message ){
 		TandemDispatcher.handleServerAction({
 			type: ActionTypes.PLAYER_RECEIVE_LIKE_ITEM,
 			likers: likers,
-			liker: liker,
+			user: user,
 			like_message: like_message
 		});
 	},

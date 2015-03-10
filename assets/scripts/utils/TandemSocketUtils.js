@@ -18,7 +18,7 @@ var _onReceiveSkip = function( skip_data ){
 };
 
 var _onReceiveLike = function( like_data ){
-	PlayerServerActionCreator.receiveLikeItem( like_data.likers, like_data.liker, like_data.message );
+	PlayerServerActionCreator.receiveLikeItem( like_data.likers, like_data.user, like_data.message );
 };
 
 var _onReceiveOrder = function( order ){

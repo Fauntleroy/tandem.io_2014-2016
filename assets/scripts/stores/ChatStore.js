@@ -12,6 +12,7 @@ var _messages = [];
 
 var _addMessage = function( message ){
 	// Mixin a UUID to maintain uniqueness in React
+	message.time = new Date();
 	message.uuid = uuid.v1();
 	_messages.unshift( message );
 };
@@ -31,6 +32,28 @@ ChatStore.dispatchToken = TandemDispatcher.register( function( payload ){
 		break;
 		case ActionTypes.CHAT_RECEIVE_ADD_EMOTE:
 			_addMessage( action.message );
+			ChatStore.emit( CHANGE_EVENT );
+		break;
+		case ActionTypes.PLAYER_RECEIVE_LIKE_ITEM:
+			_addMessage({
+				type: 'like',
+				user: action.user,
+				content: action.like_message
+			});
+			ChatStore.emit( CHANGE_EVENT );
+		break;
+		case ActionTypes.USERS_RECEIVE_JOIN:
+			_addMessage({
+				type: 'join',
+				user: action.user
+			});
+			ChatStore.emit( CHANGE_EVENT );
+		break;
+		case ActionTypes.USERS_RECEIVE_LEAVE:
+			_addMessage({
+				type: 'leave',
+				user: action.user
+			});
 			ChatStore.emit( CHANGE_EVENT );
 		break;
 	}
