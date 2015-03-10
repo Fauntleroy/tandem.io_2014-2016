@@ -16,7 +16,9 @@ var constants = {
 		USERS_RECEIVE_LEAVE: null,
 		// Chat Actions
 		CHAT_ADD_MESSAGE: null,
-		CHAT_RECEIVE_MESSAGE: null,
+		CHAT_ADD_EMOTE: null,
+		CHAT_RECEIVE_ADD_MESSAGE: null,
+		CHAT_RECEIVE_ADD_EMOTE: null,
 		// Player Actions
 		PLAYER_SET_ELAPSED_TIME: null,
 		PLAYER_SKIP_ITEM: null,
