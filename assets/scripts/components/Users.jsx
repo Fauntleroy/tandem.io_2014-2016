@@ -21,7 +21,7 @@ var _generateUsers = function( users ){
 			self: user.self
 		});
 		return (
-			<li data-id={user.id} className={li_classes}>
+			<li key={user.id} data-id={user.id} className={li_classes}>
 				<User user={user} />
 			</li>
 		);
