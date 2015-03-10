@@ -2,14 +2,11 @@ var keyMirror = require('keymirror');
 
 var constants = {
 	ActionTypes: keyMirror({
-		ADD_PLAYLIST_ITEM: null,
-		REMOVE_PLAYLIST_ITEM: null,
-		PLAY_PLAYLIST_ITEM: null,
-		RECEIVE_PLAYLIST_ITEM: null,
+		// Search Actions
 		SEARCH_ACTIVE: null,
-		START_SEARCH: null,
-		SWITCH_SEARCH_SOURCE: null,
-		RECEIVE_RESULTS: null,
+		SEARCH_START: null,
+		SEARCH_SWITCH_SOURCE: null,
+		SEARCH_RECEIVE_RESULTS: null,
 		// Users Actions
 		USERS_RECEIVE_STATE: null,
 		USERS_RECEIVE_JOIN: null,

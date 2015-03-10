@@ -56,18 +56,18 @@ SearchResultsStore.dispatchToken = TandemDispatcher.register( function( payload 
 			_active = action.toggle;
 			SearchResultsStore.emit( CHANGE_EVENT );
 		break;
-		case ActionTypes.START_SEARCH:
+		case ActionTypes.SEARCH_START:
 			_query = action.query;
 			SearchResultsStore.emit( CHANGE_EVENT );
 		break;
-		case ActionTypes.SWITCH_SEARCH_SOURCE:
+		case ActionTypes.SEARCH_SWITCH_SOURCE:
 			_sources = _sources.map( function( source ){
 				source.active = ( action.source === source.name );
 				return source;
 			});
 			SearchResultsStore.emit( CHANGE_EVENT );
 		break;
-		case ActionTypes.RECEIVE_RESULTS:
+		case ActionTypes.SEARCH_RECEIVE_RESULTS:
 			_results[action.source] = action.results;
 			SearchResultsStore.emit( CHANGE_EVENT );
 		break;

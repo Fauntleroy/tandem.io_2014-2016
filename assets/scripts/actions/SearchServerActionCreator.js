@@ -5,7 +5,7 @@ var ActionTypes = TandemConstants.ActionTypes;
 var action_creators = {
 	receiveResults: function( results, source ){
 		TandemDispatcher.handleServerAction({
-			type: ActionTypes.RECEIVE_RESULTS,
+			type: ActionTypes.SEARCH_RECEIVE_RESULTS,
 			results: results,
 			source: source
 		});

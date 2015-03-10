@@ -14,7 +14,7 @@ var action_creators = {
 	},
 	startSearch: function( query ){
 		TandemDispatcher.handleViewAction({
-			type: ActionTypes.START_SEARCH,
+			type: ActionTypes.SEARCH_START,
 			query: query
 		});
 		var source = SearchResultsStore.getActiveSource();
@@ -29,7 +29,7 @@ var action_creators = {
 	},
 	switchSource: function( source ){
 		TandemDispatcher.handleViewAction({
-			type: ActionTypes.SWITCH_SEARCH_SOURCE,
+			type: ActionTypes.SEARCH_SWITCH_SOURCE,
 			source: source
 		});
 	}
