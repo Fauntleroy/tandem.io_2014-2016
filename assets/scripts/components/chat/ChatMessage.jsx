@@ -15,7 +15,7 @@ var ChatMessage = React.createClass({
 			<li className={li_classes}>
 				<div className="content">{message.content}</div>
 				<User user={message.user} />
-				<Timestamp time={message.timestamp} />
+				<Timestamp time={message.time} />
 			</li>
 		);
 	}

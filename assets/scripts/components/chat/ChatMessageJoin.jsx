@@ -3,17 +3,18 @@ var React = require('react');
 var User = require('../User.jsx');
 var Timestamp = require('./Timestamp.jsx');
 
-var ChatMessage = React.createClass({
+var ChatMessageJoin = React.createClass({
 	render: function(){
 		var message = this.props.message;
 		return (
-			<li className="emote">
+			<li className="join">
+				<i className="fa fa-chevron-right"></i>
 				<User user={message.user} />
-				<span className="content">{message.content}</span>
+				has joined.
 				<Timestamp time={message.time} />
 			</li>
 		);
 	}
 });
 
-module.exports = ChatMessage;
+module.exports = ChatMessageJoin;
