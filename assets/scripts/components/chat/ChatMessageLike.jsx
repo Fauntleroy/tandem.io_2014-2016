@@ -9,9 +9,7 @@ var ChatMessageLike = React.createClass({
 		return (
 			<li className="like">
 				<i className="fa fa-heart"></i>
-				&nbsp;
-				<User user={message.user} />
-				&nbsp;{message.content}
+				<User user={message.user} /> {message.content}
 				<Timestamp time={message.time} />
 			</li>
 		);

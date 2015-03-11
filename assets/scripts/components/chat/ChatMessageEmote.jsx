@@ -8,8 +8,7 @@ var ChatMessage = React.createClass({
 		var message = this.props.message;
 		return (
 			<li className="emote">
-				<User user={message.user} />
-				<span className="content">{message.content}</span>
+				<User user={message.user} /> <span className="content">{message.content}</span>
 				<Timestamp time={message.time} />
 			</li>
 		);

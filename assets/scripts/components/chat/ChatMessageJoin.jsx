@@ -9,9 +9,7 @@ var ChatMessageJoin = React.createClass({
 		return (
 			<li className="join">
 				<i className="fa fa-chevron-right"></i>
-				&nbsp;
-				<User user={message.user} />
-				&nbsp;has joined.
+				<User user={message.user} /> has joined.
 				<Timestamp time={message.time} />
 			</li>
 		);
