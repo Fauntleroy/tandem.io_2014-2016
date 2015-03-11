@@ -71,6 +71,7 @@ PlayerStore.dispatchToken = TandemDispatcher.register( function( payload ){
 		break;
 		case ActionTypes.PLAYER_RECEIVE_ITEM:
 			_item = action.item;
+			_likers = [];
 			_elapsed_time = 0;
 			PlayerStore.emit( CHANGE_EVENT );
 			PlayerStore.emit( CHANGE_ITEM_EVENT );
