@@ -1,5 +1,5 @@
 var React = require('react');
-var $ = require('jquery');
+var domready = require('domready');
 
 // React Components
 var Search = require('./components/Search.jsx');
@@ -14,7 +14,7 @@ var Title = require('./components/Title.js');
 window.tandem = window.tandem || {};
 
 // Wait for DOM so views will work
-$( function(){
+domready( function(){
 	tandem.titleComponent = new Title();
 	tandem.searchComponent = React.render( <Search />, document.getElementById('search') );
 	tandem.usersComponent = React.render( <Users />, document.getElementById('users') );

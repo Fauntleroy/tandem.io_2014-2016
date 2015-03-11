@@ -64,6 +64,7 @@
   },
   "devDependencies": {
     "classnames": "^1.1.4",
+    "domready": "^1.0.7",
     "flux": "^2.0.1",
     "jsonp": "^0.1.0",
     "keymirror": "^0.1.1",
