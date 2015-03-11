@@ -11,6 +11,13 @@ var CHANGE_EVENT = 'change';
 var _messages = [];
 
 var _addMessage = function( message ){
+	// Group many chat messages from one user into one message
+	var top_message = _messages[0];
+	if( top_message && top_message.type === 'chat' && message.type === 'chat' && top_message.user.id === message.user.id ){
+		top_message.content = top_message.content.concat( message.content );
+		top_message.time = new Date();
+		return;
+	}
 	// Mixin a UUID to maintain uniqueness in React
 	message.time = new Date();
 	message.uuid = uuid.v1();
@@ -27,6 +34,7 @@ ChatStore.dispatchToken = TandemDispatcher.register( function( payload ){
 	var action = payload.action;
 	switch( action.type ){
 		case ActionTypes.CHAT_RECEIVE_ADD_MESSAGE:
+			action.message.content = [action.message.content];
 			_addMessage( action.message );
 			ChatStore.emit( CHANGE_EVENT );
 		break;
