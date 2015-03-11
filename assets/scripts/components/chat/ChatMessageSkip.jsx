@@ -8,11 +8,12 @@ var ChatMessageSkip = React.createClass({
 		var message = this.props.message;
 		return (
 			<li className="skip">
-				<i class="fa fa-forward"></i>
+				<i className="fa fa-forward"></i>
+				&nbsp;
 				<User user={message.user} />
-				skipped
-				<span class="item">
-					<strong class="title">
+				&nbsp;skipped&nbsp;
+				<span className="item">
+					<strong className="title">
 						<a href={message.item.url} target="_blank">{message.item.title}</a>
 					</strong>
 				</span>

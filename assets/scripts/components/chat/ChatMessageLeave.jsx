@@ -9,8 +9,9 @@ var ChatMessageLeave = React.createClass({
 		return (
 			<li className="leave">
 				<i className="fa fa-chevron-right"></i>
+				&nbsp;
 				<User user={message.user} />
-				has left.
+				&nbsp;has left.
 				<Timestamp time={message.time} />
 			</li>
 		);

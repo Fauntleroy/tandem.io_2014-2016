@@ -6,6 +6,7 @@ var User = React.createClass({
 		return (
 			<span className="user" data-user-id={user.id}>
 				<img className="avatar" src={user.avatar} />
+				&nbsp;
 				<strong className="name">{user.name}</strong>
 			</span>
 		);

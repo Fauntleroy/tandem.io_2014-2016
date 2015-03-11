@@ -29,9 +29,9 @@ var PlaylistItem = React.createClass({
 					<a href={item.url} target="_blank">{item.title}</a>
 				</h3>
 				<br />
-				Posted by
+				Posted by&nbsp;
 				<User user={item.user} />
-				via
+				&nbsp;via&nbsp;
 				<a href={item.url} target="_blank">
 					<i className={source_icon_classes}></i>
 				</a>
