@@ -42,13 +42,7 @@ var Player = React.createClass({
 		PlayerStore.on( CHANGE_ITEM_EVENT, this._onItemChange );
 		PlayerStore.on( CHANGE_MUTE_EVENT, this._onMuteChange );
 		PlayerStore.on( CHANGE_VOLUME_EVENT, this._onPlayerVolumeChange );
-		this.player = jwplayer('jwplayer').setup({
-			flashplayer: '/scripts/vendor/jwplayer/jwplayer.flash.swf',
-			html5player: '/scripts/vendor/jwplayer/jwplayer.html5.js',
-			file: 'http://www.youtube.com/watch?v=z8zFKSdm-Hs', // I'd love to not load anything...
-			controls: false
-		});
-		this.player.onTime( this._onPlayerTime );
+		this._setupPlayer();
 	},
 	componentWillUnmount: function(){
 		PlayerStore.removeListener( CHANGE_EVENT, this._onChange );
@@ -145,6 +139,30 @@ var Player = React.createClass({
 			</div>
 		);
 	},
+	_setupPlayer: function(){
+		this.player = jwplayer('jwplayer').setup({
+			flashplayer: '/scripts/vendor/jwplayer/jwplayer.flash.swf',
+			html5player: '/scripts/vendor/jwplayer/jwplayer.html5.js',
+			file: 'http://www.youtube.com/watch?v=z8zFKSdm-Hs',
+			controls: false
+		});
+		this.player.onTime( this._onPlayerTime );
+		this._loadItem( this.state.item );
+	},
+	_loadItem: function( item ){
+		if( item ){
+			var elapsed_time = this.state.elapsed_time;
+			this.player.load({
+				file: item.media_url,
+				type: MEDIA_TYPES[item.source],
+				image: item.image
+			});
+			this.player.play( true );
+			this.player.seek( elapsed_time || 0 );
+		} else {
+			this.player.stop();
+		}
+	},
 	_onChange: function(){
 		this.setState( _getStateFromStore() );
 	},
@@ -156,19 +174,8 @@ var Player = React.createClass({
 		}
 	},
 	_onItemChange: function(){
-		var item = PlayerStore.getItem();
-		var elapsed_time = PlayerStore.getElapsedTime();
-		if( item ){
-			this.player.load({
-				file: item.media_url,
-				type: MEDIA_TYPES[item.source],
-				image: item.image
-			});
-			this.player.play( true );
-			this.player.seek( elapsed_time || 0 );
-		} else {
-			this.player.stop();
-		}
+		var item = this.state.item;
+		this._loadItem( item );
 	},
 	_onPlayerVolumeChange: function(){
 		var volume = PlayerStore.getVolume();
