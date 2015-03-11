@@ -16,20 +16,21 @@ var _calculateVolume = function( pageX, volume_level_element ){
 var VolumeControl = React.createClass({
 	render: function(){
 		var volume_controls_classes = cx({
-			muted: this.props.mute
+			'volume': true,
+			'volume--muted': this.props.mute
 		});
 		var volume_style = {
 			width: this.props.volume +'%'
 		};
 		return (
 			<span className={volume_controls_classes}>
-				<a href="#mute" onClick={this._onMuteClick}>
-					<i className="fa fa-volume-up"></i>
-					<i className="fa fa-volume-off"></i>
+				<a className="volume__mute" href="#mute" onClick={this._onMuteClick}>
+					<i className="volume__unmuted-icon fa fa-volume-up"></i>
+					<i className="volume__muted-icon fa fa-volume-off"></i>
 				</a>
-				<span className="level" ref="volume__level" onMouseDown={this._onVolumeMouseDown}>
-					<var className="max"></var>
-					<var className="current" style={volume_style}></var>
+				<span className="volume__level" ref="volume__level" onMouseDown={this._onVolumeMouseDown}>
+					<var className="volume__level__max"></var>
+					<var className="volume__level__current" style={volume_style}></var>
 				</span>
 			</span>
 		);
