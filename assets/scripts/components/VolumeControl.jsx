@@ -2,17 +2,6 @@ var React = require('react');
 var throttle = require('lodash/function/throttle');
 var cx = require('classnames');
 
-var _calculateVolume = function( pageX, volume_level_element ){
-	var mouse_location = pageX - volume_level_element.getBoundingClientRect().left;
-	var new_volume = ( mouse_location / volume_level_element.offsetWidth ) * 100;
-	if( new_volume > 100 ){
-		new_volume = 100;
-	} else if( new_volume < 0 ){
-		new_volume = 0;
-	}
-	return new_volume;
-};
-
 var VolumeControl = React.createClass({
 	render: function(){
 		var volume_controls_classes = cx({
@@ -35,24 +24,33 @@ var VolumeControl = React.createClass({
 			</span>
 		);
 	},
+	_calculateAndSetVolume: function( pageX ){
+		var volume_level_element = this.refs.volume__level.getDOMNode();
+		var mouse_location = pageX - volume_level_element.getBoundingClientRect().left;
+		var new_volume = ( mouse_location / volume_level_element.offsetWidth ) * 100;
+		if( new_volume > 100 ){
+			new_volume = 100;
+		} else if( new_volume < 0 ){
+			new_volume = 0;
+		}
+		this.props.onChange( new_volume );
+	},
 	_onMuteClick: function( event ){
 		event.preventDefault();
 		this.props.onMute( !this.props.mute );
 	},
 	_onVolumeMouseDown: function( event ){
+		event.preventDefault();
 		window.addEventListener( 'mousemove', this._onVolumeMouseMove );
 		window.addEventListener( 'mouseup', this._onVolumeMouseUp );
+		this._calculateAndSetVolume( event.pageX );
 	},
 	_onVolumeMouseMove: throttle( function( event ){
 		event.preventDefault();
-		var volume_level_element = this.refs.volume__level.getDOMNode();
-		var volume = _calculateVolume( event.pageX, volume_level_element );
-		this.props.onChange( volume );
-	}, 1000 / 60 ),
+		this._calculateAndSetVolume( event.pageX );
+	}, 1000 / 50 ),
 	_onVolumeMouseUp: function( event ){
-		var volume_level_element = this.refs.volume__level.getDOMNode();
-		var volume = _calculateVolume( event.pageX, volume_level_element );
-		this.props.onChange( volume );
+		this._calculateAndSetVolume( event.pageX );
 		window.removeEventListener( 'mousemove', this._onVolumeMouseMove );
 		window.removeEventListener( 'mouseup', this._onVolumeMouseUp );
 	}

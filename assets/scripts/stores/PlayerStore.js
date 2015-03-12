@@ -1,5 +1,6 @@
 var EventEmitter = require('events').EventEmitter;
 var assign = require('lodash/object/assign');
+var store = require('store');
 
 var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
 var TandemConstants = require('../constants/TandemConstants.js');
@@ -10,6 +11,8 @@ var CHANGE_ELAPSED_TIME_EVENT = 'change:elapsed_time';
 var CHANGE_ITEM_EVENT = 'change:item';
 var CHANGE_MUTE_EVENT = 'change:mute';
 var CHANGE_VOLUME_EVENT = 'change:volume';
+var VOLUME_KEY = 'tandem_volume';
+var MUTE_KEY = 'tandem_mute';
 
 var _item;
 var _likers = [];
@@ -17,8 +20,12 @@ var _elapsed_time = 0;
 var _client_elapsed_time = 0;
 var _orders = ['fifo','shuffle'];
 var _order = _orders[0];
-var _volume = 85;
-var _mute = false;
+if( typeof store.get( VOLUME_KEY ) === 'undefined' ){
+	store.set( VOLUME_KEY, 85 );
+}
+if( typeof store.get( MUTE_KEY ) === 'undefined' ){
+	store.set( MUTE_KEY, false );
+}
 
 var PlayerStore = assign( {}, EventEmitter.prototype, {
 	getItem: function(){
@@ -37,10 +44,10 @@ var PlayerStore = assign( {}, EventEmitter.prototype, {
 		return _order;
 	},
 	getVolume: function(){
-		return _volume;
+		return store.get( VOLUME_KEY );
 	},
 	getMute: function(){
-		return _mute;
+		return store.get( MUTE_KEY );
 	}
 });
 
@@ -52,12 +59,12 @@ PlayerStore.dispatchToken = TandemDispatcher.register( function( payload ){
 			PlayerStore.emit( CHANGE_EVENT );
 		break;
 		case ActionTypes.PLAYER_SET_VOLUME:
-			_volume = action.volume;
+			store.set( VOLUME_KEY, action.volume );
 			PlayerStore.emit( CHANGE_EVENT );
 			PlayerStore.emit( CHANGE_VOLUME_EVENT );
 		break;
 		case ActionTypes.PLAYER_SET_MUTE:
-			_mute = action.toggle;
+			store.set( MUTE_KEY, action.toggle );
 			PlayerStore.emit( CHANGE_EVENT );
 			PlayerStore.emit( CHANGE_MUTE_EVENT );
 		break;

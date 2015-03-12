@@ -206,6 +206,7 @@ var Player = React.createClass({
 	},
 	_onVolumeChange: function( volume ){
 		PlayerActionCreator.setVolume( volume );
+		PlayerActionCreator.mute( false );
 	}
 });
 
