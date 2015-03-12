@@ -25,8 +25,11 @@ var _addMessage = function( message ){
 };
 
 var ChatStore = assign( {}, EventEmitter.prototype, {
-	getMessages: function(){
-		return _messages;
+	getMessages: function( limit ){
+		var messages = ( limit && limit < _messages.length )
+			? _messages.slice( 0, limit )
+			: _messages;
+		return messages;
 	}
 });
 

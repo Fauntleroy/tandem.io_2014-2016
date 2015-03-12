@@ -15,7 +15,7 @@ var CHANGE_EVENT = 'change';
 
 var _getStateFromStore = function(){
 	return {
-		messages: ChatStore.getMessages()
+		messages: ChatStore.getMessages( 250 )
 	}
 };
 
