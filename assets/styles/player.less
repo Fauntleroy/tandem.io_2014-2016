@@ -14,7 +14,7 @@
 	}
 }
 
-#player {
+.player {
 	.shadow-level-1;
 	position: relative;
 	overflow: hidden;
@@ -123,6 +123,7 @@
 				z-index: 3;
 				height: 100%;
 				background-color: rgba( 255, 255, 255, 0.1 );
+				.transition( width 1000ms linear );
 			}
 
 			> span.duration {
@@ -163,94 +164,19 @@
 		}
 
 		li.like {
-			> a {
-				.transition( color 250ms );
-
-				&.liked {
+			&.liked {
+				> a {
 					color: @heartred;
 				}
+			}
+
+			> a {
+				.transition( color 250ms );
 			}
 		}
 
 		li.volume {
 			float: right;
-		}
-
-		li.volume {
-
-			&.muted {
-
-				.fa-volume-up {
-					display: none;
-				}
-
-				.fa-volume-off {
-					display: inline;
-				}
-
-				.level {
-					.current {
-						opacity: 0.25;
-					}
-				}
-			}
-
-			> a {
-				display: inline-block;
-				width: 17px;
-				text-align: left;
-			}
-
-			.fa-volume-up {
-				display: inline;
-			}
-
-			.fa-volume-off {
-				display: none;
-			}
-
-			.level {
-				.user-select(none);
-				position: relative;
-				cursor: pointer;
-				display: inline-block;
-				width: 100px;
-				height: 20px;
-
-				.max {
-					display: block;
-					position: absolute;
-					z-index: 1;
-					top: 0;
-					left: 0;
-					width: 0;
-					height: 0;
-					border-style: solid;
-					border-width: 0 0 20px 100px;
-					border-color: transparent transparent rgba( 255, 255, 255, 0.2 ) transparent;
-				}
-
-				.current {
-					display: block;
-					overflow: hidden;
-					position: absolute;
-					z-index: 2;
-					top: 0;
-					left: 0;
-					width: 100px;
-					height: 20px;
-
-					&:before {
-						content: '';
-						display:block;
-						width: 0;
-						height: 0;
-						border-style: solid;
-						border-width: 0 0 20px 100px;
-						border-color: transparent transparent white transparent;
-					}
-				}
-			}
 		}
 	}
 
