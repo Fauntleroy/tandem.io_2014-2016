@@ -45,19 +45,7 @@
     "vinyl-source-stream": "~0.1.1",
     "visibilityjs": "~1.2.0",
     "watchify": "^2.1.1",
-    "waterline": "^0.10.14"
-  },
-  "browser": {
-    "jwplayer": "./assets/scripts/vendor/jwplayer/jwplayer.js"
-  },
-  "browserify-shim": {
-    "jwplayer": "jwplayer"
-  },
-  "scripts": {
-    "start": "node index.js",
-    "postinstall": "gulp compile"
-  },
-  "devDependencies": {
+    "waterline": "^0.10.14",
     "classnames": "^1.1.4",
     "domready": "^1.0.7",
     "flux": "^2.0.1",
@@ -69,5 +57,15 @@
     "socket.io": "^1.0.6",
     "socket.io-client": "^1.0.6",
     "xhr": "^2.0.1"
+  },
+  "browser": {
+    "jwplayer": "./assets/scripts/vendor/jwplayer/jwplayer.js"
+  },
+  "browserify-shim": {
+    "jwplayer": "jwplayer"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "postinstall": "gulp compile"
   }
 }
