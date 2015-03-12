@@ -13,25 +13,38 @@ var PlaylistActionCreator = {
 		});
 		TandemPlaylistSocketUtils.addItem( item );
 	},
-	// TODO Is this the right place to do this?
 	addItemFromUrl: function( url, source ){
-		switch( source ){
-			case 'youtube':
-				YoutubeAPIUtils.getItemFromUrl( url, function( err, item ){
-					PlaylistActionCreator.addItem( item );
-				});
-			break;
-			case 'soundcloud':
-				SoundcloudAPIUtils.getItemFromUrl( url, function( err, item ){
-					PlaylistActionCreator.addItem( item );
-				});
-			break;
-		}
 		TandemDispatcher.handleViewAction({
 			type: ActionTypes.PLAYLIST_ADD_ITEM_FROM_URL,
 			url: url,
 			source: source
 		});
+		switch( source ){
+			case 'youtube':
+				YoutubeAPIUtils.getItemFromUrl( url, function( err, item ){
+					PlaylistActionCreator.receiveAddItemFromUrl( err, item );
+				});
+			break;
+			case 'soundcloud':
+				SoundcloudAPIUtils.getItemFromUrl( url, function( err, item ){
+					PlaylistActionCreator.receiveAddItemFromUrl( err, item );
+				});
+			break;
+		}
+	},
+	// TODO Is this the right place to do this?
+	receiveAddItemFromUrl: function( err, item ){
+		TandemDispatcher.handleViewAction({
+			type: ActionTypes.PLAYLIST_RECEIVE_ADD_ITEM_FROM_URL,
+			err: err,
+			item: item
+		});
+		if( err ){
+			alert( err );
+		}
+		else {
+			PlaylistActionCreator.addItem( item );
+		}
 	},
 	removeItem: function( item_id ){
 		TandemDispatcher.handleViewAction({

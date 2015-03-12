@@ -14,6 +14,7 @@ var CHANGE_EVENT = 'change';
 
 var _getStateFromStore = function(){
 	return {
+		is_adding: PlaylistStore.getIsAdding(),
 		items: PlaylistStore.getItems()
 	}
 };
@@ -36,22 +37,29 @@ var Playlist = React.createClass({
 		PlaylistStore.removeListener( CHANGE_EVENT, this._onChange );
 	},
 	render: function(){
+		var is_adding = this.state.is_adding;
 		var items = this.state.items;
+		var playlist_add_form_classes = cx({
+			submitting: is_adding
+		});
 		var playlist_duration = items.reduce( function( duration, next_item ){
 			return duration + next_item.duration;
 		}, 0 );
 		var items_jsx = _generateItems( this.state.items );
 		return (
 			<div className="playlist">
-				<form name="playlist_add" onSubmit={this._onAddSubmit}>
+				<form name="playlist_add" className={playlist_add_form_classes} onSubmit={this._onAddSubmit}>
 					<input
 						name="url"
 						type="text"
 						value={this.state.url}
 						placeholder="URL or search terms"
+						disabled={is_adding}
 						onChange={this._onUrlInputChange}
 					/>
-					<button type="submit">Add to Playlist <i className="fa fa-search"></i></button>
+					<button type="submit" disabled={is_adding}>
+						Add to Playlist <i className="fa fa-search"></i>
+					</button>
 					<i className="fa fa-refresh fa-spin"></i>
 				</form>
 				<div className="playlist_duration">

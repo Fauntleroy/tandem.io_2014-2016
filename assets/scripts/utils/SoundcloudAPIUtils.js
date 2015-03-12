@@ -4,6 +4,7 @@ var xhr = require('xhr');
 
 var SearchServerActionCreator = require('../actions/SearchServerActionCreator.js');
 
+var NO_OP = function(){};
 var SOUNDCLOUD_CLIENT_ID = tandem.bridge.apis.soundcloud.client_id;
 var SOUNDCLOUD_API_HOST = 'api.soundcloud.com';
 
@@ -60,6 +61,7 @@ var SoundcloudAPIUtils = {
 		return /.*soundcloud\.com\/.*/i.test( url );
 	},
 	getItemFromUrl: function( item_url, callback ){
+		callback = callback || NO_OP;
 		var resolve_url = url.format({
 			host: SOUNDCLOUD_API_HOST,
 			pathname: 'resolve.json',
@@ -68,14 +70,12 @@ var SoundcloudAPIUtils = {
 				url: item_url
 			}
 		});
-		jsonp( resolve_url, {}, function( err, data ){
-			if( err ){
-				alert('Error resolving url with SoundCloud.');
-				return;
+		jsonp( resolve_url, {}, function( error, data ){
+			if( error ){
+				return callback( new Error('Error resolving url with SoundCloud.') );
 			}
 			if( !data.streamable ){
-				alert('Streaming has been disabled for this track! Nooo :(');
-				return;
+				return callback( new Error('Streaming has been disabled for this track! Nooo :(') );
 			}
 			var item = _processSoundcloudItem( data );
 			// Unfortunately, the SoundCloud API can't be trusted, so stream_urls have to be validated
@@ -84,12 +84,9 @@ var SoundcloudAPIUtils = {
 				url: item.media_url
 			}, function( err ){
 				if( err ){
-					alert('Stream URL not found. This is a problem with the SoundCloud API.');
-					return;
+					return callback( new Error('Stream URL not found. This is a problem with the SoundCloud API.') );
 				}
-				if( callback ){
-					callback( null, item );
-				}
+				return callback( null, item );
 			});
 		});
 	},

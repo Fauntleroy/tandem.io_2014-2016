@@ -3,6 +3,7 @@ var jsonp = require('jsonp');
 
 var SearchServerActionCreator = require('../actions/SearchServerActionCreator.js');
 
+var NO_OP = function(){};
 var YOUTUBE_API_HOST = 'gdata.youtube.com';
 var YOUTUBE_API_PATH = '/feeds/api';
 var YOUTUBE_WATCH_URL = 'http://www.youtube.com/watch?v=';
@@ -57,6 +58,7 @@ var YoutubeAPIUtils = {
 		return /youtube\.com.*[\?&]v=(.{11})|youtu\.be\/(.{11})/i.test( item_url );
 	},
 	getItemFromUrl: function( item_url, callback ){
+		callback = callback || NO_OP;
 		var id = _getIdFromUrl( item_url );
 		var video_url = url.format({
 			host: YOUTUBE_API_HOST,
@@ -66,23 +68,18 @@ var YoutubeAPIUtils = {
 				alt: 'jsonc'
 			}
 		});
-		jsonp( video_url, {}, function( err, data ){
-			if( err || data.error ){
-				alert('Error getting item from YouTube');
-				return;
+		jsonp( video_url, {}, function( error, data ){
+			if( error || data.error ){
+				return callback( new Error('Error getting item from YouTube') );
 			}
 			if( data.data.accessControl.embed != 'allowed' ){
-				alert('Embedding has been disabled for this video! How Stingy :(');
-				return;
+				return callback( new Error('Embedding has been disabled for this video! How Stingy :(') );
 			}
 			if( data.data.category === 'Movies' ){
-				alert('Full movies can\'t be used at this time.');
-				return
+				return callback( new Error('Full movies can\'t be used at this time.') );
 			}
 			var item = _processYoutubeItem( data.data );
-			if( callback ){
-				callback( null, item );
-			}
+			return callback( null, item );
 		});
 	},
 	startSearch: function( query ){

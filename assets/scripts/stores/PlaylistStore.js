@@ -8,6 +8,7 @@ var ActionTypes = TandemConstants.ActionTypes;
 
 var CHANGE_EVENT = 'change';
 
+var _is_adding = false;
 var _items = [];
 
 var _removeItem = function( item_id ){
@@ -17,6 +18,9 @@ var _removeItem = function( item_id ){
 };
 
 var PlaylistStore = assign( {}, EventEmitter.prototype, {
+	getIsAdding: function(){
+		return _is_adding;
+	},
 	getItems: function(){
 		return _items;
 	}
@@ -25,6 +29,14 @@ var PlaylistStore = assign( {}, EventEmitter.prototype, {
 PlaylistStore.dispatchToken = TandemDispatcher.register( function( payload ){
 	var action = payload.action;
 	switch( action.type ){
+		case ActionTypes.PLAYLIST_ADD_ITEM_FROM_URL:
+			_is_adding = true;
+			PlaylistStore.emit( CHANGE_EVENT );
+		break;
+		case ActionTypes.PLAYLIST_RECEIVE_ADD_ITEM_FROM_URL:
+			_is_adding = false;
+			PlaylistStore.emit( CHANGE_EVENT );
+		break;
 		case ActionTypes.PLAYLIST_RECEIVE_STATE:
 			_items = action.state;
 			PlaylistStore.emit( CHANGE_EVENT );
