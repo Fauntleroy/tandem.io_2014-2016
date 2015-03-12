@@ -10,6 +10,17 @@ var gulp_livereload = require('gulp-livereload');
 var gulp_uglify = require('gulp-uglify');
 var gulp_minify_css = require('gulp-minify-css');
 
+var minifyAssets = function(){
+	gulp.src('./assets/compiled/**/*.js')
+		.pipe( gulp_uglify() )
+		.pipe( gulp.dest('./assets/compiled') );
+	gulp.src('./assets/compiled/**/*.css')
+		.pipe( gulp_minify_css({
+			keepSpecialComments: 0
+		}))
+		.pipe( gulp.dest('./assets/compiled') );
+};
+
 var generateCssStream = function(){
 	var stream = gulp.src('./assets/styles/index.less')
 		.pipe( gulp_less({
@@ -62,16 +73,7 @@ gulp.task( 'compile and watch js', function(){
 	return rebundle();
 });
 
-gulp.task( 'minify', function(){
-	gulp.src('./assets/compiled/**/*.js')
-		.pipe( gulp_uglify() )
-		.pipe( gulp.dest('./assets/compiled') );
-	gulp.src('./assets/compiled/**/*.css')
-		.pipe( gulp_minify_css({
-			keepSpecialComments: 0
-		}))
-		.pipe( gulp.dest('./assets/compiled') );
-});
+gulp.task( 'compile and minify', ['compile css', 'compile js'], minifyAssets );
 
-gulp.task( 'compile', ['compile css', 'compile js', 'minify'] );
+gulp.task( 'compile', ['compile and minify'] );
 gulp.task( 'default', ['compile and watch css', 'compile and watch js'] );
