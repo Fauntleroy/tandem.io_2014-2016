@@ -66,6 +66,6 @@
   },
   "scripts": {
     "start": "node index.js",
-    "postinstall": "gulp compile"
+    "postinstall": "npm dedupe && gulp compile"
   }
 }
