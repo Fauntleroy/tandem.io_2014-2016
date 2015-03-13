@@ -3,7 +3,7 @@ var TandemPlayerSocketUtils = require('../utils/TandemPlayerSocketUtils.js');
 var TandemConstants = require('../constants/TandemConstants.js');
 var ActionTypes = TandemConstants.ActionTypes;
 
-var action_creators = {
+var PlayerActionCreator = {
 	setElapsedTime: function( elapsed_time ){
 		TandemDispatcher.handleViewAction({
 			type: ActionTypes.PLAYER_SET_ELAPSED_TIME,
@@ -43,4 +43,4 @@ var action_creators = {
 	}
 };
 
-module.exports = action_creators;
+module.exports = PlayerActionCreator;

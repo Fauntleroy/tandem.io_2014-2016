@@ -5,7 +5,7 @@ var TandemConstants = require('../constants/TandemConstants.js');
 var ActionTypes = TandemConstants.ActionTypes;
 var SearchResultsStore = require('../stores/SearchResultsStore.js');
 
-var action_creators = {
+var SearchActionCreator = {
 	toggleActive: function( toggle ){
 		TandemDispatcher.handleViewAction({
 			type: ActionTypes.SEARCH_ACTIVE,
@@ -35,4 +35,4 @@ var action_creators = {
 	}
 };
 
-module.exports = action_creators;
+module.exports = SearchActionCreator;

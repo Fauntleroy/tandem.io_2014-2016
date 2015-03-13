@@ -15,10 +15,12 @@ window.tandem = window.tandem || {};
 
 // Wait for DOM so views will work
 domready( function(){
-	tandem.titleComponent = new Title();
-	tandem.searchComponent = React.render( <Search />, document.getElementById('search') );
-	tandem.usersComponent = React.render( <Users />, document.getElementById('users') );
-	tandem.chatComponent = React.render( <Chat />, document.getElementById('chat') );
-	tandem.playerComponent = React.render( <Player />, document.getElementById('player') );
-	tandem.playlistComponent = React.render( <Playlist />, document.getElementById('playlist') );
+	tandem.components = {
+		title: new Title(),
+		search: React.render( <Search />, document.getElementById('search') ),
+		users: React.render( <Users />, document.getElementById('users') ),
+		chat: React.render( <Chat />, document.getElementById('chat') ),
+		player: React.render( <Player />, document.getElementById('player') ),
+		playlist: React.render( <Playlist />, document.getElementById('playlist') )
+	};
 });

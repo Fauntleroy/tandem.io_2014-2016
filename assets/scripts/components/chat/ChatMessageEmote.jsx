@@ -3,7 +3,7 @@ var React = require('react');
 var User = require('../User.jsx');
 var Timestamp = require('./Timestamp.jsx');
 
-var ChatMessage = React.createClass({
+var ChatMessageEmote = React.createClass({
 	render: function(){
 		var message = this.props.message;
 		return (
@@ -15,4 +15,4 @@ var ChatMessage = React.createClass({
 	}
 });
 
-module.exports = ChatMessage;
+module.exports = ChatMessageEmote;
