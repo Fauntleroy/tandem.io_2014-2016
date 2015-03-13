@@ -18,7 +18,8 @@ var _getStateFromStore = function(){
 var _generateUsers = function( users ){
 	var users_jsx = users.map( function( user ){
 		var li_classes = cx({
-			self: user.self
+			users__user: true,
+			'users__user--self': user.self
 		});
 		return (
 			<li key={user.id} data-id={user.id} className={li_classes}>
