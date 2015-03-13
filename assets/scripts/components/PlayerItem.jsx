@@ -12,8 +12,8 @@ var PlayerItem = React.createClass({
 		source_icon_classes_object['fa-'+ item.source] = true;
 		var source_icon_classes = cx( source_icon_classes_object );
 		return (
-			<div className="item">
-				<h2 className="title">
+			<div className="player__item">
+				<h2 className="player__item__title">
 					<a href={item.url} target="_blank">{item.title}</a>
 				</h2>
 				Posted by&nbsp;

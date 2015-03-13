@@ -62,7 +62,7 @@ var Player = React.createClass({
 		});
 		var player_classes = cx({
 			player: true,
-			empty: !player.item
+			'player--empty': !player.item
 		});
 		var cover_style = {
 			'background-image': ( player.item )
@@ -73,8 +73,9 @@ var Player = React.createClass({
 			width: ( player.client_elapsed_time / duration ) * 100 +'%'
 		};
 		var like_classes = cx({
-			like: true,
-			liked: is_liked
+			player__controls__like: true,
+			player__controls__control: true,
+			'player__controls__like--liked': is_liked
 		});
 		var like_icon_classes = cx({
 			fa: true,
@@ -86,46 +87,48 @@ var Player = React.createClass({
 			: null;
 		return (
 			<div className={player_classes}>
-				<div id="players">
-					<div className="empty">
-						<h3 className="message">
+				<div className="player__media">
+					<div className="player__media__empty">
+						<h3 className="player__media__empty__message">
 							The player is empty! Add something to the playlist below to get started.
 						</h3>
 					</div>
-					<div id="jwplayer"></div>
-					<img className="aspect" src="/images/16x9.png" />
+					<div className="player__media__jwplayer">
+						<div id="jwplayer"></div>
+					</div>
+					<img className="player__media__aspect" src="/images/16x9.png" />
 				</div>
-				<div className="meta">
-					<div className="cover" style={cover_style}></div>
-					<div className="progress">
-						<div className="times">
-							<var className="elapsed">{secondsToTime(player.client_elapsed_time)}</var>
-							<span className="duration">{secondsToTime(duration)}</span>
+				<div className="player__meta">
+					<div className="player__cover" style={cover_style}></div>
+					<div className="player__progress">
+						<div className="player__progress__times">
+							<var className="player__progress__times__elapsed">{secondsToTime(player.client_elapsed_time)}</var>
+							<span className="player__progress__times__duration">{secondsToTime(duration)}</span>
 						</div>
-						<div className="bars">
-							<var className="elapsed" style={elapsed_style}></var>
-							<span className="duration"></span>
+						<div className="player__progress__bars">
+							<var className="player__progress__bars__elapsed" style={elapsed_style}></var>
+							<span className="player__progress__bars__duration"></span>
 						</div>
 					</div>
-					<ul className="controls">
-						<li className="order">
+					<ul className="player__controls">
+						<li className="player__controls__order player__controls__control">
 							<select name="order" onChange={this._onOrderChange}>
 								<option value="fifo" selected={player.order === 'fifo'}>Normal</option>
 								<option value="shuffle" selected={player.order === 'shuffle'}>Shuffle</option>
 							</select>
 						</li>
-						<li className="skip">
+						<li className="player__controls__skip player__controls__control">
 							<a href="#skip" onClick={this._onSkipClick}>
 								<i className="fa fa-forward"></i>
 							</a>
 						</li>
 						<li className={like_classes}>
-							<a href="#like" onClick={this._onLikeClick}>
+							<a className="player__controls__like__button" href="#like" onClick={this._onLikeClick}>
 								<i className={like_icon_classes}></i>
 							</a>
-							<var className="likes">{player.likers.length || null}</var>
+							<var className="player__controls__like__count">{player.likers.length || null}</var>
 						</li>
-						<li className="volume">
+						<li className="player__controls__volume player__controls__control">
 							<VolumeControl
 								mute={player.mute}
 								volume={player.volume}
