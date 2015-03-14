@@ -1,6 +1,5 @@
 var url = require('url');
 var jsonp = require('jsonp');
-var xhr = require('xhr');
 
 var SearchServerActionCreator = require('../actions/SearchServerActionCreator.js');
 
@@ -78,16 +77,7 @@ var SoundcloudAPIUtils = {
 				return callback( new Error('Streaming has been disabled for this track! Nooo :(') );
 			}
 			var item = _processSoundcloudItem( data );
-			// Unfortunately, the SoundCloud API can't be trusted, so stream_urls have to be validated
-			xhr({
-				method: 'HEAD',
-				url: item.media_url
-			}, function( err ){
-				if( err ){
-					return callback( new Error('Stream URL not found. This is a problem with the SoundCloud API.') );
-				}
-				return callback( null, item );
-			});
+			return callback( null, item );
 		});
 	},
 	startSearch: function( query ){
