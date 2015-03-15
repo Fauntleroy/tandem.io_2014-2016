@@ -1,112 +1,77 @@
-const NO_OP = function(){};
+var thinky = require('thinky')();
+var r = thinky.r;
 
-var Waterline = require('waterline');
-var _ = require('underscore');
+var NO_OP = function(){};
 
-var User = Waterline.Collection.extend({
-	identity: 'user',
-	connection: 'mysql',
-	attributes: {
-		name: {
-			type: 'string',
-			size: 40
-		},
-		avatar: {
-			type: 'string',
-			size: 255
-		},
-		youtube_client_id: {
-			type: 'string',
-			index: true
-		},
-		youtube_access_token: {
-			type: 'string'
-		},
-		youtube_refresh_token: {
-			type: 'string'
-		},
-		youtube_access_token_expiry: {
-			type: 'integer'
-		},
-		youtube_likes_id: {
-			type: 'string',
-			index: true
-		},
-		soundcloud_client_id: {
-			type: 'string'
-		},
-		soundcloud_access_token: {
-			type: 'string'
-		},
-
-		//// instance methods
-		// remove an auth strategy from an existing user
-		removeAuth: function( auth_provider, cb ){
-			cb = cb || NO_OP;
-			// kind of nasty, but will probably replace with associations later
-			switch( auth_provider ){
-			case 'youtube':
-				this.youtube_client_id = null;
-				this.youtube_access_token = null;
-				this.youtube_refresh_token = null;
-				this.youtube_access_token_expiry = null;
-				this.youtube_likes_id = null;
-			break;
-			case 'soundcloud':
-				this.soundcloud_client_id = null;
-				this.soundcloud_access_token = null;
-			break;
-			}
-			this.save( cb );
-		}
+var User = thinky.createModel( 'User', {
+	id: String,
+	name: thinky.type.string().max(40),
+	avatar: String,
+	youtube: {
+		client_id: String,
+		access_token: String,
+		refresh_token: String,
+		access_token_expiry: Number,
+		likes_id: String
 	},
-
-	//// lifecycle events
-	beforeCreate: function( values, next ){
-		delete values.id; // delete the guest id before creating
-		next();
+	soundcloud: {
+		client_id: Number,
+		access_token: String
 	},
+	created_at: thinky.type.date().default( function(){
+		return new Date();
+	})
+});
 
-	//// class methods
-	// find and update an existing user
-	// or create a new user
-	updateOrCreate: function( auth_data, user_data, cb ){
-		cb = cb || NO_OP;
-		var User = this;
-		var where_params = _.pick( auth_data, function( value, key ){
-			return /_client_id$/.test( key );
-		});
-		this
-		.findOne()
-		.where( where_params )
-		.exec( function( err, user ){
-			// user with client id already exists, return it
-			if( user ){
-				return cb( null, user );
-			}
-			// if we have a user id, update that user
-			// the only ids we'll find in the db are numbers
-			if( user_data.id && typeof user_data.id === 'number'){
-				User
-				.findOne()
-				.where({ id: user_data.id })
-				.exec( function( err, user ){
-					if( err ){
-						return cb( err );
-					}
-					if( !user ){
-						return User.create( _.extend( user_data, auth_data ), cb );
-					}
-					user = _.extend( user, auth_data );
-					user.save( cb );
-				});
-			}
-			// otherwise, we're making a new user
-			else {
-				User.create( _.extend( user_data, auth_data ), cb );
-			}
-		});
+User.ensureIndex( 'youtube_client_id', function( document ){
+	return document('youtube.client_id');
+});
+User.ensureIndex( 'soundcloud_client_id', function( document ){
+	return document('soundcloud.client_id');
+});
+
+User.defineStatic( 'updateOrCreate', function( user_data, callback ){
+	callback = callback || NO_OP;
+	// Figure out which client_id to search for
+	var client_id_key;
+	var client_id_value;
+	if( user_data.youtube && user_data.youtube.client_id ){
+		client_id_key = 'youtube_client_id';
+		client_id_value = user_data.youtube.client_id;
 	}
+	else if( user_data.soundcloud && user_data.soundcloud.client_id ){
+		client_id_key = 'soundcloud_client_id';
+		client_id_value = user_data.soundcloud.client_id;
+	}
+	console.log('pre getAll');
+	User.getAll( client_id_value, {
+		index: client_id_key
+	}).run( function( error, user ){
+		console.log('pre if/else if/else');
+		if( user.length > 1 ){
+			console.log('user',user[0]);
+			return callback( null, user[0] );
+		}
+		else if( user_data.id ){
+			console.log('user_data.id', user_data.id);
+			User.get( user_data.id ).run( function( error, user ){
+				if( !user ){
+					console.log('no user', user_data);
+					user = new User( user_data );
+				}
+				else {
+					console.log('user', user_data);
+					user.merge( user_data ).save( callback );
+				}
+				user.save( callback );
+			});
+		}
+		else {
+			console.log('no user_data.id or user', user_data);
+			var user = new User( user_data );
+			user.save( callback );
+		}
+	});
 });
 
 module.exports = User;
