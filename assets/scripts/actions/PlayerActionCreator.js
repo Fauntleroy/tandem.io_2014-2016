@@ -1,5 +1,7 @@
 var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
 var TandemPlayerSocketUtils = require('../utils/TandemPlayerSocketUtils.js');
+var YoutubeAPIUtils = require('../utils/YoutubeAPIUtils.js');
+var SoundcloudAPIUtils = require('../utils/SoundcloudAPIUtils.js');
 var TandemConstants = require('../constants/TandemConstants.js');
 var ActionTypes = TandemConstants.ActionTypes;
 
@@ -23,11 +25,24 @@ var PlayerActionCreator = {
 		});
 		TandemPlayerSocketUtils.skipItem();
 	},
-	likeItem: function(){
+	likeItem: function( item ){
+		var user = tandem.bridge.user;
 		TandemDispatcher.handleViewAction({
 			type: ActionTypes.PLAYER_LIKE_ITEM
 		});
 		TandemPlayerSocketUtils.likeItem();
+		switch( item.source ){
+			case 'youtube':
+				if( user.youtube_linked && user.youtube_likes_id ){
+					YoutubeAPIUtils.likeItem( item.original_id, user.youtube_likes_id );
+				}
+			break;
+			case 'soundcloud':
+				if( user.soundcloud_linked ){
+					SoundcloudAPIUtils.likeItem( item.original_id );
+				}
+			break;
+		}
 	},
 	mute: function( toggle ){
 		TandemDispatcher.handleViewAction({

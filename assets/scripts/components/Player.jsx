@@ -202,7 +202,7 @@ var Player = React.createClass({
 	},
 	_onLikeClick: function( event ){
 		event.preventDefault();
-		PlayerActionCreator.likeItem();
+		PlayerActionCreator.likeItem( this.state.item );
 	},
 	_onMute: function( toggle ){
 		PlayerActionCreator.mute( toggle );

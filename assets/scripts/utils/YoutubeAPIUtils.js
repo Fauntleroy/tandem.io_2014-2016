@@ -1,11 +1,13 @@
 var url = require('url');
 var jsonp = require('jsonp');
+var xhr = require('xhr');
 
 var SearchServerActionCreator = require('../actions/SearchServerActionCreator.js');
 
 var NO_OP = function(){};
 var YOUTUBE_API_HOST = 'gdata.youtube.com';
 var YOUTUBE_API_PATH = '/feeds/api';
+var YOUTUBE_API_PROXY_PATH = '/api/v1/proxy/youtube';
 var YOUTUBE_WATCH_URL = 'http://www.youtube.com/watch?v=';
 
 var _getIdFromUrl = function( item_url ){
@@ -103,6 +105,23 @@ var YoutubeAPIUtils = {
 			var results = _processYoutubeResults( data.data.items );
 			SearchServerActionCreator.receiveResults( results, 'youtube' );
 		});
+	},
+	likeItem: function( item_id, playlist_id, callback ){
+		callback = callback || NO_OP;
+		xhr({
+			url: YOUTUBE_API_PROXY_PATH +'/playlistItems?part=snippet',
+			method: 'POST',
+			json: {
+				snippet: {
+					playlistId: playlist_id,
+					resourceId: {
+						kind: 'youtube#video',
+						videoId: item_id
+					},
+					position: 0
+				}
+			}
+		}, callback );
 	}
 };
 
