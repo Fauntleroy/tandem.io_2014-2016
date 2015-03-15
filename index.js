@@ -358,8 +358,9 @@ server.post( '/rooms', function( req, res ){
 
 server.get( '/rooms/:id', function( req, res ){
 	var user = req.session.passport.user || {};
-	var user_data = _.pick( user, 'id', 'name', 'avatar', 'youtube_likes_id' );
+	var user_data = _.pick( user, 'id', 'name', 'avatar' );
 	user_data.id = user_data.id.toString();
+	user_data.youtube_likes_id = ( user.youtube && user.youtube.likes_id );
 	user_data.youtube_linked = !!( user.youtube && user.youtube.client_id );
 	user_data.soundcloud_linked = !!( user.soundcloud && user.soundcloud.client_id );
 	user_data.token = generateAuthToken( user_data.id, user_data.name, user_data.avatar );

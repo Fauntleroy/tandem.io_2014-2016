@@ -1,11 +1,13 @@
 var url = require('url');
 var jsonp = require('jsonp');
+var xhr = require('xhr');
 
 var SearchServerActionCreator = require('../actions/SearchServerActionCreator.js');
 
 var NO_OP = function(){};
 var SOUNDCLOUD_CLIENT_ID = tandem.bridge.apis.soundcloud.client_id;
 var SOUNDCLOUD_API_HOST = 'api.soundcloud.com';
+var SOUNDCLOUD_API_PROXY_PATH = '/api/v1/proxy/soundcloud';
 
 var _processSoundcloudItem = function( item ){
 	var stream_url = item.stream_url +'?consumer_key='+ SOUNDCLOUD_CLIENT_ID;
@@ -100,6 +102,13 @@ var SoundcloudAPIUtils = {
 			var results = _processSoundcloudResults( data );
 			SearchServerActionCreator.receiveResults( results, 'soundcloud' );
 		});
+	},
+	likeItem: function( item_id, callback ){
+		callback = callback || NO_OP;
+		xhr({
+			url: SOUNDCLOUD_API_PROXY_PATH +'/me/favorites/'+ item_id,
+			method: 'PUT'
+		}, callback );
 	}
 };
 
