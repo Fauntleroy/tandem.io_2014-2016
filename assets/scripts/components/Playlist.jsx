@@ -1,5 +1,7 @@
 var React = require('react');
 var cx = require('classnames');
+var assign = require('lodash/object/assign')
+var indexOf = Array.prototype.indexOf;
 
 var secondsToTime = require('../utils/secondsToTime.js');
 
@@ -12,6 +14,11 @@ var SoundcloudAPIUtils = require('../utils/SoundcloudAPIUtils.js');
 
 var CHANGE_EVENT = 'change';
 
+var _move = function( array, origin, destination ){
+	var element_to_move = array.splice( origin, 1 )[0];
+	array.splice( destination, 0, element_to_move );
+};
+
 var _getStateFromStore = function(){
 	return {
 		is_adding: PlaylistStore.getIsAdding(),
@@ -19,16 +26,9 @@ var _getStateFromStore = function(){
 	}
 };
 
-var _generateItems = function( items ){
-	var items_jsx = items.map( function( item ){
-		return <PlaylistItem key={item.id} item={item} />
-	});
-	return items_jsx;
-};
-
 var Playlist = React.createClass({
-	getInitialState: function () {
-		return _getStateFromStore()
+	getInitialState: function(){
+		return _getStateFromStore();
 	},
 	componentDidMount: function(){
 		PlaylistStore.on( CHANGE_EVENT, this._onChange );
@@ -45,7 +45,7 @@ var Playlist = React.createClass({
 		var playlist_duration = items.reduce( function( duration, next_item ){
 			return duration + next_item.duration;
 		}, 0 );
-		var items_jsx = _generateItems( this.state.items );
+		var items_jsx = this._generateItems( this.state.items );
 		return (
 			<div className="playlist">
 				<form name="playlist_add" className={playlist_add_form_classes} onSubmit={this._onAddSubmit}>
@@ -65,11 +65,25 @@ var Playlist = React.createClass({
 				<div className="playlist_duration">
 					<i className="fa fa-clock-o"></i> <var className="duration">{secondsToTime(playlist_duration)}</var>
 				</div>
-				<ul className="items">
+				<ul className="items" onDragOver={this._onDragOver}>
 					{items_jsx}
 				</ul>
 			</div>
 		);
+	},
+	_generateItems: function( items ){
+		var _this = this;
+		var items_jsx = items.map( function( item ){
+			return (
+				<PlaylistItem
+					key={item.id}
+					item={item}
+					onDragStart={_this._onItemDragStart}
+					onDragEnd={_this._onItemDragEnd}
+				/>
+			);
+		});
+		return items_jsx;
 	},
 	_onChange: function(){
 		this.setState( _getStateFromStore() );
@@ -95,6 +109,20 @@ var Playlist = React.createClass({
 		this.setState({
 			url: ''
 		});
+	},
+	// Drag events
+	_onItemDragStart: function( event ){
+		this._drag_origin = indexOf.call( event.target.parentElement.children, event.target );
+	},
+	_onItemDragEnd: function( event ){
+		_move( this.state.items, this._drag_origin, this._drag_destination );
+		this.setState( this.state );
+	},
+	_onDragOver: function( event ){
+		event.preventDefault();
+		if( event.target !== event.currentTarget ){
+			this._drag_destination = indexOf.call( event.target.parentElement.children, event.target );
+		}
 	}
 });
 

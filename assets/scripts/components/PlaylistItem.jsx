@@ -23,7 +23,12 @@ var PlaylistItem = React.createClass({
 		source_icon_classes_object['fa-'+ item.source] = true;
 		var source_icon_classes = cx( source_icon_classes_object );
 		return (
-			<li data-id={item.id}>
+			<li
+				data-id={item.id}
+				onDragStart={this.props.onDragStart}
+				onDragEnd={this.props.onDragEnd}
+				draggable
+			>
 				<span className={image_classes} style={image_style} />
 				<h3 className="title">
 					<a href={item.url} target="_blank">{item.title}</a>
