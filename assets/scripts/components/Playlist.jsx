@@ -129,7 +129,7 @@ var Playlist = React.createClass({
 	},
 	// Drag events
 	_onItemDragStart: function( event ){
-		event.dataTransfer.setData("text/html", event.currentTarget);
+		event.dataTransfer.setData( 'text/html', event.currentTarget );
 		this.setState({
 			_sort_origin: indexOf.call( event.target.parentElement.children, event.target )
 		});
@@ -144,10 +144,12 @@ var Playlist = React.createClass({
 	},
 	_onDragOver: function( event ){
 		event.preventDefault();
-		var child_index = _getChildIndexViaEventTarget( event.currentTarget, event.target );
-		if( child_index >= 0 ){
+		event.dataTransfer.dropEffect = 'move';
+		var list_element = event.currentTarget;
+		var item_element_index = _getChildIndexViaEventTarget( list_element, event.target );
+		if( item_element_index >= 0 ){
 			this.setState({
-				_sort_destination: child_index
+				_sort_destination: item_element_index
 			});
 		}
 	}
