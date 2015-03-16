@@ -19,6 +19,15 @@ var _move = function( array, origin, destination ){
 	array.splice( destination, 0, element_to_move );
 };
 
+var _getChildIndexViaEventTarget = function( parent, target ){
+	for( var i = 0; i < parent.children.length; i++ ){
+		if( parent.children[i].contains( target ) ){
+			return i;
+		}
+	}
+	return -1;
+};
+
 var _getStateFromStore = function(){
 	return {
 		is_adding: PlaylistStore.getIsAdding(),
@@ -73,13 +82,21 @@ var Playlist = React.createClass({
 	},
 	_generateItems: function( items ){
 		var _this = this;
-		var items_jsx = items.map( function( item ){
+		var items_jsx = items.map( function( item, i ){
+			var sort_before = false;
+			var sort_after = false;
+			if( _this.state._sort_destination === i ){
+				var sort_before = ( _this.state._sort_destination < _this.state._sort_origin );
+				var sort_after = ( _this.state._sort_destination > _this.state._sort_origin );
+			}
 			return (
 				<PlaylistItem
 					key={item.id}
 					item={item}
 					onDragStart={_this._onItemDragStart}
 					onDragEnd={_this._onItemDragEnd}
+					sort_before={sort_before}
+					sort_after={sort_after}
 				/>
 			);
 		});
@@ -112,16 +129,25 @@ var Playlist = React.createClass({
 	},
 	// Drag events
 	_onItemDragStart: function( event ){
-		this._drag_origin = indexOf.call( event.target.parentElement.children, event.target );
+		this.setState({
+			_sort_origin: indexOf.call( event.target.parentElement.children, event.target )
+		});
 	},
 	_onItemDragEnd: function( event ){
-		_move( this.state.items, this._drag_origin, this._drag_destination );
-		this.setState( this.state );
+		_move( this.state.items, this.state._sort_origin, this.state._sort_destination );
+		this.setState({
+			_sort_origin: null,
+			_sort_destination: null,
+			items: this.state.items
+		});
 	},
 	_onDragOver: function( event ){
 		event.preventDefault();
-		if( event.target !== event.currentTarget ){
-			this._drag_destination = indexOf.call( event.target.parentElement.children, event.target );
+		var child_index = _getChildIndexViaEventTarget( event.currentTarget, event.target );
+		if( child_index >= 0 ){
+			this.setState({
+				_sort_destination: child_index
+			});
 		}
 	}
 });
