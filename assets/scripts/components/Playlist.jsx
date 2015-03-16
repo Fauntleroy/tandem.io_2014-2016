@@ -1,5 +1,7 @@
 var React = require('react');
 var cx = require('classnames');
+var Sortable = require('Sortable');
+var SortableMixin = require('SortableMixin');
 
 var secondsToTime = require('../utils/secondsToTime.js');
 
@@ -27,6 +29,11 @@ var _generateItems = function( items ){
 };
 
 var Playlist = React.createClass({
+	mixins: [SortableMixin],
+	sortableOptions: {
+		ref: 'items',
+		model: 'items'
+	},
 	getInitialState: function () {
 		return _getStateFromStore()
 	},
@@ -65,7 +72,7 @@ var Playlist = React.createClass({
 				<div className="playlist_duration">
 					<i className="fa fa-clock-o"></i> <var className="duration">{secondsToTime(playlist_duration)}</var>
 				</div>
-				<ul className="items">
+				<ul ref="items" className="items">
 					{items_jsx}
 				</ul>
 			</div>

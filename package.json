@@ -59,10 +59,14 @@
     "xhr": "^2.0.1"
   },
   "browser": {
-    "jwplayer": "./assets/scripts/vendor/jwplayer/jwplayer.js"
+    "jwplayer": "./assets/scripts/vendor/jwplayer/jwplayer.js",
+    "Sortable": "./assets/scripts/vendor/sortable/Sortable.js",
+    "SortableMixin": "./assets/scripts/vendor/sortable/react-sortable-mixin.js"
   },
   "browserify-shim": {
-    "jwplayer": "jwplayer"
+    "jwplayer": "jwplayer",
+    "Sortable": "Sortable",
+    "SortableMixin": "SortableMixin"
   },
   "scripts": {
     "start": "node index.js",
