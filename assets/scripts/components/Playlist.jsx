@@ -129,6 +129,7 @@ var Playlist = React.createClass({
 	},
 	// Drag events
 	_onItemDragStart: function( event ){
+		event.dataTransfer.setData("text/html", event.currentTarget);
 		this.setState({
 			_sort_origin: indexOf.call( event.target.parentElement.children, event.target )
 		});
