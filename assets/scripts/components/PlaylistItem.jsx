@@ -47,10 +47,10 @@ var PlaylistItem = React.createClass({
 						<i className={source_icon_classes}></i>
 					</a>
 					<var className="duration">{secondsToTime( item.duration )}</var>
+					<a className="remove" href="#remove" onClick={this._onRemoveClick} draggable="false">
+						<i className="fa fa-times"></i>
+					</a>
 				</div>
-				<a className="remove" href="#remove" onClick={this._onRemoveClick} draggable="false">
-					<i className="fa fa-times"></i>
-				</a>
 			</li>
 		);
 	},
