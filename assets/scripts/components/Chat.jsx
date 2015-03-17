@@ -6,6 +6,7 @@ var ChatMessageEmote = require('./chat/ChatMessageEmote.jsx');
 var ChatMessageLike = require('./chat/ChatMessageLike.jsx');
 var ChatMessagePlay = require('./chat/ChatMessagePlay.jsx');
 var ChatMessageSkip = require('./chat/ChatMessageSkip.jsx');
+var ChatMessageSort = require('./chat/ChatMessageSort.jsx');
 var ChatMessageJoin = require('./chat/ChatMessageJoin.jsx');
 var ChatMessageLeave = require('./chat/ChatMessageLeave.jsx');
 var ChatActionCreator = require('../actions/ChatActionCreator.js');
@@ -38,6 +39,9 @@ var _generateMessages = function( messages ){
 			break;
 			case 'skip':
 				return <ChatMessageSkip key={message.uuid} message={message} />;
+			break;
+			case 'sort':
+				return <ChatMessageSort key={message.uuid} message={message} />;
 			break;
 			case 'join':
 				return <ChatMessageJoin key={message.uuid} message={message} />;
