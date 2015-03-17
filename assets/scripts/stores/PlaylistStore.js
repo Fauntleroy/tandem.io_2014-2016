@@ -8,6 +8,7 @@ var ActionTypes = TandemConstants.ActionTypes;
 
 var CHANGE_EVENT = 'change';
 
+var _is_remote_sorting = false;
 var _is_adding = false;
 var _items = [];
 
@@ -24,6 +25,9 @@ var _removeItem = function( item_id ){
 };
 
 var PlaylistStore = assign( {}, EventEmitter.prototype, {
+	getIsRemoteSorting: function(){
+		return _is_remote_sorting;
+	},
 	getIsAdding: function(){
 		return _is_adding;
 	},
@@ -59,8 +63,15 @@ PlaylistStore.dispatchToken = TandemDispatcher.register( function( payload ){
 			_items = _removeItem( action.item.id );
 			PlaylistStore.emit( CHANGE_EVENT );
 		break;
+		case ActionTypes.PLAYLIST_RECEIVE_SORT_START:
+			if( action.user.id !== tandem.bridge.user.id ){
+				_is_remote_sorting = true;
+				PlaylistStore.emit( CHANGE_EVENT );
+			}
+		break;
 		case ActionTypes.PLAYLIST_RECEIVE_SORT_END:
 			if( action.user.id !== tandem.bridge.user.id ){
+				_is_remote_sorting = false;
 				_move( _items, action.origin, action.destination );
 				PlaylistStore.emit( CHANGE_EVENT );
 			}

@@ -16,6 +16,7 @@ var CHANGE_EVENT = 'change';
 
 var _getStateFromStore = function(){
 	return {
+		is_remote_sorting: PlaylistStore.getIsRemoteSorting(),
 		is_adding: PlaylistStore.getIsAdding(),
 		items: PlaylistStore.getItems()
 	}
@@ -34,8 +35,18 @@ var Playlist = React.createClass({
 		ref: 'items',
 		model: 'items'
 	},
-	handleSort: function( event ){
+	handleStart: function(){
+		PlaylistActionCreator.sortStart();
+		setTimeout( this.disableSort, 10 * 1000 );
+	},
+	handleEnd: function( event ){
 		PlaylistActionCreator.sortEnd( event.oldIndex, event.newIndex );
+	},
+	disableSort: function(){
+		this._sortableInstance.option( 'disabled', true );
+	},
+	enableSort: function(){
+		this._sortableInstance.option( 'disabled', false );
 	},
 	getInitialState: function () {
 		return _getStateFromStore()
@@ -43,22 +54,33 @@ var Playlist = React.createClass({
 	componentDidMount: function(){
 		PlaylistStore.on( CHANGE_EVENT, this._onChange );
 	},
+	componentDidUpdate: function(){
+		if( this.state.is_remote_sorting ){
+			this.disableSort();
+		}
+		else {
+			this.enableSort();
+		}
+	},
 	componentWillUnmount: function(){
 		PlaylistStore.removeListener( CHANGE_EVENT, this._onChange );
 	},
 	render: function(){
+		var is_remote_sorting = this.state.is_remote_sorting;
 		var is_adding = this.state.is_adding;
 		var items = this.state.items;
-		var playlist_add_form_classes = cx({
-			submitting: is_adding
+		var playlist_classes = cx({
+			playlist: true,
+			'playlist--is-remote-sorting': is_remote_sorting,
+			'playlist--is-adding': is_adding
 		});
 		var playlist_duration = items.reduce( function( duration, next_item ){
 			return duration + next_item.duration;
 		}, 0 );
 		var items_jsx = _generateItems( this.state.items );
 		return (
-			<div className="playlist">
-				<form name="playlist_add" className={playlist_add_form_classes} onSubmit={this._onAddSubmit}>
+			<div className={playlist_classes}>
+				<form name="playlist_add" onSubmit={this._onAddSubmit}>
 					<input
 						name="url"
 						type="text"
