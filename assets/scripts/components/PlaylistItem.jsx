@@ -15,7 +15,7 @@ var PlaylistItem = React.createClass({
 		image_classes_object[item.source] = true;
 		var image_classes = cx( image_classes_object );
 		var image_style = {
-			'background-image': 'url('+ item.image +')'
+			backgroundImage: 'url('+ item.image +')'
 		};
 		var source_icon_classes_object = {
 			fa: true

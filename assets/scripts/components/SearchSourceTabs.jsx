@@ -5,7 +5,7 @@ var SearchSourceTab = require('./SearchSourceTab.jsx');
 var _generateSourceTabs = function( sources ){
 	var sources_jsx = sources.map( function( source ){
 		return (
-			<SearchSourceTab source={source} />
+			<SearchSourceTab key={source.name} source={source} />
 		);
 	});
 	return sources_jsx;

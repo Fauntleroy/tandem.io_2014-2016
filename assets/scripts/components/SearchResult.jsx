@@ -14,7 +14,7 @@ var SearchResult = React.createClass({
 		thumbnail_classes_object[result.source] = true;
 		var thumbnail_classes = cx( thumbnail_classes_object );
 		var thumbnail_style = {
-			'background-image': 'url('+ result.image +')'
+			backgroundImage: 'url('+ result.image +')'
 		};
 		return (
 			<li>

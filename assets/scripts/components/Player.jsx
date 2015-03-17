@@ -65,7 +65,7 @@ var Player = React.createClass({
 			'player--empty': !player.item
 		});
 		var cover_style = {
-			'background-image': ( player.item )
+			backgroundImage: ( player.item )
 				? 'url('+ player.item.image +')'
 				: null
 		};
@@ -112,9 +112,9 @@ var Player = React.createClass({
 					</div>
 					<ul className="player__controls">
 						<li className="player__controls__order player__controls__control">
-							<select name="order" onChange={this._onOrderChange}>
-								<option value="fifo" selected={player.order === 'fifo'}>Normal</option>
-								<option value="shuffle" selected={player.order === 'shuffle'}>Shuffle</option>
+							<select name="order" value={player.order} onChange={this._onOrderChange}>
+								<option value="fifo">Normal</option>
+								<option value="shuffle">Shuffle</option>
 							</select>
 						</li>
 						<li className="player__controls__skip player__controls__control">
