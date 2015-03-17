@@ -42,25 +42,11 @@ var Playlist = React.createClass({
 	handleEnd: function( event ){
 		PlaylistActionCreator.sortEnd( event.oldIndex, event.newIndex );
 	},
-	disableSort: function(){
-		this._sortableInstance.option( 'disabled', true );
-	},
-	enableSort: function(){
-		this._sortableInstance.option( 'disabled', false );
-	},
 	getInitialState: function () {
 		return _getStateFromStore()
 	},
 	componentDidMount: function(){
 		PlaylistStore.on( CHANGE_EVENT, this._onChange );
-	},
-	componentDidUpdate: function(){
-		if( this.state.is_remote_sorting ){
-			this.disableSort();
-		}
-		else {
-			this.enableSort();
-		}
 	},
 	componentWillUnmount: function(){
 		PlaylistStore.removeListener( CHANGE_EVENT, this._onChange );
