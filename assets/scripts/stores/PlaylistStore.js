@@ -11,10 +11,16 @@ var CHANGE_EVENT = 'change';
 var _is_adding = false;
 var _items = [];
 
+var _move = function( array, origin, destination ){
+	var moving_item = array.splice( origin, 1 )[0];
+	array.splice( destination, 0, moving_item );
+};
+
 var _removeItem = function( item_id ){
-	_items = reject( _items, function( item ){
+	var items = reject( _items, function( item ){
 		return item.id === item_id;
 	});
+	return items;
 };
 
 var PlaylistStore = assign( {}, EventEmitter.prototype, {
@@ -33,6 +39,10 @@ PlaylistStore.dispatchToken = TandemDispatcher.register( function( payload ){
 			_is_adding = true;
 			PlaylistStore.emit( CHANGE_EVENT );
 		break;
+		case ActionTypes.PLAYLIST_SORT_END:
+			_move( _items, action.origin, action.destination );
+			PlaylistStore.emit( CHANGE_EVENT );
+		break;
 		case ActionTypes.PLAYLIST_RECEIVE_ADD_ITEM_FROM_URL:
 			_is_adding = false;
 			PlaylistStore.emit( CHANGE_EVENT );
@@ -46,8 +56,14 @@ PlaylistStore.dispatchToken = TandemDispatcher.register( function( payload ){
 			PlaylistStore.emit( CHANGE_EVENT );
 		break;
 		case ActionTypes.PLAYLIST_RECEIVE_REMOVE_ITEM:
-			_removeItem( action.item.id );
+			_items = _removeItem( action.item.id );
 			PlaylistStore.emit( CHANGE_EVENT );
+		break;
+		case ActionTypes.PLAYLIST_RECEIVE_SORT_END:
+			if( action.user.id !== tandem.bridge.user.id ){
+				_move( _items, action.origin, action.destination );
+				PlaylistStore.emit( CHANGE_EVENT );
+			}
 		break;
 	}
 });

@@ -34,6 +34,9 @@ var Playlist = React.createClass({
 		ref: 'items',
 		model: 'items'
 	},
+	handleSort: function( event ){
+		PlaylistActionCreator.sortEnd( event.oldIndex, event.newIndex );
+	},
 	getInitialState: function () {
 		return _getStateFromStore()
 	},

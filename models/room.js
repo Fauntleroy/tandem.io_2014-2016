@@ -11,7 +11,8 @@ var rooms = [];
 
 var generateAuthToken = require('../utils/generateAuthToken.js');
 var likeMessage = require('../utils/likeMessage.js');
-var generateRoomName = require('../utils/generateRoomName');
+var generateRoomName = require('../utils/generateRoomName.js');
+var move = require('../utils/move.js');
 
 var Room = function( data, options ){
 
@@ -92,6 +93,12 @@ var Room = function( data, options ){
 		});
 		socket.on( 'playlist:remove', function( id ){
 			room.removeItem( id );
+		});
+		socket.on( 'playlist:sort:start', function(){
+			room.sortStart( user );
+		});
+		socket.on( 'playlist:sort:end', function( origin, destination ){
+			room.sortEnd( origin, destination, user );
 		});
 		socket.on( 'player:skip', function(){
 			room.nextItem( user );
@@ -253,7 +260,17 @@ Room.prototype.setOrder = function( order ){
 	this.data.player.order = order;
 	io.of( this.namespace ).emit( 'player:order', order );
 	return order;
-}
+};
+
+Room.prototype.sortStart = function( user ){
+	io.of( this.namespace ).emit( 'playlist:sort:start', user );
+};
+
+Room.prototype.sortEnd = function( origin, destination, user ){
+	var item = this.data.playlist[origin];
+	move( this.data.playlist, origin, destination );
+	io.of( this.namespace ).emit( 'playlist:sort:end', origin, destination, item, user );
+};
 
 // export a function so we can pass in http_server instance
 module.exports = function( config ){
