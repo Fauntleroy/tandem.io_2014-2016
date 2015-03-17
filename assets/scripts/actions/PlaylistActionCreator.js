@@ -52,6 +52,20 @@ var PlaylistActionCreator = {
 			item_id: item_id
 		});
 		TandemPlaylistSocketUtils.removeItem( item_id );
+	},
+	sortStart: function(){
+		TandemDispatcher.handleViewAction({
+			type: ActionTypes.PLAYLIST_SORT_START
+		});
+		TandemPlaylistSocketUtils.sortStart();
+	},
+	sortEnd: function( origin, destination ){
+		TandemDispatcher.handleViewAction({
+			type: ActionTypes.PLAYLIST_SORT_END,
+			origin: origin,
+			destination: destination
+		});
+		TandemPlaylistSocketUtils.sortEnd( origin, destination );
 	}
 };
 

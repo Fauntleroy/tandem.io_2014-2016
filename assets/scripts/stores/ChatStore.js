@@ -68,6 +68,16 @@ ChatStore.dispatchToken = TandemDispatcher.register( function( payload ){
 			});
 			ChatStore.emit( CHANGE_EVENT );
 		break;
+		case ActionTypes.PLAYLIST_RECEIVE_SORT_END:
+			_addMessage({
+				type: 'sort',
+				origin: action.origin,
+				destination: action.destination,
+				user: action.user,
+				item: action.item
+			});
+			ChatStore.emit( CHANGE_EVENT );
+		break;
 		case ActionTypes.USERS_RECEIVE_JOIN:
 			_addMessage({
 				type: 'join',

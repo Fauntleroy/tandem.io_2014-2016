@@ -20,6 +20,21 @@ var PlaylistServerActionCreator = {
 			type: ActionTypes.PLAYLIST_RECEIVE_REMOVE_ITEM,
 			item: item
 		});
+	},
+	receiveSortStart: function( user ){
+		TandemDispatcher.handleServerAction({
+			type: ActionTypes.PLAYLIST_RECEIVE_SORT_START,
+			user: user
+		});
+	},
+	receiveSortEnd: function( origin, destination, item, user ){
+		TandemDispatcher.handleServerAction({
+			type: ActionTypes.PLAYLIST_RECEIVE_SORT_END,
+			origin: origin,
+			destination: destination,
+			item: item,
+			user: user
+		});
 	}
 };
 

@@ -1,15 +1,22 @@
-#playlist {
+.playlist {
 	margin-top: 20px;
+
+	&.playlist--is-adding {
+		form > .fa-refresh {
+			display: inline-block;
+		}
+	}
+
+	&.playlist--is-remote-sorting {
+		ul.items {
+			pointer-events: none;
+			opacity: 0.5;
+		}
+	}
 
 	form {
 		float: left;
 		margin: 0 0 10px 0;
-
-		&.submitting {
-			> .fa-refresh {
-				display: inline-block;
-			}
-		}
 
 		> .fa-refresh {
 			display: none;
@@ -20,6 +27,7 @@
 
 	ul.items {
 		.list-reset;
+		.transition( opacity 500ms ease );
 		clear: both;
 		padding-top: 10px;
 
@@ -32,12 +40,16 @@
 		}
 
 		> li {
-			.animation( slidein 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94) );
+			//.animation( slidein 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94) );
 			position: relative;
 			clear: both;
 			min-height: 58px;
 			margin: 0 0 10px 0;
 			padding: 0 40px 0 0;
+
+			&.sortable-ghost {
+				opacity: 0.15 !important;
+			}
 
 			h3 {
 				display: inline;

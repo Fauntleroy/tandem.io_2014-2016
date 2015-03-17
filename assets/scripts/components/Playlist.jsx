@@ -1,5 +1,7 @@
 var React = require('react');
 var cx = require('classnames');
+var Sortable = require('Sortable');
+var SortableMixin = require('SortableMixin');
 
 var secondsToTime = require('../utils/secondsToTime.js');
 
@@ -14,6 +16,7 @@ var CHANGE_EVENT = 'change';
 
 var _getStateFromStore = function(){
 	return {
+		is_remote_sorting: PlaylistStore.getIsRemoteSorting(),
 		is_adding: PlaylistStore.getIsAdding(),
 		items: PlaylistStore.getItems()
 	}
@@ -27,6 +30,18 @@ var _generateItems = function( items ){
 };
 
 var Playlist = React.createClass({
+	mixins: [SortableMixin],
+	sortableOptions: {
+		ref: 'items',
+		model: 'items'
+	},
+	handleStart: function(){
+		PlaylistActionCreator.sortStart();
+		setTimeout( this.disableSort, 10 * 1000 );
+	},
+	handleEnd: function( event ){
+		PlaylistActionCreator.sortEnd( event.oldIndex, event.newIndex );
+	},
 	getInitialState: function () {
 		return _getStateFromStore()
 	},
@@ -37,18 +52,21 @@ var Playlist = React.createClass({
 		PlaylistStore.removeListener( CHANGE_EVENT, this._onChange );
 	},
 	render: function(){
+		var is_remote_sorting = this.state.is_remote_sorting;
 		var is_adding = this.state.is_adding;
 		var items = this.state.items;
-		var playlist_add_form_classes = cx({
-			submitting: is_adding
+		var playlist_classes = cx({
+			playlist: true,
+			'playlist--is-remote-sorting': is_remote_sorting,
+			'playlist--is-adding': is_adding
 		});
 		var playlist_duration = items.reduce( function( duration, next_item ){
 			return duration + next_item.duration;
 		}, 0 );
 		var items_jsx = _generateItems( this.state.items );
 		return (
-			<div className="playlist">
-				<form name="playlist_add" className={playlist_add_form_classes} onSubmit={this._onAddSubmit}>
+			<div className={playlist_classes}>
+				<form name="playlist_add" onSubmit={this._onAddSubmit}>
 					<input
 						name="url"
 						type="text"
@@ -65,7 +83,7 @@ var Playlist = React.createClass({
 				<div className="playlist_duration">
 					<i className="fa fa-clock-o"></i> <var className="duration">{secondsToTime(playlist_duration)}</var>
 				</div>
-				<ul className="items">
+				<ul ref="items" className="items">
 					{items_jsx}
 				</ul>
 			</div>
