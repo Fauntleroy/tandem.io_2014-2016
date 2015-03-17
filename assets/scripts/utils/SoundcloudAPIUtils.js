@@ -21,7 +21,7 @@ var _processSoundcloudItem = function( item ){
 	var processed_item = {
 		original_id: item.id,
 		title: item.title,
-		url: url,
+		url: item.permalink_url,
 		media_url: stream_url,
 		source: 'soundcloud',
 		image: image,
