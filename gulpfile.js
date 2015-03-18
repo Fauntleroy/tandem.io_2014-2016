@@ -26,7 +26,8 @@ var generateCssStream = function(){
 		.pipe( gulp_less({
 			paths: [ path.join( __dirname, 'assets', 'styles' ) ]
 		}))
-		.pipe( gulp.dest('./assets/compiled') );
+		.pipe( gulp.dest('./assets/compiled') )
+		.pipe( gulp_livereload() );
 	return stream;
 };
 
@@ -35,8 +36,7 @@ gulp.task( 'compile css', function(){
 });
 
 gulp.task( 'compile and watch css', function(){
-	var stream = generateCssStream();
-	stream.pipe( gulp_livereload() );
+	gulp_livereload.listen();
 	gulp.watch( './assets/styles/**/*.{less,css}', ['compile css'] );
 });
 
