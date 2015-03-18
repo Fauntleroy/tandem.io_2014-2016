@@ -143,12 +143,16 @@ var Player = React.createClass({
 		);
 	},
 	_setupPlayer: function(){
+		var volume = PlayerStore.getVolume();
+		var mute = PlayerStore.getMute();
 		this.player = jwplayer('jwplayer').setup({
 			flashplayer: '/scripts/vendor/jwplayer/jwplayer.flash.swf',
 			html5player: '/scripts/vendor/jwplayer/jwplayer.html5.js',
 			file: 'http://www.youtube.com/watch?v=z8zFKSdm-Hs',
 			controls: false
 		});
+		this.player.setVolume( volume );
+		this.player.setMute( mute );
 		this.player.onTime( this._onPlayerTime );
 		this._loadItem( this.state.item );
 	},
