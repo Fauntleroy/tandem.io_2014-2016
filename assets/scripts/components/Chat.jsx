@@ -12,6 +12,7 @@ var ChatMessageLeave = require('./chat/ChatMessageLeave.jsx');
 var ChatActionCreator = require('../actions/ChatActionCreator.js');
 var PlayerActionCreator = require('../actions/PlayerActionCreator.js');
 var ChatStore = require('../stores/ChatStore.js');
+var PlayerStore = require('../stores/PlayerStore.js');
 
 var CHANGE_EVENT = 'change';
 var STARTS_WITH_LIKE_TEXT_REGEX = /^<3(?:$|\s)|^\+\+(?:$|\s)/;
@@ -105,7 +106,8 @@ var Chat = React.createClass({
 				}
 				// auto-like items if they start with...
 				if( STARTS_WITH_LIKE_TEXT_REGEX.test( new_message ) ){
-					PlayerActionCreator.likeItem();
+					var item = PlayerStore.getItem();
+					PlayerActionCreator.likeItem( item );
 				}
 				this.setState({
 					new_message: ''

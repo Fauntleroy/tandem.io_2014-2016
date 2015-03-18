@@ -26,6 +26,9 @@ var PlayerActionCreator = {
 		TandemPlayerSocketUtils.skipItem();
 	},
 	likeItem: function( item ){
+		if( !item ){
+			return;
+		}
 		var user = tandem.bridge.user;
 		TandemDispatcher.handleViewAction({
 			type: ActionTypes.PLAYER_LIKE_ITEM
