@@ -1,7 +1,3 @@
-if( process.env.NEW_RELIC_LICENSE_KEY ){
-	require('newrelic');
-}
-
 const PORT = process.env.PORT || 8080;
 const SESSION_SECRET = process.env.TANDEM_SESSION_SECRET;
 const SOUNDCLOUD_APP_ID = process.env.TANDEM_SOUNDCLOUD_APP_ID;
@@ -15,7 +11,6 @@ const URL = process.env.TANDEM_URL || 'http://dev.tandem.io:8080';
 const ENV = process.env.NODE_ENV || 'development';
 const SOUNDCLOUD_API_BASE_URL = 'https://api.soundcloud.com';
 const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
-const SENTRY_DSN = process.env.TANDEM_SENTRY_DSN;
 const VIEWS_PATH = __dirname +'/views';
 const NO_OP = function(){};
 
@@ -109,12 +104,6 @@ server.use( express.compress() );
 
 // Static file serving
 server.use( express.static( __dirname + '/assets' ) );
-
-// Exception tracking
-if( SENTRY_DSN ){
-	var raven = require('raven');
-	server.use( raven.middleware.express( SENTRY_DSN ) );
-}
 
 // Socket.io configuration
 io.use( function( socket, next ){
