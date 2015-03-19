@@ -30,7 +30,6 @@ module.exports = function( req, res, next ){
 		name: name,
 		avatar: 'http://www.gravatar.com/avatar/'+ generateUsernameHash( name ) +'?default=retro'
 	});
-	console.log('user',user);
 	req.session.save( function(){
 		next();
 	});
