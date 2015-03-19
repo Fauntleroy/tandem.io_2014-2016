@@ -1,7 +1,7 @@
 var querystring = require('querystring');
 var io = require('socket.io-client');
 
-var TandemSocketConnection = io.connect( '/rooms/'+ tandem.bridge.room.id, {
+var TandemSocketConnection = io.connect( location.protocol +'//'+ location.host +'/rooms/'+ tandem.bridge.room.id, {
 	query: querystring.stringify({
 		token: tandem.bridge.user.token,
 		id: tandem.bridge.user.id,
