@@ -15,7 +15,7 @@ var generateUsernameHash = function( username ){
 
 module.exports = function( req, res, next ){
 	if( !req.session ){
-		return next;
+		return next();
 	}
 	var user = req.session.passport.user = req.session.passport.user || {};
 	// user already has an id, so we've done this already
