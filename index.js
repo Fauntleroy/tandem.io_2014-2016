@@ -96,7 +96,7 @@ server.use( express_session({
 		pass: (parsed_redis_connection_url.auth || '').split(':')[1]
 	}),
 	resave: false,
-	saveUninitialized: false
+	saveUninitialized: true
 }) );
 
 // Compress responses
