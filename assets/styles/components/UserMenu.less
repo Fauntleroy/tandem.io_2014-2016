@@ -1,0 +1,58 @@
+.menu__content {
+	.shadow-level-2;
+	display: none;
+	position: absolute;
+	right: 0;
+	z-index: 16777271;
+	width: 225px;
+	background: rgb( 45, 45, 45 );
+}
+
+.menu--active {
+	.menu__content {
+		display: block;
+	}
+}
+
+.user-menu {
+	color: white;
+
+	.menu__trigger {
+		display: block;
+		padding: 4px 8px;
+		color: white;
+		background: black;
+	}
+
+	.user {
+		margin-right: 8px;
+	}
+
+	.user__avatar {
+		width: 15px;
+		height: 15px;
+	}
+}
+
+.user-menu__items {
+	.list-reset;
+}
+
+.user-menu__item__link,
+.user-menu__item__info {
+	display: block;
+	padding: 4px 8px;
+	border-bottom: rgb( 25, 25, 25 ) 1px solid;
+}
+
+.user-menu__item__link {
+	&:hover,
+	&:hover:visited {
+		color: white;
+		background: rgb( 65, 65, 65 );
+	}
+}
+
+.user-menu__item__info {
+
+}
