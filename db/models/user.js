@@ -26,7 +26,7 @@ var User = Waterline.Collection.extend({
 			type: 'string'
 		},
 		youtube_access_token_expiry: {
-			type: 'integer'
+			type: 'datetime'
 		},
 		youtube_likes_id: {
 			type: 'string',

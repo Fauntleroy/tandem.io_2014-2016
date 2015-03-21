@@ -197,10 +197,11 @@ passport.use( new GoogleStrategy({
 	getLikesID( access_token, function( err, likes_id ){
 		if( err ) return done( err, null );
 		var user_session = _.extend( {}, req.session.passport.user );
+		var youtube_access_token_expiry = new Date( Date.now() + ( params.expires_in * 1000 ) );
 		var auth_data = {
 			youtube_client_id: profile.id,
 			youtube_access_token: access_token,
-			youtube_access_token_expiry: Date.now() + ( params.expires_in * 1000 ),
+			youtube_access_token_expiry: youtube_access_token_expiry,
 			youtube_refresh_token: refresh_token,
 			youtube_likes_id: likes_id
 		};
@@ -342,7 +343,7 @@ server.all( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
 			refreshYouTubeToken( req.user.youtube_refresh_token, function( err, access_token, expires_in ){
 				if( err ) return next( err, null );
 				req.user.youtube_access_token = access_token;
-				req.user.youtube_access_token_expiry = Date.now() + ( expires_in * 1000 );
+				req.user.youtube_access_token_expiry = new Date( Date.now() + ( expires_in * 1000 ) );
 				next( null, access_token );
 			});
 		}
