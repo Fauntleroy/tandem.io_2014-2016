@@ -52,7 +52,10 @@ var Room = function( data, options ){
 		};
 
 		// send current presence list
-		socket.emit( 'presences:list', room.data.users );
+		var users_data = room.data.users.map( function( user ){
+			return _.pick( user, 'id', 'name', 'avatar' );
+		});
+		socket.emit( 'presences:list', users_data );
 		// add connection to presences
 		var presence = {
 			id: id,
@@ -154,7 +157,8 @@ Room.prototype.addPresence = function( presence ){
 			avatar: presence.avatar,
 			sids: [ presence.sid ]
 		});
-		io.of( this.namespace ).emit( 'presences:join', presence );
+		var presence_data = _.pick( presence, 'id', 'name', 'avatar' );
+		io.of( this.namespace ).emit( 'presences:join', presence_data );
 	}
 	return;
 };
@@ -171,6 +175,7 @@ Room.prototype.removePresence = function( presence ){
 	// if sids.length === 0 remove user from users array
 	if( existing_user.sids.length === 0 ){
 		this.data.users = _.without( this.data.users, existing_user );
+		var presence_data = _.pick( presence, 'id', 'name', 'avatar' );
 		io.of( this.namespace ).emit( 'presences:leave', presence );
 	}
 	return;
