@@ -72,13 +72,13 @@ var Menu = React.createClass({
 var UserMenu = React.createClass({
 	render: function(){
 		var user = tandem.bridge.user;
-		var register_youtube_jsx = ( user.youtube_linked )
-			? <span className="user-menu__item__info">Registered with Youtube <i className="fa fa-check" /></span>
-			: <a className="user-menu__item__link" href="/auth/youtube">Register with Youtube <i className="fa fa-youtube" /></a>;
-		var register_soundcloud_jsx = ( user.soundcloud_linked )
-			? <span className="user-menu__item__info">Registered with Soundcloud <i className="fa fa-check" /></span>
-			: <a className="user-menu__item__link" href="/auth/soundcloud">Register with Soundcloud <i className="fa fa-soundcloud" /></a>;
-		var logout_jsx = ( user.youtube_linked || user.soundcloud_linked )
+		var register_youtube_jsx = ( user.is_youtube_linked )
+			? <span className="user-menu__item__info">Logged in with Youtube <i className="fa fa-check" /></span>
+			: <a className="user-menu__item__link" href="/auth/youtube">Log in with Youtube <i className="fa fa-youtube" /></a>;
+		var register_soundcloud_jsx = ( user.is_soundcloud_linked )
+			? <span className="user-menu__item__info">Logged in with Soundcloud <i className="fa fa-check" /></span>
+			: <a className="user-menu__item__link" href="/auth/soundcloud">Log in with Soundcloud <i className="fa fa-soundcloud" /></a>;
+		var logout_jsx = ( user.is_registered )
 			? <li className="user-menu__item"><a className="user-menu__item__link" href="/logout">Log Out</a></li>
 			: '';
 		return (

@@ -28,7 +28,10 @@ module.exports = function( req, res, next ){
 	user = _.extend( user, {
 		id: uuid.v4(),
 		name: name,
-		avatar: 'http://www.gravatar.com/avatar/'+ generateUsernameHash( name ) +'?default=retro'
+		avatar: 'http://www.gravatar.com/avatar/'+ generateUsernameHash( name ) +'?default=retro',
+		is_youtube_linked: false,
+		is_soundcloud_linked: false,
+		is_registered: false
 	});
 	req.session.save( function(){
 		next();

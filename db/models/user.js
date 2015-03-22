@@ -15,6 +15,13 @@ var User = Waterline.Collection.extend({
 			type: 'string',
 			size: 255
 		},
+		youtube_username: {
+			type: 'string'
+		},
+		youtube_avatar: {
+			type: 'string',
+			size: 255
+		},
 		youtube_client_id: {
 			type: 'string',
 			index: true
@@ -32,6 +39,13 @@ var User = Waterline.Collection.extend({
 			type: 'string',
 			index: true
 		},
+		soundcloud_username: {
+			type: 'string'
+		},
+		soundcloud_avatar: {
+			type: 'string',
+			size: 255
+		},
 		soundcloud_client_id: {
 			type: 'string'
 		},
@@ -39,7 +53,32 @@ var User = Waterline.Collection.extend({
 			type: 'string'
 		},
 
+		//// toJSON override
+		toJSON: function(){
+			var user_object = this.toObject();
+			user_object.is_youtube_linked = this.isYoutubeLinked();
+			user_object.is_soundcloud_linked = this.isSoundcloudLinked();
+			user_object.is_registered = this.isRegistered();
+			return user_object;
+		},
+
 		//// instance methods
+
+		// determine if user is currently registered with a provider
+		isRegistered: function(){
+			return (this.isYoutubeLinked() || this.isSoundcloudLinked());
+		},
+
+		// determine if user is registered with Youtube
+		isYoutubeLinked: function(){
+			return !!this.youtube_client_id;
+		},
+
+		// determine if user is registered with Soundcloud
+		isSoundcloudLinked: function(){
+			return !!this.soundcloud_client_id;
+		},
+
 		// remove an auth strategy from an existing user
 		removeAuth: function( auth_provider, cb ){
 			cb = cb || NO_OP;
@@ -82,7 +121,8 @@ var User = Waterline.Collection.extend({
 		.exec( function( err, user ){
 			// user with client id already exists, return it
 			if( user ){
-				return cb( null, user );
+				cb( null, user );
+				return;
 			}
 			// if we have a user id, update that user
 			// the only ids we'll find in the db are numbers
@@ -92,10 +132,15 @@ var User = Waterline.Collection.extend({
 				.where({ id: user_data.id })
 				.exec( function( err, user ){
 					if( err ){
-						return cb( err );
+						cb( err );
+						return;
 					}
 					if( !user ){
-						return User.create( _.extend( user_data, auth_data ), cb );
+						User.create( _.extend( user_data, auth_data, {
+							avatar: ( auth_data.youtube_avatar || auth_data.soundcloud_avatar ),
+							name: ( auth_data.youtube_username || auth_data.soundcloud_username )
+						} ), cb );
+						return;
 					}
 					user = _.extend( user, auth_data );
 					user.save( cb );
@@ -103,7 +148,10 @@ var User = Waterline.Collection.extend({
 			}
 			// otherwise, we're making a new user
 			else {
-				User.create( _.extend( user_data, auth_data ), cb );
+				User.create( _.extend( user_data, auth_data, {
+					avatar: ( auth_data.youtube_avatar || auth_data.soundcloud_avatar ),
+					name: ( auth_data.youtube_username || auth_data.soundcloud_username )
+				}), cb );
 			}
 		});
 	}
