@@ -5,6 +5,7 @@ var xhr = require('xhr');
 var SearchServerActionCreator = require('../actions/SearchServerActionCreator.js');
 
 var NO_OP = function(){};
+var REQUEST_TIMEOUT = 15 * 1000;
 var SOUNDCLOUD_CLIENT_ID = tandem.bridge.apis.soundcloud.client_id;
 var SOUNDCLOUD_API_HOST = 'api.soundcloud.com';
 var SOUNDCLOUD_API_PROXY_PATH = '/api/v1/proxy/soundcloud';
@@ -71,7 +72,9 @@ var SoundcloudAPIUtils = {
 				url: item_url
 			}
 		});
-		jsonp( resolve_url, {}, function( error, data ){
+		jsonp( resolve_url, {
+			timeout: REQUEST_TIMEOUT
+		}, function( error, data ){
 			if( error ){
 				return callback( new Error('Error resolving url with SoundCloud.') );
 			}
@@ -94,7 +97,9 @@ var SoundcloudAPIUtils = {
 				q: query
 			}
 		});
-		jsonp( search_url, {}, function( err, data ){
+		jsonp( search_url, {
+			timeout: REQUEST_TIMEOUT
+		}, function( err, data ){
 			if( err ){
 				alert('SoundCloud search error');
 				return;

@@ -5,6 +5,7 @@ var xhr = require('xhr');
 var SearchServerActionCreator = require('../actions/SearchServerActionCreator.js');
 
 var NO_OP = function(){};
+var REQUEST_TIMEOUT = 15 * 1000;
 var YOUTUBE_API_HOST = 'gdata.youtube.com';
 var YOUTUBE_API_PATH = '/feeds/api';
 var YOUTUBE_API_PROXY_PATH = '/api/v1/proxy/youtube';
@@ -70,7 +71,9 @@ var YoutubeAPIUtils = {
 				alt: 'jsonc'
 			}
 		});
-		jsonp( video_url, {}, function( error, data ){
+		jsonp( video_url, {
+			timeout: REQUEST_TIMEOUT
+		}, function( error, data ){
 			if( error || data.error ){
 				return callback( new Error('Error getting item from YouTube') );
 			}
@@ -97,7 +100,9 @@ var YoutubeAPIUtils = {
 				alt: 'jsonc'
 			}
 		});
-		jsonp( search_url, {}, function( err, data ){
+		jsonp( search_url, {
+			timeout: REQUEST_TIMEOUT
+		}, function( err, data ){
 			if( err ){
 				console.log( 'YouTube search error', err );
 				return;
