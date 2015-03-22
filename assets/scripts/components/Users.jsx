@@ -19,7 +19,7 @@ var _generateUsers = function( users ){
 	var users_jsx = users.map( function( user ){
 		var li_classes = cx({
 			users__user: true,
-			'users__user--self': user.self
+			'users__user--self': ( user.id === tandem.bridge.user.id )
 		});
 		return (
 			<li key={user.id} data-id={user.id} className={li_classes}>
