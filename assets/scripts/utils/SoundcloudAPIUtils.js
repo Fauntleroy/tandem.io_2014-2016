@@ -78,7 +78,10 @@ var SoundcloudAPIUtils = {
 			if( error ){
 				return callback( new Error('Error resolving url with SoundCloud.') );
 			}
-			if( !data.streamable ){
+			else if( data.kind !== 'track' ){
+				return callback( new Error('Invalid SoundCloud URL. Must be a SoundCloud track (no sets for now).') );
+			}
+			else if( !data.streamable ){
 				return callback( new Error('Streaming has been disabled for this track! Nooo :(') );
 			}
 			var item = _processSoundcloudItem( data );
