@@ -85,6 +85,8 @@ var User = Waterline.Collection.extend({
 			// kind of nasty, but will probably replace with associations later
 			switch( auth_provider ){
 			case 'youtube':
+				this.youtube_username = null;
+				this.youtube_avatar = null;
 				this.youtube_client_id = null;
 				this.youtube_access_token = null;
 				this.youtube_refresh_token = null;
@@ -92,6 +94,8 @@ var User = Waterline.Collection.extend({
 				this.youtube_likes_id = null;
 			break;
 			case 'soundcloud':
+				this.soundcloud_username = null;
+				this.soundcloud_avatar = null;
 				this.soundcloud_client_id = null;
 				this.soundcloud_access_token = null;
 			break;
