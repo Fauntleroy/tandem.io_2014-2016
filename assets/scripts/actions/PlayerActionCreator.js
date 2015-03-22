@@ -36,12 +36,12 @@ var PlayerActionCreator = {
 		TandemPlayerSocketUtils.likeItem();
 		switch( item.source ){
 			case 'youtube':
-				if( user.youtube_linked && user.youtube_likes_id ){
+				if( user.is_youtube_linked && user.youtube_likes_id ){
 					YoutubeAPIUtils.likeItem( item.original_id, user.youtube_likes_id );
 				}
 			break;
 			case 'soundcloud':
-				if( user.soundcloud_linked ){
+				if( user.is_soundcloud_linked ){
 					SoundcloudAPIUtils.likeItem( item.original_id );
 				}
 			break;

@@ -42,7 +42,9 @@ gulp.task( 'compile and watch css', function(){
 
 var generateBrowserifyBundler = function(){
 	var bundler = browserify( './assets/scripts/room.jsx', watchify.args );
-	bundler.transform('reactify');
+	bundler.transform({
+		global: true
+	}, 'reactify');
 	bundler.transform('browserify-shim');
 	return bundler;
 };

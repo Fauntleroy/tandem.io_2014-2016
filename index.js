@@ -151,6 +151,8 @@ passport.use( new SoundcloudStrategy({
 }, function( req, access_token, refresh_token, params, profile, done ){
 	var user_session = req.session.passport.user;
 	var auth_data = {
+		soundcloud_username: profile._json.username,
+		soundcloud_avatar: profile._json.avatar_url,
 		soundcloud_client_id: profile.id,
 		soundcloud_access_token: access_token
 	};
@@ -197,10 +199,13 @@ passport.use( new GoogleStrategy({
 	getLikesID( access_token, function( err, likes_id ){
 		if( err ) return done( err, null );
 		var user_session = _.extend( {}, req.session.passport.user );
+		var youtube_access_token_expiry = new Date( Date.now() + ( params.expires_in * 1000 ) );
 		var auth_data = {
+			youtube_username: profile.displayName,
+			youtube_avatar: profile._json.picture,
 			youtube_client_id: profile.id,
 			youtube_access_token: access_token,
-			youtube_access_token_expiry: Date.now() + ( params.expires_in * 1000 ),
+			youtube_access_token_expiry: youtube_access_token_expiry,
 			youtube_refresh_token: refresh_token,
 			youtube_likes_id: likes_id
 		};
@@ -342,7 +347,7 @@ server.all( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
 			refreshYouTubeToken( req.user.youtube_refresh_token, function( err, access_token, expires_in ){
 				if( err ) return next( err, null );
 				req.user.youtube_access_token = access_token;
-				req.user.youtube_access_token_expiry = Date.now() + ( expires_in * 1000 );
+				req.user.youtube_access_token_expiry = new Date( Date.now() + ( expires_in * 1000 ) );
 				next( null, access_token );
 			});
 		}
@@ -382,10 +387,8 @@ server.post( '/rooms', function( req, res ){
 
 server.get( '/rooms/:id', function( req, res ){
 	var user = req.session.passport.user || {};
-	var user_data = _.pick( user, 'id', 'name', 'avatar', 'youtube_likes_id' );
+	var user_data = _.pick( user, 'id', 'name', 'avatar', 'is_registered', 'is_youtube_linked', 'is_soundcloud_linked', 'youtube_likes_id' );
 	user_data.id = user_data.id.toString();
-	user_data.youtube_linked = !!user.youtube_client_id;
-	user_data.soundcloud_linked = !!user.soundcloud_client_id;
 	user_data.token = generateAuthToken( user_data.id, user_data.name, user_data.avatar );
 	var room = Room.findById( req.params.id, true );
 	res.expose( room, 'tandem.bridge.room' );

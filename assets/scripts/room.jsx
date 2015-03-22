@@ -2,6 +2,7 @@ var React = require('react');
 var domready = require('domready');
 
 // React Components
+var UserMenu = require('./components/UserMenu.jsx');
 var Search = require('./components/Search.jsx');
 var Users = require('./components/Users.jsx');
 var Chat = require('./components/Chat.jsx');
@@ -17,6 +18,7 @@ window.tandem = window.tandem || {};
 domready( function(){
 	tandem.components = {
 		title: new Title(),
+		user_menu: React.render( <UserMenu />, document.getElementById('user-menu') ),
 		search: React.render( <Search />, document.getElementById('search') ),
 		users: React.render( <Users />, document.getElementById('users') ),
 		chat: React.render( <Chat />, document.getElementById('chat') ),
