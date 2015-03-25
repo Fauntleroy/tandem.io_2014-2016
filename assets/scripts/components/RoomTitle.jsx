@@ -55,6 +55,9 @@ var RoomTitle = React.createClass({
 		event.preventDefault();
 		var title_input_element = this.refs.title.getDOMNode();
 		title_input_element.value = this.state.title;
+		setTimeout( function(){
+			title_input_element.focus();
+		}, 0 );
 		this.setState({
 			is_editing: !this.state.is_editing
 		});
