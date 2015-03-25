@@ -202,7 +202,13 @@ var Player = React.createClass({
 	},
 	_onSkipClick: function( event ){
 		event.preventDefault();
-		PlayerActionCreator.skipItem();
+		var current_item = PlayerStore.getItem();
+		if( !current_item ){
+			return;
+		}
+		if( confirm('Are you sure you want to skip this? It will be skipped for every user in the room.') ){
+			PlayerActionCreator.skipItem();
+		}
 	},
 	_onLikeClick: function( event ){
 		event.preventDefault();
