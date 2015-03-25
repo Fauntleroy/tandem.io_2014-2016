@@ -33,12 +33,16 @@
 
 		li.chat {
 			&.self {
+				.content {
+					background-color: @white;
+				}
 				.user {
 					text-align: right;
 
 					.user__avatar {
 						float: right;
 						margin: -10px 5px 0 6px;
+						border-color: @white;
 					}
 				}
 				.timestamp {
