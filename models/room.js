@@ -1,6 +1,7 @@
 const PLAYER_TICK_INTERVAL_SECONDS = 3;
 const PLAYER_TICK_INTERVAL = PLAYER_TICK_INTERVAL_SECONDS * 1000;
 const AUTH_TIMEOUT = 15 * 1000;
+const MAX_TITLE_LENGTH = 50;
 const NO_OP = function(){};
 
 var _ = require('underscore');
@@ -185,6 +186,7 @@ Room.prototype.removePresence = function( presence ){
 };
 
 Room.prototype.setTitle = function( title, user ){
+	title = String( title ).substring( 0, MAX_TITLE_LENGTH );
 	this.data.name = title;
 	io.of( this.namespace ).emit( 'room:title', title, user );
 };

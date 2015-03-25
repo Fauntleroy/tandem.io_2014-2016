@@ -45,6 +45,14 @@ ChatStore.dispatchToken = TandemDispatcher.register( function( payload ){
 			_addMessage( action.message );
 			ChatStore.emit( CHANGE_EVENT );
 		break;
+		case ActionTypes.ROOM_RECEIVE_SET_TITLE:
+			_addMessage({
+				type: 'title',
+				user: action.user,
+				title: action.title
+			});
+			ChatStore.emit( CHANGE_EVENT );
+		break;
 		case ActionTypes.PLAYER_RECEIVE_LIKE_ITEM:
 			_addMessage({
 				type: 'like',

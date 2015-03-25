@@ -4,6 +4,7 @@ var uuid = require('node-uuid');
 var AutosizeTextarea = require('react-textarea-autosize');
 var ChatMessage = require('./chat/ChatMessage.jsx');
 var ChatMessageEmote = require('./chat/ChatMessageEmote.jsx');
+var ChatMessageTitle = require('./chat/ChatMessageTitle.jsx');
 var ChatMessageLike = require('./chat/ChatMessageLike.jsx');
 var ChatMessagePlay = require('./chat/ChatMessagePlay.jsx');
 var ChatMessageSkip = require('./chat/ChatMessageSkip.jsx');
@@ -33,6 +34,9 @@ var _generateMessages = function( messages ){
 			break;
 			case 'emote':
 				return <ChatMessageEmote key={message.uuid} message={message} />;
+			break;
+			case 'title':
+				return <ChatMessageTitle key={message.uuid} message={message} />;
 			break;
 			case 'like':
 				return <ChatMessageLike key={message.uuid} message={message} />;

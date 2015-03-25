@@ -53,6 +53,8 @@ var RoomTitle = React.createClass({
 	},
 	_onEditClick: function( event ){
 		event.preventDefault();
+		var title_input_element = this.refs.title.getDOMNode();
+		title_input_element.value = this.state.title;
 		this.setState({
 			is_editing: !this.state.is_editing
 		});
