@@ -41,6 +41,7 @@
     "passport-google-oauth": "~0.1.5",
     "passport-soundcloud": "~0.1.2",
     "react": "^0.12.2",
+    "react-textarea-autosize": "^1.1.0",
     "reactify": "^1.0.0",
     "request": "~2.33.0",
     "sails-mysql": "^0.10.7",

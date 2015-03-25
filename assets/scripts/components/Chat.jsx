@@ -1,6 +1,7 @@
 var React = require('react');
 var uuid = require('node-uuid');
 
+var AutosizeTextarea = require('react-textarea-autosize');
 var ChatMessage = require('./chat/ChatMessage.jsx');
 var ChatMessageEmote = require('./chat/ChatMessageEmote.jsx');
 var ChatMessageLike = require('./chat/ChatMessageLike.jsx');
@@ -74,13 +75,13 @@ var Chat = React.createClass({
 		return (
 			<div className="chat">
 				<form className="new_message">
-					<textarea
+					<AutosizeTextarea
 						name="new_message"
 						value={this.state.new_message}
 						placeholder="(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ type to chat"
 						onChange={this._onNewMessageChange}
 						onKeyPress={this._onNewMessageKeyPress}
-					></textarea>
+					/>
 				</form>
 				<ul className="messages">
 					{messages_jsx}
