@@ -1,0 +1,50 @@
+.title {
+	position: relative;
+
+	&.title--editing {
+		.title__text {
+			display: none;
+		}
+		.title__input {
+			display: inline-block;
+		}
+	}
+
+	&:hover {
+		.title__edit {
+			display: inline-block;
+		}
+	}
+}
+
+.title__text {
+	display: inline-block;
+}
+
+.title__input {
+	display: none;
+}
+
+.title__text,
+.title__input {
+	margin: 0;
+	padding: 0;
+	border: none;
+	font-family: Montserrat, sans-serif;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: inherit;
+}
+
+.title__edit {
+	display: none;
+	margin: 0 -27px 0 5px;
+	padding: 3px 5px;
+	background: none;
+	color: @darkgray;
+
+	&:hover {
+		color: @black;
+		background: none;
+	}
+}

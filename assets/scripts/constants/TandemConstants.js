@@ -7,6 +7,9 @@ var constants = {
 		SEARCH_START: null,
 		SEARCH_SWITCH_SOURCE: null,
 		SEARCH_RECEIVE_RESULTS: null,
+		// Room Actions
+		ROOM_SET_TITLE: null,
+		ROOM_RECEIVE_SET_TITLE: null,
 		// Users Actions
 		USERS_RECEIVE_STATE: null,
 		USERS_RECEIVE_JOIN: null,

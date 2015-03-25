@@ -74,6 +74,9 @@ var Room = function( data, options ){
 		socket.emit( 'player:state', room.data.player );
 
 		// listen for commands from the user
+		socket.on( 'room:title', function( title ){
+			room.setTitle( title, user );
+		});
 		socket.on( 'chat:message', function( content ){
 			var message = {
 				content: content,
@@ -179,6 +182,11 @@ Room.prototype.removePresence = function( presence ){
 		io.of( this.namespace ).emit( 'presences:leave', presence );
 	}
 	return;
+};
+
+Room.prototype.setTitle = function( title, user ){
+	this.data.name = title;
+	io.of( this.namespace ).emit( 'room:title', title, user );
 };
 
 Room.prototype.addItem = function( item ){
