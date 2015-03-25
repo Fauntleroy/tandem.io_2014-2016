@@ -95,7 +95,7 @@ var Room = function( data, options ){
 			callback( null );
 		});
 		socket.on( 'playlist:remove', function( id ){
-			room.removeItem( id );
+			room.removeItem( id, user );
 		});
 		socket.on( 'playlist:sort:start', function(){
 			room.sortStart( user );
@@ -189,10 +189,10 @@ Room.prototype.addItem = function( item ){
 	return item;
 };
 
-Room.prototype.removeItem = function( id ){
+Room.prototype.removeItem = function( id, user ){
 	var item = _.findWhere( this.data.playlist, { id: id } );
 	this.data.playlist = _.without( this.data.playlist, item );
-	io.of( this.namespace ).emit( 'playlist:remove', item );
+	io.of( this.namespace ).emit( 'playlist:remove', item, user );
 	return item;
 };
 

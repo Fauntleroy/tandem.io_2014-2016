@@ -15,10 +15,11 @@ var PlaylistServerActionCreator = {
 			item: item
 		});
 	},
-	receiveRemoveItem: function( item ){
+	receiveRemoveItem: function( item, user ){
 		TandemDispatcher.handleServerAction({
 			type: ActionTypes.PLAYLIST_RECEIVE_REMOVE_ITEM,
-			item: item
+			item: item,
+			user: user
 		});
 	},
 	receiveSortStart: function( user ){

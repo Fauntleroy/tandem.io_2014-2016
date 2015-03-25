@@ -9,8 +9,8 @@ var _onReceiveAddItem = function( item ){
 	PlaylistServerActionCreator.receiveAddItem( item );
 };
 
-var _onReceiveRemoveItem = function( item ){
-	PlaylistServerActionCreator.receiveRemoveItem( item );
+var _onReceiveRemoveItem = function( item, user ){
+	PlaylistServerActionCreator.receiveRemoveItem( item, user );
 };
 
 var _onReceiveSortStart = function( user ){
