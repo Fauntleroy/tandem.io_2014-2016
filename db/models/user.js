@@ -55,7 +55,7 @@ var User = Waterline.Collection.extend({
 
 		//// toJSON override
 		toJSON: function(){
-			var user_object = this.toObject();
+			var user_object = this.toJSON();
 			user_object.is_youtube_linked = this.isYoutubeLinked();
 			user_object.is_soundcloud_linked = this.isSoundcloudLinked();
 			user_object.is_registered = this.isRegistered();

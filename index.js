@@ -340,10 +340,16 @@ var refreshYouTubeToken = function( refresh_token, cb ){
 };
 
 server.all( /^\/api\/v1\/proxy\/youtube\/(.+)$/, function( req, res ){
-	if( !req.user.youtube_client_id ) return res.json( 500, { error: 'Error: User has no YouTube credentials' });
-	if( !req.user.youtube_access_token ) return res.json( 500, { error: 'Error: Missing access token' });
+	if( !req.user.youtube_client_id ){
+		res.json( 500, { error: 'Error: User has no YouTube credentials' });
+		return;
+	}
+	if( !req.user.youtube_access_token ){
+		res.json( 500, { error: 'Error: Missing access token' });
+		return;
+	}
 	async.waterfall([ function checkToken( next ){
-		if( Date.now() > req.user.youtube_access_token_expiry ){
+		if( Date.now() > new Date(req.user.youtube_access_token_expiry) ){
 			refreshYouTubeToken( req.user.youtube_refresh_token, function( err, access_token, expires_in ){
 				if( err ) return next( err, null );
 				req.user.youtube_access_token = access_token;
