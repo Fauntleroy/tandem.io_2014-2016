@@ -56,7 +56,7 @@ waterline_orm.initialize({
 		}
 	},
 	defaults: {
-		migrate: 'alter'
+		migrate: 'safe'
 	}
 }, function( err, models ){
 	if( err ){
