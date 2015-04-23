@@ -1,8 +1,6 @@
 var React = require('react');
 var cx = require('classnames');
 
-var secondsToTime = require('../utils/secondsToTime.js');
-
 var PlaylistActionCreator = require('../actions/PlaylistActionCreator.js');
 
 var SearchResult = React.createClass({
@@ -23,9 +21,6 @@ var SearchResult = React.createClass({
 				<p className="description">{result.description}</p>
 				<ul className="details">
 					<li className="author">{result.author}</li>
-					<li className="duration">{secondsToTime(result.duration)}</li>
-					<li className="added">{result.date}</li>
-					<li className="plays">{result.plays}</li>
 				</ul>
 				<button className="add btn btn-small btn-primary" alt="add" value={result.url} onClick={this._onAddClick}>
 					Add to Playlist <i className="fa fa-plus"></i>

@@ -6,8 +6,9 @@ var SearchServerActionCreator = require('../actions/SearchServerActionCreator.js
 
 var NO_OP = function(){};
 var REQUEST_TIMEOUT = 15 * 1000;
-var YOUTUBE_API_HOST = 'gdata.youtube.com';
-var YOUTUBE_API_PATH = '/feeds/api';
+var YOUTUBE_API_KEY = tandem.bridge.apis.youtube.api_key;
+var YOUTUBE_API_HOST = 'www.googleapis.com';
+var YOUTUBE_API_PATH = '/youtube/v3';
 var YOUTUBE_API_PROXY_PATH = '/api/v1/proxy/youtube';
 var YOUTUBE_WATCH_URL = 'http://www.youtube.com/watch?v=';
 
@@ -39,16 +40,13 @@ var _processYoutubeItem = function( item ){
 var _processYoutubeResults = function( results ){
 	var processed_results = results.map( function( result ){
 		var processed_result = {
-			title: result.title,
-			url: YOUTUBE_WATCH_URL + result.id,
-			item_id: result.id,
-			description: result.description,
-			author: result.uploader,
-			date: Date.parse( result.uploaded ),
-			image: result.thumbnail.hqDefault,
-			duration: result.duration,
-			plays: result.viewCount,
-			embeddable: result.accessControl.embed === 'allowed',
+			title: result.snippet.title,
+			url: YOUTUBE_WATCH_URL + result.id.videoId,
+			item_id: result.id.videoId,
+			description: result.snippet.description,
+			author: result.snippet.channelTitle,
+			date: Date.parse( result.snippet.publishedAt ),
+			image: result.snippet.thumbnails.high.url,
 			source: 'youtube'
 		};
 		return processed_result;
@@ -89,25 +87,29 @@ var YoutubeAPIUtils = {
 	},
 	startSearch: function( query ){
 		var search_url = url.format({
+			protocol: 'https:',
 			host: YOUTUBE_API_HOST,
-			pathname: YOUTUBE_API_PATH +'/videos',
+			pathname: YOUTUBE_API_PATH +'/search',
 			query: {
-				orderby: 'relevance',
-				'max-results': 30,
-				'start-index': 0 + 1,
 				q: query,
-				v: 2,
-				alt: 'jsonc'
+				type: 'video',
+				part: 'snippet,id',
+				videoEmbeddable: true,
+				order: 'relevance',
+				maxResults: 30,
+				key: YOUTUBE_API_KEY
 			}
 		});
-		jsonp( search_url, {
-			timeout: REQUEST_TIMEOUT
-		}, function( err, data ){
+		xhr({
+			url: search_url,
+			method: 'GET',
+			json: true
+		}, function( err, response, body ){
 			if( err ){
 				console.log( 'YouTube search error', err );
 				return;
 			}
-			var results = _processYoutubeResults( data.data.items );
+			var results = _processYoutubeResults( body.items );
 			SearchServerActionCreator.receiveResults( results, 'youtube' );
 		});
 	},
