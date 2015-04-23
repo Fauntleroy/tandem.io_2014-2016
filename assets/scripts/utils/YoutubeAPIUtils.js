@@ -2,6 +2,8 @@ var url = require('url');
 var jsonp = require('jsonp');
 var xhr = require('xhr');
 
+var duration8601ToSeconds = require('./duration8601ToSeconds.js');
+
 var SearchServerActionCreator = require('../actions/SearchServerActionCreator.js');
 
 var NO_OP = function(){};
@@ -24,15 +26,15 @@ var _getIdFromUrl = function( item_url ){
 var _processYoutubeItem = function( item ){
 	var processed_item = {
 		original_id: item.id,
-		title: item.title,
+		title: item.snippet.title,
 		url: YOUTUBE_WATCH_URL + item.id,
 		media_url: YOUTUBE_WATCH_URL + item.id,
 		source: 'youtube',
-		image: item.thumbnail.hqDefault,
+		image: item.snippet.thumbnails.high.url,
 		type: 'video',
-		duration: item.duration,
-		artist: item.uploader,
-		artist_url: 'http://www.youtube.com/user/'+ item.uploader
+		duration: duration8601ToSeconds( item.contentDetails.duration ),
+		artist: item.snippet.channelTitle,
+		artist_url: 'http://www.youtube.com/user/'+ item.snippet.channelTitle
 	};
 	return processed_item;
 };
@@ -62,26 +64,28 @@ var YoutubeAPIUtils = {
 		callback = callback || NO_OP;
 		var id = _getIdFromUrl( item_url );
 		var video_url = url.format({
+			protocol: 'https:',
 			host: YOUTUBE_API_HOST,
-			pathname: YOUTUBE_API_PATH +'/videos/'+ id,
+			pathname: YOUTUBE_API_PATH +'/videos/',
 			query: {
-				v: 2,
-				alt: 'jsonc'
+				part: 'contentDetails,id,snippet,status',
+				fields: 'items(contentDetails,id,snippet,status)',
+				id: id,
+				key: YOUTUBE_API_KEY
 			}
 		});
-		jsonp( video_url, {
-			timeout: REQUEST_TIMEOUT
-		}, function( error, data ){
-			if( error || data.error ){
+		xhr({
+			url: video_url,
+			method: 'GET',
+			json: true
+		}, function( error, response, body ){
+			if( error ){
 				return callback( new Error('Error getting item from YouTube') );
 			}
-			if( data.data.accessControl.embed != 'allowed' ){
+			if( !body.items[0].status.embeddable ){
 				return callback( new Error('Embedding has been disabled for this video! How Stingy :(') );
 			}
-			if( data.data.category === 'Movies' ){
-				return callback( new Error('Full movies can\'t be used at this time.') );
-			}
-			var item = _processYoutubeItem( data.data );
+			var item = _processYoutubeItem( body.items[0] );
 			return callback( null, item );
 		});
 	},
