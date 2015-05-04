@@ -1,5 +1,4 @@
 var url = require('url');
-var jsonp = require('jsonp');
 var xhr = require('xhr');
 var assign = require('lodash/object/assign');
 
