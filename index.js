@@ -402,6 +402,9 @@ server.get( '/rooms/:id', function( req, res ){
 	res.expose( {
 		soundcloud: {
 			client_id: SOUNDCLOUD_APP_ID
+		},
+		youtube: {
+			api_key: YOUTUBE_API_KEY
 		}
 	}, 'tandem.bridge.apis' );
 	res.render( 'room.hbs', {
