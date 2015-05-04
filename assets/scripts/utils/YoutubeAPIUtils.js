@@ -1,6 +1,7 @@
 var url = require('url');
 var jsonp = require('jsonp');
 var xhr = require('xhr');
+var assign = require('lodash/object/assign');
 
 var duration8601ToSeconds = require('./duration8601ToSeconds.js');
 
@@ -60,24 +61,30 @@ var YoutubeAPIUtils = {
 	testUrl: function( item_url ){
 		return /youtube\.com.*[\?&]v=(.{11})|youtu\.be\/(.{11})/i.test( item_url );
 	},
+	apiRequest: function( path, method, query, callback ){
+		callback = callback || NO_OP;
+		query = assign({
+			key: YOUTUBE_API_KEY
+		}, query);
+		var request_url = url.format({
+			protocol: 'https:',
+			host: YOUTUBE_API_HOST,
+			pathname: YOUTUBE_API_PATH + path,
+			query: query
+		});
+		xhr({
+			url: request_url,
+			method: method,
+			json: true
+		}, callback);
+	},
 	getItemFromUrl: function( item_url, callback ){
 		callback = callback || NO_OP;
 		var id = _getIdFromUrl( item_url );
-		var video_url = url.format({
-			protocol: 'https:',
-			host: YOUTUBE_API_HOST,
-			pathname: YOUTUBE_API_PATH +'/videos/',
-			query: {
-				part: 'contentDetails,id,snippet,status',
-				fields: 'items(contentDetails,id,snippet,status)',
-				id: id,
-				key: YOUTUBE_API_KEY
-			}
-		});
-		xhr({
-			url: video_url,
-			method: 'GET',
-			json: true
+		this.apiRequest( '/videos/', 'GET', {
+			part: 'contentDetails,id,snippet,status',
+			fields: 'items(contentDetails,id,snippet,status)',
+			id: id
 		}, function( error, response, body ){
 			if( error ){
 				return callback( new Error('Error getting item from YouTube') );
@@ -90,24 +97,13 @@ var YoutubeAPIUtils = {
 		});
 	},
 	startSearch: function( query ){
-		var search_url = url.format({
-			protocol: 'https:',
-			host: YOUTUBE_API_HOST,
-			pathname: YOUTUBE_API_PATH +'/search',
-			query: {
-				q: query,
-				type: 'video',
-				part: 'snippet,id',
-				videoEmbeddable: true,
-				order: 'relevance',
-				maxResults: 30,
-				key: YOUTUBE_API_KEY
-			}
-		});
-		xhr({
-			url: search_url,
-			method: 'GET',
-			json: true
+		this.apiRequest( '/search/', 'GET', {
+			q: query,
+			type: 'video',
+			part: 'snippet,id',
+			videoEmbeddable: true,
+			order: 'relevance',
+			maxResults: 30
 		}, function( err, response, body ){
 			if( err ){
 				console.log( 'YouTube search error', err );
