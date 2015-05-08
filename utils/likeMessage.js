@@ -18,7 +18,7 @@ var messages = [
 	"is codependent with this",
 	"canʼt fight this feelinʼ",
 	"wants to show this their dancing",
-	"wants to show this their feelings",
+	"wants to show this their feels",
 	"used a pick-up line on this song and almost succeeded",
 	"stalks this fondly from afar",
 	"was wondering if this was doing anything tonight",
