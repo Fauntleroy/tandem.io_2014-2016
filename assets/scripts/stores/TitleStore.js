@@ -24,6 +24,9 @@ var _setVisibility = function( event, state ){
 Visibility.change( _setVisibility );
 
 var TitleStore = assign( {}, EventEmitter.prototype, {
+	setRoomTitle: function( title ){
+		_room_title = title;
+	},
 	getTitle: function(){
 		var title = '';
 		if( _unread_messages ){
@@ -60,6 +63,10 @@ TitleStore.dispatchToken = TandemDispatcher.register( function( payload ){
 				_unread_messages++;
 				TitleStore.emit( CHANGE_EVENT );
 			}
+		break;
+		case ActionTypes.ROOM_RECEIVE_SET_TITLE:
+			TitleStore.setRoomTitle( action.title );
+			TitleStore.emit( CHANGE_EVENT );
 		break;
 	}
 });
