@@ -2,9 +2,7 @@ var React = require('react');
 
 var _generateTimestamp = function( time ){
 	var hours = time.getHours();
-	var hours_12 = ( hours === 0 )
-		? 12
-		: hours % 12;
+	var hours_12 = hours % 12 || 12;
 	var am_pm = ( hours > 11 )
 		? 'PM'
 		: 'AM';
