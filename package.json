@@ -67,9 +67,13 @@
   },
   "scripts": {
     "start": "node index.js",
-    "postinstall": "npm dedupe && gulp compile"
+    "postinstall": "npm dedupe && gulp compile",
+    "test": "zuul -- test/client/**/*.jsx",
+    "test:browser": "zuul --local 55555 -- test/client/**/*.jsx"
   },
   "devDependencies": {
-    "gulp-livereload": "^3.8.0"
+    "gulp-livereload": "^3.8.0",
+    "tape": "^4.0.0",
+    "zuul": "^3.0.0"
   }
 }
