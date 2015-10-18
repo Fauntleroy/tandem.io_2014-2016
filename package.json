@@ -14,8 +14,9 @@
   },
   "dependencies": {
     "async": "~0.4.0",
-    "browserify": "^6.3.3",
-    "browserify-shim": "^3.8.0",
+    "babelify": "^6.3.0",
+    "browserify": "^11.2.0",
+    "browserify-shim": "^3.8.10",
     "classnames": "^1.1.4",
     "connect-mongo": "~0.4.0",
     "connect-redis": "^2.1.0",
@@ -40,36 +41,27 @@
     "passport": "^0.2.1",
     "passport-google-oauth": "~0.1.5",
     "passport-soundcloud": "~0.1.2",
-    "react": "^0.12.2",
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0",
+    "react-player": "fauntleroy/react-player#configuration-tmp",
+    "react-sortable": "0.0.2",
     "react-textarea-autosize": "^1.1.0",
-    "reactify": "^1.0.0",
     "request": "~2.33.0",
     "sails-mysql": "^0.10.7",
-    "socket.io": "^1.0.6",
-    "socket.io-client": "^1.0.6",
+    "socket.io": "^1.3.7",
+    "socket.io-client": "^1.3.7",
     "store": "~1.3.14",
     "underscore": "^1.7.0",
     "vinyl-source-stream": "~0.1.1",
     "visibilityjs": "~1.2.0",
-    "watchify": "^2.1.1",
+    "watchify": "^3.4.0",
     "waterline": "^0.10.14",
     "xhr": "^2.0.1"
   },
-  "browser": {
-    "jwplayer": "./assets/scripts/vendor/jwplayer/jwplayer.js",
-    "Sortable": "./assets/scripts/vendor/sortable/Sortable.js",
-    "SortableMixin": "./assets/scripts/vendor/sortable/react-sortable-mixin.js"
-  },
-  "browserify-shim": {
-    "jwplayer": "jwplayer",
-    "Sortable": "Sortable",
-    "SortableMixin": "SortableMixin"
-  },
   "scripts": {
     "start": "node index.js",
-    "postinstall": "npm dedupe && gulp compile"
-  },
-  "devDependencies": {
-    "gulp-livereload": "^3.8.0"
+    "postinstall": "npm dedupe && gulp compile",
+    "build": "gulp compile",
+    "dev": "gulp"
   }
 }

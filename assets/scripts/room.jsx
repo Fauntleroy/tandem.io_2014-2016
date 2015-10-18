@@ -1,4 +1,5 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 var domready = require('domready');
 
 // React Components
@@ -19,12 +20,12 @@ window.tandem = window.tandem || {};
 domready( function(){
 	tandem.components = {
 		title: new Title(),
-		user_menu: React.render( <UserMenu />, document.getElementById('user-menu') ),
-		search: React.render( <Search />, document.getElementById('search') ),
-		room_title: React.render( <RoomTitle />, document.getElementById('title') ),
-		users: React.render( <Users />, document.getElementById('users') ),
-		chat: React.render( <Chat />, document.getElementById('chat') ),
-		player: React.render( <Player />, document.getElementById('player') ),
-		playlist: React.render( <Playlist />, document.getElementById('playlist') )
+		user_menu: ReactDOM.render( <UserMenu />, document.getElementById('user-menu') ),
+		search: ReactDOM.render( <Search />, document.getElementById('search') ),
+		room_title: ReactDOM.render( <RoomTitle />, document.getElementById('title') ),
+		users: ReactDOM.render( <Users />, document.getElementById('users') ),
+		chat: ReactDOM.render( <Chat />, document.getElementById('chat') ),
+		player: ReactDOM.render( <Player />, document.getElementById('player') ),
+		playlist: ReactDOM.render( <Playlist />, document.getElementById('playlist') )
 	};
 });

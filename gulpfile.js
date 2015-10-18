@@ -40,12 +40,10 @@ gulp.task( 'compile and watch css', function(){
 	gulp.watch( './assets/styles/**/*.{less,css}', ['compile css'] );
 });
 
-var generateBrowserifyBundler = function(){
-	var bundler = browserify( './assets/scripts/room.jsx', watchify.args );
-	bundler.transform({
-		global: true
-	}, 'reactify');
-	bundler.transform('browserify-shim');
+var generateBrowserifyBundler = function(config){
+	config = _.extend( {}, watchify.args, config );
+	var bundler = browserify( './assets/scripts/room.jsx', config );
+	bundler.transform('babelify');
 	return bundler;
 };
 
@@ -63,7 +61,7 @@ gulp.task( 'compile js', function(){
 });
 
 gulp.task( 'compile and watch js', function(){
-	var bundler = watchify( generateBrowserifyBundler() );
+	var bundler = watchify( generateBrowserifyBundler({ debug: true }) );
 	var rebundle = function() {
 		console.log('[watchify] Bundling js...');
 		return generateBrowserifyStream( bundler );

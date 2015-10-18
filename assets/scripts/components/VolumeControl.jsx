@@ -25,7 +25,7 @@ var VolumeControl = React.createClass({
 		);
 	},
 	_calculateAndSetVolume: function( pageX ){
-		var volume_level_element = this.refs.volume__level.getDOMNode();
+		var volume_level_element = this.refs.volume__level;
 		var mouse_location = pageX - volume_level_element.getBoundingClientRect().left;
 		var new_volume = ( mouse_location / volume_level_element.offsetWidth ) * 100;
 		if( new_volume > 100 ){

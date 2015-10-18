@@ -1,7 +1,6 @@
 var React = require('react');
 var cx = require('classnames');
-var Sortable = require('Sortable');
-var SortableMixin = require('SortableMixin');
+var Sortable = require('react-sortable');
 
 var secondsToTime = require('../utils/secondsToTime.js');
 
@@ -30,7 +29,7 @@ var _generateItems = function( items ){
 };
 
 var Playlist = React.createClass({
-	mixins: [SortableMixin],
+	mixins: [Sortable],
 	sortableOptions: {
 		ref: 'items',
 		model: 'items'
