@@ -44,6 +44,7 @@
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
     "react-player": "fauntleroy/react-player#configuration-tmp",
+    "react-simple-dropdown": "0.1.x",
     "react-sortable": "0.0.2",
     "react-textarea-autosize": "^1.1.0",
     "request": "~2.33.0",
