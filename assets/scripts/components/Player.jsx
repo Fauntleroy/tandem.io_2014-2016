@@ -159,12 +159,12 @@ var Player = React.createClass({
 		}
 	},
 	_onPlayerTime: function( progress ){
+		// TODO figure out what's actually going on with these conflicting dispatches
+		if (progress.played === 0) {
+			return;
+		}
 		var elapsed_time = parseInt( progress.played * this.state.item.duration, 10 );
-		// I'm not letting this mystery Invariant error stop me
-		// TODO fit this later
-		setTimeout(function () {
-			PlayerActionCreator.setElapsedTime( elapsed_time );
-		}, 0);
+		PlayerActionCreator.setElapsedTime( elapsed_time );
 	},
 	_onOrderChange: function( event ){
 		event.preventDefault();
