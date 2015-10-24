@@ -19,6 +19,14 @@ var MEDIA_TYPES = {
 	youtube: 'youtube',
 	soundcloud: 'mp3'
 };
+const SOUNDCLOUD_CONFIG = {
+	clientId: tandem.bridge.apis.soundcloud.client_id
+};
+const YOUTUBE_CONFIG = {
+	playerVars: {
+		rel: 0
+	}
+};
 
 var _getStateFromStore = function(){
 	return {
@@ -98,7 +106,8 @@ var Player = React.createClass({
 							ref="player"
 							url={media_url}
 							volume={volume}
-							soundcloud={{ clientId: tandem.bridge.apis.soundcloud.client_id }}
+							soundcloudConfig={SOUNDCLOUD_CONFIG}
+							youtubeConfig={YOUTUBE_CONFIG}
 							onProgress={this._onPlayerTime}
 						/>
 					</div>
