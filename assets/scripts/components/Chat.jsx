@@ -1,5 +1,4 @@
 var React = require('react');
-var uuid = require('node-uuid');
 
 var AutosizeTextarea = require('react-textarea-autosize');
 var ChatMessage = require('./chat/ChatMessage.jsx');

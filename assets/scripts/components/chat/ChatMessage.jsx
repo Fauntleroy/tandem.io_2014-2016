@@ -25,10 +25,11 @@ var _linkify = function( text ) {
 	return linkified_jsx;
 }
 
-var _generateContent = function( content ){
-	return content.map( function( message_content ){
-		message_content = _linkify( message_content );
-		return <p>{message_content}</p>;
+var _generateContent = function( content_array ){
+	return content_array.map( function( content ){
+		const { text, uuid } = content;
+		content = _linkify( text );
+		return <p key={uuid}>{text}</p>;
 	});
 };
 
