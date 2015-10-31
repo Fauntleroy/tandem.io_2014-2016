@@ -3,6 +3,7 @@ var vinyl_source = require('vinyl-source-stream');
 var _ = require('underscore');
 var browserify = require('browserify');
 var watchify = require('watchify');
+var babelify = require('babelify');
 var gulp = require('gulp');
 var gulp_util = require('gulp-util');
 var gulp_less = require('gulp-less');
@@ -43,7 +44,9 @@ gulp.task( 'compile and watch css', function(){
 var generateBrowserifyBundler = function(config){
 	config = _.extend( {}, watchify.args, config );
 	var bundler = browserify( './assets/scripts/room.jsx', config );
-	bundler.transform('babelify');
+	bundler.transform(babelify.configure({
+		stage: 0
+	}));
 	return bundler;
 };
 
