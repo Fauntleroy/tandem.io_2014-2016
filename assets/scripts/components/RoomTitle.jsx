@@ -41,7 +41,7 @@ var RoomTitle = React.createClass({
 	},
 	_onFormSubmit: function( event ){
 		event.preventDefault();
-		var title_input_element = this.refs.title.getDOMNode();
+		var title_input_element = this.refs.title;
 		var new_title = title_input_element.value.trim();
 		if( !new_title ){
 			return;
@@ -53,7 +53,7 @@ var RoomTitle = React.createClass({
 	},
 	_onEditClick: function( event ){
 		event.preventDefault();
-		var title_input_element = this.refs.title.getDOMNode();
+		var title_input_element = this.refs.title;
 		title_input_element.value = this.state.title;
 		setTimeout( function(){
 			title_input_element.focus();
