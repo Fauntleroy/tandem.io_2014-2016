@@ -1,6 +1,5 @@
-var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var TandemConstants = require('../constants/TandemConstants.js');
-var ActionTypes = TandemConstants.ActionTypes;
+import TandemDispatcher from '../dispatcher/TandemDispatcher.js';
+import { ActionTypes } from '../constants/TandemConstants.js';
 
 var PlayerServerActionCreator = {
 	receiveState: function( state ){
@@ -44,4 +43,4 @@ var PlayerServerActionCreator = {
 	}
 };
 
-module.exports = PlayerServerActionCreator;
+export default PlayerServerActionCreator;

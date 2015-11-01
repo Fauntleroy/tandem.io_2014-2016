@@ -1,9 +1,8 @@
-var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var YoutubeAPIUtils = require('../utils/YoutubeAPIUtils.js');
-var SoundcloudAPIUtils = require('../utils/SoundcloudAPIUtils.js');
-var TandemConstants = require('../constants/TandemConstants.js');
-var ActionTypes = TandemConstants.ActionTypes;
-var SearchResultsStore = require('../stores/SearchResultsStore.js');
+import TandemDispatcher from '../dispatcher/TandemDispatcher.js';
+import YoutubeAPIUtils from '../utils/YoutubeAPIUtils.js';
+import SoundcloudAPIUtils from '../utils/SoundcloudAPIUtils.js';
+import { ActionTypes } from '../constants/TandemConstants.js';
+import SearchResultsStore from '../stores/SearchResultsStore.js';
 
 var SearchActionCreator = {
 	toggleActive: function( toggle ){
@@ -35,4 +34,4 @@ var SearchActionCreator = {
 	}
 };
 
-module.exports = SearchActionCreator;
+export default SearchActionCreator;
