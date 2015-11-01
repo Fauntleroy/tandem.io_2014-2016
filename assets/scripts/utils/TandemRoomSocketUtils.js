@@ -1,5 +1,5 @@
-var RoomServerActionCreator = require('../actions/RoomServerActionCreator.js');
-var TandemSocketConnection = require('./_TandemSocketConnection.js');
+import RoomServerActionCreator from '../actions/RoomServerActionCreator.js';
+import TandemSocketConnection from './_TandemSocketConnection.js';
 
 var _onReceiveSetTitle = function( title, user ){
 	RoomServerActionCreator.receiveSetTitle( title, user );
@@ -13,4 +13,4 @@ var TandemRoomSocketUtils = {
 	}
 };
 
-module.exports = TandemRoomSocketUtils;
+export default TandemRoomSocketUtils;

@@ -1,10 +1,9 @@
-var EventEmitter = require('events').EventEmitter;
-var assign = require('lodash/object/assign');
-var find = require('lodash/collection/find');
+import { EventEmitter } from 'events';
+import assign from 'lodash/object/assign';
+import find from 'lodash/collection/find';
 
-var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var TandemConstants = require('../constants/TandemConstants.js');
-var ActionTypes = TandemConstants.ActionTypes;
+import TandemDispatcher from '../dispatcher/TandemDispatcher.js';
+import { ActionTypes } from '../constants/TandemConstants.js';
 
 var CHANGE_EVENT = 'change';
 
@@ -74,4 +73,4 @@ SearchResultsStore.dispatchToken = TandemDispatcher.register( function( payload 
 	}
 });
 
-module.exports = SearchResultsStore;
+export default SearchResultsStore;

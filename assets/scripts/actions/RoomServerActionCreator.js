@@ -1,6 +1,5 @@
-var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var TandemConstants = require('../constants/TandemConstants.js');
-var ActionTypes = TandemConstants.ActionTypes;
+import TandemDispatcher from '../dispatcher/TandemDispatcher.js';
+import { ActionTypes } from '../constants/TandemConstants.js';
 
 var RoomServerActionCreator = {
 	receiveSetTitle: function( title, user ){
@@ -12,4 +11,4 @@ var RoomServerActionCreator = {
 	}
 };
 
-module.exports = RoomServerActionCreator;
+export default RoomServerActionCreator;

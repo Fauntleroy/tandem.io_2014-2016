@@ -1,4 +1,4 @@
-var keyMirror = require('keymirror');
+import keyMirror from 'keymirror';
 
 var constants = {
 	ActionTypes: keyMirror({
@@ -51,4 +51,4 @@ var constants = {
 	})
 };
 
-module.exports = constants;
+export default constants;

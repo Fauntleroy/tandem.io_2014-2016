@@ -1,11 +1,11 @@
-var React = require('react');
-var cx = require('classnames');
+import React from 'react';
+import cx from 'classnames';
 
-var User = require('./User.jsx');
+import User from './User.jsx';
 
-var UsersStore = require('../stores/UsersStore.js');
+import UsersStore from '../stores/UsersStore.js';
 // Even though this is never *used* it needs to be included so it is instantiated
-var TandemUsersSocketUtils = require('../utils/TandemUsersSocketUtils.js');
+import TandemUsersSocketUtils from '../utils/TandemUsersSocketUtils.js';
 
 var CHANGE_EVENT = 'change';
 
@@ -53,4 +53,4 @@ var Users = React.createClass({
 	}
 });
 
-module.exports = Users;
+export default Users;

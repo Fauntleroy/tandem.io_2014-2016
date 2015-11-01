@@ -1,4 +1,4 @@
-var TitleStore = require('../stores/TitleStore.js');
+import TitleStore from '../stores/TitleStore.js';
 
 var CHANGE_EVENT = 'change';
 
@@ -10,4 +10,4 @@ Title.prototype.updateTitle = function(){
 	document.title = TitleStore.getTitle();
 };
 
-module.exports = Title;
+export default Title;

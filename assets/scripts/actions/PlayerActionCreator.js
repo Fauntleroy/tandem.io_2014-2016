@@ -1,9 +1,8 @@
-var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var TandemPlayerSocketUtils = require('../utils/TandemPlayerSocketUtils.js');
-var YoutubeAPIUtils = require('../utils/YoutubeAPIUtils.js');
-var SoundcloudAPIUtils = require('../utils/SoundcloudAPIUtils.js');
-var TandemConstants = require('../constants/TandemConstants.js');
-var ActionTypes = TandemConstants.ActionTypes;
+import TandemDispatcher from '../dispatcher/TandemDispatcher.js';
+import TandemPlayerSocketUtils from '../utils/TandemPlayerSocketUtils.js';
+import YoutubeAPIUtils from '../utils/YoutubeAPIUtils.js';
+import SoundcloudAPIUtils from '../utils/SoundcloudAPIUtils.js';
+import { ActionTypes } from '../constants/TandemConstants.js';
 
 var PlayerActionCreator = {
 	setElapsedTime: function( elapsed_time ){
@@ -61,4 +60,4 @@ var PlayerActionCreator = {
 	}
 };
 
-module.exports = PlayerActionCreator;
+export default PlayerActionCreator;

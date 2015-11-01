@@ -1,16 +1,16 @@
-var React = require('react');
-var cx = require('classnames');
-var Sortable = require('Sortable');
-var SortableMixin = require('SortableMixin');
+import React from 'react';
+import cx from 'classnames';
 
-var secondsToTime = require('../utils/secondsToTime.js');
+import secondsToTime from '../utils/secondsToTime.js';
+import PlaylistActionCreator from '../actions/PlaylistActionCreator.js';
+import SearchActionCreator from '../actions/SearchActionCreator.js';
+import PlaylistStore from '../stores/PlaylistStore.js';
+import YoutubeAPIUtils from '../utils/YoutubeAPIUtils.js';
+import SoundcloudAPIUtils from '../utils/SoundcloudAPIUtils.js';
 
-var PlaylistItem = require('./PlaylistItem.jsx');
-var PlaylistActionCreator = require('../actions/PlaylistActionCreator.js');
-var SearchActionCreator = require('../actions/SearchActionCreator.js');
-var PlaylistStore = require('../stores/PlaylistStore.js');
-var YoutubeAPIUtils = require('../utils/YoutubeAPIUtils.js');
-var SoundcloudAPIUtils = require('../utils/SoundcloudAPIUtils.js');
+import SortableList from './sortable/List.jsx';
+import SortableItem from './sortable/Item.jsx';
+import PlaylistItem from './PlaylistItem.jsx';
 
 var CHANGE_EVENT = 'change';
 
@@ -22,28 +22,9 @@ var _getStateFromStore = function(){
 	}
 };
 
-var _generateItems = function( items ){
-	var items_jsx = items.map( function( item ){
-		return <PlaylistItem key={item.id} item={item} />
-	});
-	return items_jsx;
-};
-
 var Playlist = React.createClass({
-	mixins: [SortableMixin],
-	sortableOptions: {
-		ref: 'items',
-		model: 'items'
-	},
-	handleStart: function(){
-		PlaylistActionCreator.sortStart();
-		setTimeout( this.disableSort, 10 * 1000 );
-	},
-	handleEnd: function( event ){
-		PlaylistActionCreator.sortEnd( event.oldIndex, event.newIndex );
-	},
 	getInitialState: function () {
-		return _getStateFromStore()
+		return _getStateFromStore();
 	},
 	componentDidMount: function(){
 		PlaylistStore.on( CHANGE_EVENT, this._onChange );
@@ -51,6 +32,21 @@ var Playlist = React.createClass({
 	componentWillUnmount: function(){
 		PlaylistStore.removeListener( CHANGE_EVENT, this._onChange );
 	},
+	renderItems: function(){
+    const { items } = this.state;
+    return items.map( ( item, i ) => {
+      const { id } = item;
+      return (
+        <SortableItem key={id}>
+          <PlaylistItem
+            item={item}
+            key={id}
+            index={i}
+          />
+        </SortableItem>
+      );
+    });
+  },
 	render: function(){
 		var is_remote_sorting = this.state.is_remote_sorting;
 		var is_adding = this.state.is_adding;
@@ -63,7 +59,6 @@ var Playlist = React.createClass({
 		var playlist_duration = items.reduce( function( duration, next_item ){
 			return duration + next_item.duration;
 		}, 0 );
-		var items_jsx = _generateItems( this.state.items );
 		return (
 			<div className={playlist_classes}>
 				<form name="playlist_add" onSubmit={this._onAddSubmit}>
@@ -83,9 +78,9 @@ var Playlist = React.createClass({
 				<div className="playlist_duration">
 					<i className="fa fa-clock-o"></i> <var className="duration">{secondsToTime(playlist_duration)}</var>
 				</div>
-				<ul ref="items" className="items">
-					{items_jsx}
-				</ul>
+				<SortableList className="items" ref="items" onSortStart={this.onSortStart} onSortEnd={this.onSortEnd}>
+	        {this.renderItems()}
+	      </SortableList>
 			</div>
 		);
 	},
@@ -113,7 +108,16 @@ var Playlist = React.createClass({
 		this.setState({
 			url: ''
 		});
+	},
+	onSortStart: function(){
+		PlaylistActionCreator.sortStart();
+		setTimeout( this.disableSort, 10 * 1000 );
+	},
+	onSortEnd: function( start, end ){
+		if( start !== end ){
+			PlaylistActionCreator.sortEnd( start, end );
+		}
 	}
 });
 
-module.exports = Playlist;
+export default Playlist;

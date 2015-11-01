@@ -1,7 +1,7 @@
-var React = require('react');
+import React from 'react';
 
-var User = require('../User.jsx');
-var Timestamp = require('./Timestamp.jsx');
+import User from '../User.jsx';
+import Timestamp from './Timestamp.jsx';
 
 var ChatMessageSkip = React.createClass({
 	render: function(){
@@ -21,4 +21,4 @@ var ChatMessageSkip = React.createClass({
 	}
 });
 
-module.exports = ChatMessageSkip;
+export default ChatMessageSkip;

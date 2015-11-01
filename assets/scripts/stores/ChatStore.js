@@ -1,16 +1,25 @@
-var EventEmitter = require('events').EventEmitter;
-var uuid = require('node-uuid');
-var assign = require('lodash/object/assign');
+import { EventEmitter } from 'events';
+import uuid from 'node-uuid';
+import assign from 'lodash/object/assign';
 
-var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var TandemConstants = require('../constants/TandemConstants.js');
-var ActionTypes = TandemConstants.ActionTypes;
+import TandemDispatcher from '../dispatcher/TandemDispatcher.js';
+import { ActionTypes } from '../constants/TandemConstants.js';
 
 var CHANGE_EVENT = 'change';
 
 var _messages = [];
 
 var _addMessage = function( message ){
+	// Mixin a UUID to maintain uniqueness in React
+	message.time = new Date();
+	message.uuid = uuid.v1();
+	// Turn chat message content into arrays
+	if( message.type === 'chat' ){
+		message.content = [{
+			text: message.content,
+			uuid: message.uuid
+		}];
+	}
 	// Group many chat messages from one user into one message
 	var top_message = _messages[0];
 	if( top_message && top_message.type === 'chat' && message.type === 'chat' && top_message.user.id === message.user.id ){
@@ -18,9 +27,6 @@ var _addMessage = function( message ){
 		top_message.time = new Date();
 		return;
 	}
-	// Mixin a UUID to maintain uniqueness in React
-	message.time = new Date();
-	message.uuid = uuid.v1();
 	_messages.unshift( message );
 };
 
@@ -37,7 +43,6 @@ ChatStore.dispatchToken = TandemDispatcher.register( function( payload ){
 	var action = payload.action;
 	switch( action.type ){
 		case ActionTypes.CHAT_RECEIVE_ADD_MESSAGE:
-			action.message.content = [action.message.content];
 			_addMessage( action.message );
 			ChatStore.emit( CHANGE_EVENT );
 		break;
@@ -113,4 +118,4 @@ ChatStore.dispatchToken = TandemDispatcher.register( function( payload ){
 	}
 });
 
-module.exports = ChatStore;
+export default ChatStore;

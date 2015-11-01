@@ -1,4 +1,4 @@
-module.exports = function( seconds ){
+export default function( seconds ){
 	seconds = parseInt( seconds, 10 );
 	var s = parseInt( ( seconds % 60 ), 10 ).toString();
 	var m = parseInt( Math.floor( ( seconds % 3600 )/ 60 ), 10 ).toString();

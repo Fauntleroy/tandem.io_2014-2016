@@ -1,5 +1,5 @@
-var TandemSocketConnection = require('./_TandemSocketConnection.js');
-var PlaylistServerActionCreator = require('../actions/PlaylistServerActionCreator.js');
+import TandemSocketConnection from './_TandemSocketConnection.js';
+import PlaylistServerActionCreator from '../actions/PlaylistServerActionCreator.js';
 
 var _onReceiveState = function( state ){
 	PlaylistServerActionCreator.receiveState( state );
@@ -42,4 +42,4 @@ var TandemPlaylistSocketUtils = {
 	}
 };
 
-module.exports = TandemPlaylistSocketUtils;
+export default TandemPlaylistSocketUtils;

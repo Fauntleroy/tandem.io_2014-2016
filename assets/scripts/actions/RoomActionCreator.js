@@ -1,7 +1,6 @@
-var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var TandemRoomSocketUtils = require('../utils/TandemRoomSocketUtils.js');
-var TandemConstants = require('../constants/TandemConstants.js');
-var ActionTypes = TandemConstants.ActionTypes;
+import TandemDispatcher from '../dispatcher/TandemDispatcher.js';
+import TandemRoomSocketUtils from '../utils/TandemRoomSocketUtils.js';
+import { ActionTypes } from '../constants/TandemConstants.js';
 
 var RoomActionCreator = {
 	setTitle: function( title ){
@@ -13,4 +12,4 @@ var RoomActionCreator = {
 	}
 };
 
-module.exports = RoomActionCreator;
+export default RoomActionCreator;

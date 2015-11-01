@@ -1,10 +1,10 @@
-var React = require('react');
-var cx = require('classnames');
+import React from 'react';
+import cx from 'classnames';
 
-var SearchSourceTabs = require('./SearchSourceTabs.jsx');
-var SearchResult = require('./SearchResult.jsx');
-var SearchActionCreator = require('../actions/SearchActionCreator.js');
-var SearchResultsStore = require('../stores/SearchResultsStore.js');
+import SearchSourceTabs from './SearchSourceTabs.jsx';
+import SearchResult from './SearchResult.jsx';
+import SearchActionCreator from '../actions/SearchActionCreator.js';
+import SearchResultsStore from '../stores/SearchResultsStore.js';
 
 var CHANGE_EVENT = 'change';
 
@@ -79,4 +79,4 @@ var Search = React.createClass({
 	}
 });
 
-module.exports = Search;
+export default Search;

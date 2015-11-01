@@ -1,7 +1,6 @@
-var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var TandemChatSocketUtils = require('../utils/TandemChatSocketUtils.js');
-var TandemConstants = require('../constants/TandemConstants.js');
-var ActionTypes = TandemConstants.ActionTypes;
+import TandemDispatcher from '../dispatcher/TandemDispatcher.js';
+import TandemChatSocketUtils from '../utils/TandemChatSocketUtils.js';
+import { ActionTypes } from '../constants/TandemConstants.js';
 
 var ChatActionCreator = {
 	addMessage: function( message ){
@@ -20,4 +19,4 @@ var ChatActionCreator = {
 	}
 };
 
-module.exports = ChatActionCreator;
+export default ChatActionCreator;

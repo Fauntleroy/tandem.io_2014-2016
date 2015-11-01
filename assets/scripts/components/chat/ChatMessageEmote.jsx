@@ -1,7 +1,7 @@
-var React = require('react');
+import React from 'react';
 
-var User = require('../User.jsx');
-var Timestamp = require('./Timestamp.jsx');
+import User from '../User.jsx';
+import Timestamp from './Timestamp.jsx';
 
 var ChatMessageEmote = React.createClass({
 	render: function(){
@@ -15,4 +15,4 @@ var ChatMessageEmote = React.createClass({
 	}
 });
 
-module.exports = ChatMessageEmote;
+export default ChatMessageEmote;

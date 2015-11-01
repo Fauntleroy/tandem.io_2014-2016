@@ -1,6 +1,5 @@
-var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var TandemConstants = require('../constants/TandemConstants.js');
-var ActionTypes = TandemConstants.ActionTypes;
+import TandemDispatcher from '../dispatcher/TandemDispatcher.js';
+import { ActionTypes } from '../constants/TandemConstants.js';
 
 var PlaylistServerActionCreator = {
 	receiveState: function( state ){
@@ -39,4 +38,4 @@ var PlaylistServerActionCreator = {
 	}
 };
 
-module.exports = PlaylistServerActionCreator;
+export default PlaylistServerActionCreator;

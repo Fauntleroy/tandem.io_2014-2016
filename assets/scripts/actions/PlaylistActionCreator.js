@@ -1,9 +1,8 @@
-var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var TandemPlaylistSocketUtils = require('../utils/TandemPlaylistSocketUtils.js');
-var YoutubeAPIUtils = require('../utils/YoutubeAPIUtils.js');
-var SoundcloudAPIUtils = require('../utils/SoundcloudAPIUtils.js');
-var TandemConstants = require('../constants/TandemConstants.js');
-var ActionTypes = TandemConstants.ActionTypes;
+import TandemDispatcher from '../dispatcher/TandemDispatcher.js';
+import TandemPlaylistSocketUtils from '../utils/TandemPlaylistSocketUtils.js';
+import YoutubeAPIUtils from '../utils/YoutubeAPIUtils.js';
+import SoundcloudAPIUtils from '../utils/SoundcloudAPIUtils.js';
+import { ActionTypes } from '../constants/TandemConstants.js';
 
 var PlaylistActionCreator = {
 	addItem: function( item ){
@@ -69,4 +68,4 @@ var PlaylistActionCreator = {
 	}
 };
 
-module.exports = PlaylistActionCreator;
+export default PlaylistActionCreator;

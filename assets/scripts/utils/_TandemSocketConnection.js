@@ -1,5 +1,5 @@
-var querystring = require('querystring');
-var io = require('socket.io-client');
+import querystring from 'querystring';
+import io from 'socket.io-client';
 
 var TandemSocketConnection = io.connect( location.protocol +'//'+ location.host +'/rooms/'+ tandem.bridge.room.id, {
 	query: querystring.stringify({
@@ -10,4 +10,4 @@ var TandemSocketConnection = io.connect( location.protocol +'//'+ location.host 
 	})
 });
 
-module.exports = TandemSocketConnection;
+export default TandemSocketConnection;

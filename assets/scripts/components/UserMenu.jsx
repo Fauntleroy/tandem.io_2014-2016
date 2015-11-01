@@ -1,73 +1,8 @@
-var React = require('react');
-var cloneWithProps = require('react/lib/cloneWithProps');
-var cx = require('classnames');
+import React from 'react';
+import cx from 'classnames';
 
-var User = require('./User.jsx');
-var MenuTrigger = React.createClass({
-	render: function(){
-		return (
-			<a className="menu__trigger" href="#menu-trigger" onClick={this.props.onClick}>
-				{this.props.children}
-			</a>
-		);
-	}
-});
-var MenuContent = React.createClass({
-	render: function(){
-		return (
-			<div className="menu__content">
-				{this.props.children}
-			</div>
-		);
-	}
-});
-var Menu = React.createClass({
-	getInitialState: function(){
-		return {
-			active: false
-		};
-	},
-	componentDidMount: function () {
-		window.addEventListener( 'click', this._onWindowClick );
-	},
-	componentWillUnmount: function () {
-		window.removeEventListener( 'click', this._onWindowClick );
-	},
-	render: function(){
-		var children = React.Children.map( this.props.children, function( child ){
-			if( child.type === MenuTrigger.type ){
-				child = cloneWithProps( child, {
-					ref: 'trigger',
-					onClick: this._onToggleClick
-				});
-			}
-			return child;
-		}, this);
-		var menu_classes = cx({
-			menu: true,
-			'menu--active': this.state.active
-		});
-		return (
-			<div className={menu_classes}>
-				{children}
-			</div>
-		);
-	},
-	_onWindowClick: function( event ){
-		var menu_element = this.getDOMNode();
-		if( event.target !== menu_element && !menu_element.contains( event.target ) ){
-			this.setState({
-				active: false
-			});
-		}
-	},
-	_onToggleClick: function( event ){
-		event.preventDefault();
-		this.setState({
-			active: !this.state.active
-		});
-	}
-});
+import Dropdown, { DropdownTrigger, DropdownContent } from 'react-simple-dropdown';
+import User from './User.jsx';
 
 var UserMenu = React.createClass({
 	render: function(){
@@ -82,27 +17,25 @@ var UserMenu = React.createClass({
 			? <li className="user-menu__item"><a className="user-menu__item__link" href="/logout">Log Out</a></li>
 			: '';
 		return (
-			<div className="user-menu">
-				<Menu>
-					<MenuTrigger>
-						<User user={user} />
-						<i className="fa fa-caret-down" />
-					</MenuTrigger>
-					<MenuContent>
-						<ul className="user-menu__items">
-							<li className="user-menu__item">
-								{register_youtube_jsx}
-							</li>
-							<li className="user-menu__item">
-								{register_soundcloud_jsx}
-							</li>
-							{logout_jsx}
-						</ul>
-					</MenuContent>
-				</Menu>
-			</div>
+			<Dropdown className="user-menu">
+				<DropdownTrigger className="user-menu__trigger">
+					<User user={user} />
+					<i className="fa fa-caret-down" />
+				</DropdownTrigger>
+				<DropdownContent className="user-menu__content">
+					<ul className="user-menu__items">
+						<li className="user-menu__item">
+							{register_youtube_jsx}
+						</li>
+						<li className="user-menu__item">
+							{register_soundcloud_jsx}
+						</li>
+						{logout_jsx}
+					</ul>
+				</DropdownContent>
+			</Dropdown>
 		);
 	}
 });
 
-module.exports = UserMenu;
+export default UserMenu;

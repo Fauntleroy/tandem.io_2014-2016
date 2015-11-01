@@ -1,6 +1,6 @@
-var React = require('react');
+import React from 'react';
 
-var SearchSourceTab = require('./SearchSourceTab.jsx');
+import SearchSourceTab from './SearchSourceTab.jsx';
 
 var _generateSourceTabs = function( sources ){
 	var sources_jsx = sources.map( function( source ){
@@ -22,4 +22,4 @@ var SearchSourceTabs = React.createClass({
 	}
 });
 
-module.exports = SearchSourceTabs;
+export default SearchSourceTabs;

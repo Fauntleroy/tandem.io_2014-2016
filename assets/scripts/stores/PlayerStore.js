@@ -1,10 +1,9 @@
-var EventEmitter = require('events').EventEmitter;
-var assign = require('lodash/object/assign');
-var store = require('store');
+import { EventEmitter } from 'events';
+import assign from 'lodash/object/assign';
+import store from 'store';
 
-var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var TandemConstants = require('../constants/TandemConstants.js');
-var ActionTypes = TandemConstants.ActionTypes;
+import TandemDispatcher from '../dispatcher/TandemDispatcher.js';
+import { ActionTypes } from '../constants/TandemConstants.js';
 
 var CHANGE_EVENT = 'change';
 var CHANGE_ELAPSED_TIME_EVENT = 'change:elapsed_time';
@@ -99,4 +98,4 @@ PlayerStore.dispatchToken = TandemDispatcher.register( function( payload ){
 	}
 });
 
-module.exports = PlayerStore;
+export default PlayerStore;

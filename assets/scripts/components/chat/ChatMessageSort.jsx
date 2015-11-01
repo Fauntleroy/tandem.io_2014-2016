@@ -1,7 +1,7 @@
-var React = require('react');
+import React from 'react';
 
-var User = require('../User.jsx');
-var Timestamp = require('./Timestamp.jsx');
+import User from '../User.jsx';
+import Timestamp from './Timestamp.jsx';
 
 var ChatMessageSort = React.createClass({
 	render: function(){
@@ -21,4 +21,4 @@ var ChatMessageSort = React.createClass({
 	}
 });
 
-module.exports = ChatMessageSort;
+export default ChatMessageSort;

@@ -1,10 +1,9 @@
-var EventEmitter = require('events').EventEmitter;
-var assign = require('lodash/object/assign');
-var filter = require('lodash/collection/filter');
+import { EventEmitter } from 'events';
+import assign from 'lodash/object/assign';
+import filter from 'lodash/collection/filter';
 
-var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var TandemConstants = require('../constants/TandemConstants.js');
-var ActionTypes = TandemConstants.ActionTypes;
+import TandemDispatcher from '../dispatcher/TandemDispatcher.js';
+import { ActionTypes } from '../constants/TandemConstants.js';
 
 var CHANGE_EVENT = 'change';
 
@@ -36,4 +35,4 @@ UsersStore.dispatchToken = TandemDispatcher.register( function( payload ){
 	}
 });
 
-module.exports = UsersStore;
+export default UsersStore;

@@ -8,4 +8,4 @@ var duration8601ToSeconds = function( duration_string ){
 	return duration;
 };
 
-module.exports = duration8601ToSeconds;
+export default duration8601ToSeconds;

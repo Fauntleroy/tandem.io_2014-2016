@@ -1,8 +1,8 @@
-var React = require('react');
-var cx = require('classnames');
+import React from 'react';
+import cx from 'classnames';
 
-var SearchActionCreator = require('../actions/SearchActionCreator.js');
-var SearchResultsStore = require('../stores/SearchResultsStore.js');
+import SearchActionCreator from '../actions/SearchActionCreator.js';
+import SearchResultsStore from '../stores/SearchResultsStore.js';
 
 var SearchSourceTab = React.createClass({
 	render: function(){
@@ -25,4 +25,4 @@ var SearchSourceTab = React.createClass({
 	}
 });
 
-module.exports = SearchSourceTab;
+export default SearchSourceTab;

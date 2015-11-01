@@ -1,9 +1,8 @@
-var EventEmitter = require('events').EventEmitter;
-var assign = require('lodash/object/assign');
+import { EventEmitter } from 'events';
+import assign from 'lodash/object/assign';
 
-var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var TandemConstants = require('../constants/TandemConstants.js');
-var ActionTypes = TandemConstants.ActionTypes;
+import TandemDispatcher from '../dispatcher/TandemDispatcher.js';
+import { ActionTypes } from '../constants/TandemConstants.js';
 
 var CHANGE_EVENT = 'change';
 
@@ -25,4 +24,4 @@ RoomStore.dispatchToken = TandemDispatcher.register( function( payload ){
 	}
 });
 
-module.exports = RoomStore;
+export default RoomStore;

@@ -1,7 +1,7 @@
-var React = require('react');
-var cx = require('classnames');
+import React from 'react';
+import cx from 'classnames';
 
-var User = require('./User.jsx');
+import User from './User.jsx';
 
 var PlayerItem = React.createClass({
 	render: function(){
@@ -27,4 +27,4 @@ var PlayerItem = React.createClass({
 	}
 });
 
-module.exports = PlayerItem;
+export default PlayerItem;

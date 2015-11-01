@@ -1,8 +1,8 @@
-var React = require('react');
-var cx = require('classnames');
+import React from 'react';
+import cx from 'classnames';
 
-var RoomActionCreator = require('../actions/RoomActionCreator.js');
-var RoomStore = require('../stores/RoomStore.js');
+import RoomActionCreator from '../actions/RoomActionCreator.js';
+import RoomStore from '../stores/RoomStore.js';
 
 var CHANGE_EVENT = 'change';
 
@@ -41,7 +41,7 @@ var RoomTitle = React.createClass({
 	},
 	_onFormSubmit: function( event ){
 		event.preventDefault();
-		var title_input_element = this.refs.title.getDOMNode();
+		var title_input_element = this.refs.title;
 		var new_title = title_input_element.value.trim();
 		if( !new_title ){
 			return;
@@ -53,7 +53,7 @@ var RoomTitle = React.createClass({
 	},
 	_onEditClick: function( event ){
 		event.preventDefault();
-		var title_input_element = this.refs.title.getDOMNode();
+		var title_input_element = this.refs.title;
 		title_input_element.value = this.state.title;
 		setTimeout( function(){
 			title_input_element.focus();
@@ -64,4 +64,4 @@ var RoomTitle = React.createClass({
 	}
 });
 
-module.exports = RoomTitle;
+export default RoomTitle;
