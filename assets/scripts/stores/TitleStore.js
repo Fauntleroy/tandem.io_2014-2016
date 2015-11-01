@@ -1,10 +1,9 @@
-var EventEmitter = require('events').EventEmitter;
-var assign = require('lodash/object/assign');
-var Visibility = require('visibilityjs/lib/visibility.core');
+import { EventEmitter } from 'events';
+import assign from 'lodash/object/assign';
+import Visibility from 'visibilityjs/lib/visibility.core';
 
-var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var TandemConstants = require('../constants/TandemConstants.js');
-var ActionTypes = TandemConstants.ActionTypes;
+import TandemDispatcher from '../dispatcher/TandemDispatcher.js';
+import { ActionTypes } from '../constants/TandemConstants.js';
 
 var CHANGE_EVENT = 'change';
 
@@ -36,7 +35,7 @@ var TitleStore = assign( {}, EventEmitter.prototype, {
 		return title;
 	}
 });
-	
+
 TitleStore.dispatchToken = TandemDispatcher.register( function( payload ){
 	var action = payload.action;
 	switch( action.type ){
@@ -71,4 +70,4 @@ TitleStore.dispatchToken = TandemDispatcher.register( function( payload ){
 	}
 });
 
-module.exports = TitleStore;
+export default TitleStore;

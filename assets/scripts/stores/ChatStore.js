@@ -1,10 +1,9 @@
-var EventEmitter = require('events').EventEmitter;
-var uuid = require('node-uuid');
-var assign = require('lodash/object/assign');
+import { EventEmitter } from 'events';
+import uuid from 'node-uuid';
+import assign from 'lodash/object/assign';
 
-var TandemDispatcher = require('../dispatcher/TandemDispatcher.js');
-var TandemConstants = require('../constants/TandemConstants.js');
-var ActionTypes = TandemConstants.ActionTypes;
+import TandemDispatcher from '../dispatcher/TandemDispatcher.js';
+import { ActionTypes } from '../constants/TandemConstants.js';
 
 var CHANGE_EVENT = 'change';
 
@@ -119,4 +118,4 @@ ChatStore.dispatchToken = TandemDispatcher.register( function( payload ){
 	}
 });
 
-module.exports = ChatStore;
+export default ChatStore;

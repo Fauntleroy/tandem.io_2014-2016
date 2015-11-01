@@ -1,8 +1,7 @@
-var Dispatcher = require('flux').Dispatcher;
-var assign = require('lodash/object/assign');
+import { Dispatcher } from 'flux';
+import assign from 'lodash/object/assign';
 
-var TandemConstants = require('../constants/TandemConstants.js');
-var PayloadSources = TandemConstants.PayloadSources;
+import { PayloadSources } from '../constants/TandemConstants.js';
 
 var TandemDispatcher = assign( new Dispatcher(), {
 	handleServerAction: function( action ){
@@ -21,4 +20,4 @@ var TandemDispatcher = assign( new Dispatcher(), {
 	}
 });
 
-module.exports = TandemDispatcher;
+export default TandemDispatcher;
