@@ -387,7 +387,10 @@ server.get( '/logout', function( req, res ){
 });
 
 server.post( '/rooms', function( req, res ){
-	var room = new Room;
+	var private = req.body.private === 'on';
+	var room = new Room({
+		private: private
+	});
 	res.redirect( '/rooms/'+ room.id );
 });
 
@@ -414,7 +417,9 @@ server.get( '/rooms/:id', function( req, res ){
 });
 
 var renderIndex = function( req, res ){
-	var rooms = Room.list( true );
+	var rooms = Room.list({
+		convert: true
+	});
 	res.render( 'index.hbs', {
 		rooms: rooms
 	});

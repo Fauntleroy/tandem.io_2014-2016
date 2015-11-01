@@ -27,6 +27,7 @@ var Room = function( data, options ){
 	this.data = {
 		id: this.id,
 		name: generateRoomName(),
+		private: false,
 		player: {
 			order: 'fifo',
 			likers: []
@@ -123,13 +124,16 @@ var Room = function( data, options ){
 
 };
 
-Room.list = function( convert ){
-	if( convert ){
-		return rooms.map( function( room ){
+Room.list = function( options ){
+	var public_rooms = rooms.filter( function( room ){
+		return !room.data.private;
+	});
+	if( options.convert ){
+		return public_rooms.map( function( room ){
 			return room.data;
 		});
 	}
-	return rooms;
+	return public_rooms;
 }
 
 Room.findById = function( id, convert ){
