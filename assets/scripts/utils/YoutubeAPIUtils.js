@@ -1,10 +1,10 @@
-var url = require('url');
-var xhr = require('xhr');
-var assign = require('lodash/object/assign');
+import url from 'url';
+import xhr from 'xhr';
+import assign from 'lodash/object/assign';
 
-var duration8601ToSeconds = require('./duration8601ToSeconds.js');
+import duration8601ToSeconds from './duration8601ToSeconds.js';
 
-var SearchServerActionCreator = require('../actions/SearchServerActionCreator.js');
+import SearchServerActionCreator from '../actions/SearchServerActionCreator.js';
 
 var NO_OP = function(){};
 var REQUEST_TIMEOUT = 15 * 1000;
@@ -131,4 +131,4 @@ var YoutubeAPIUtils = {
 	}
 };
 
-module.exports = YoutubeAPIUtils;
+export default YoutubeAPIUtils;

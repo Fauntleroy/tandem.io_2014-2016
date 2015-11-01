@@ -1,5 +1,5 @@
-var TandemSocketConnection = require('./_TandemSocketConnection.js');
-var UsersServerActionCreator = require('../actions/UsersServerActionCreator.js');
+import TandemSocketConnection from './_TandemSocketConnection.js';
+import UsersServerActionCreator from '../actions/UsersServerActionCreator.js';
 
 var _onState = function( state ){
 	UsersServerActionCreator.receiveState( state );
@@ -19,4 +19,4 @@ TandemSocketConnection.on( 'presences:leave', _onLeave );
 
 var TandemPlayerSocketUtils = {};
 
-module.exports = TandemPlayerSocketUtils;
+export default TandemPlayerSocketUtils;

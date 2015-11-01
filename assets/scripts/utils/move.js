@@ -3,4 +3,4 @@ var move = function( array, origin, destination ){
 	array.splice( destination, 0, moving_item );
 };
 
-module.exports = move;
+export default move;

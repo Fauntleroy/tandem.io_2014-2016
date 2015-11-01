@@ -1,5 +1,5 @@
-var ChatServerActionCreator = require('../actions/ChatServerActionCreator.js');
-var TandemSocketConnection = require('./_TandemSocketConnection.js');
+import ChatServerActionCreator from '../actions/ChatServerActionCreator.js';
+import TandemSocketConnection from './_TandemSocketConnection.js';
 
 var _onReceiveMessage = function( message ){
 	message.type = 'chat';
@@ -23,4 +23,4 @@ var TandemChatSocketUtils = {
 	}
 };
 
-module.exports = TandemChatSocketUtils;
+export default TandemChatSocketUtils;

@@ -1,8 +1,8 @@
-var url = require('url');
-var jsonp = require('jsonp');
-var xhr = require('xhr');
+import url from 'url';
+import jsonp from 'jsonp';
+import xhr from 'xhr';
 
-var SearchServerActionCreator = require('../actions/SearchServerActionCreator.js');
+import SearchServerActionCreator from '../actions/SearchServerActionCreator.js';
 
 var NO_OP = function(){};
 var REQUEST_TIMEOUT = 15 * 1000;
@@ -120,4 +120,4 @@ var SoundcloudAPIUtils = {
 	}
 };
 
-module.exports = SoundcloudAPIUtils;
+export default SoundcloudAPIUtils;

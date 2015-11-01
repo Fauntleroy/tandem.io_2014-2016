@@ -1,18 +1,18 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var domready = require('domready');
+import React from'react';
+import ReactDOM from'react-dom';
+import domready from'domready';
 
 // React Components
-var UserMenu = require('./components/UserMenu.jsx');
-var Search = require('./components/Search.jsx');
-var RoomTitle = require('./components/RoomTitle.jsx');
-var Users = require('./components/Users.jsx');
-var Chat = require('./components/Chat.jsx');
-var Player = require('./components/Player.jsx');
-var Playlist = require('./components/Playlist.jsx');
+import UserMenu from'./components/UserMenu.jsx';
+import Search from'./components/Search.jsx';
+import RoomTitle from'./components/RoomTitle.jsx';
+import Users from'./components/Users.jsx';
+import Chat from'./components/Chat.jsx';
+import Player from'./components/Player.jsx';
+import Playlist from'./components/Playlist.jsx';
 
 // Other Components
-var Title = require('./components/Title.js');
+import Title from './components/Title.js';
 
 window.tandem = window.tandem || {};
 
