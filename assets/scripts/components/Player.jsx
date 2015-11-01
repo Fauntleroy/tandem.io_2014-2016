@@ -1,14 +1,14 @@
-var React = require('react');
-var cx = require('classnames');
-var findWhere = require('lodash/collection/findWhere');
+import React from 'react';
+import cx from 'classnames';
+import findWhere from 'lodash/collection/findWhere';
 
-var secondsToTime = require('../utils/secondsToTime.js');
+import secondsToTime from '../utils/secondsToTime.js';
 
-var ReactPlayer = require('react-player');
-var VolumeControl = require('./VolumeControl.jsx');
-var PlayerItem = require('./PlayerItem.jsx');
-var PlayerActionCreator = require('../actions/PlayerActionCreator.js');
-var PlayerStore = require('../stores/PlayerStore.js');
+import ReactPlayer from 'react-player';
+import VolumeControl from './VolumeControl.jsx';
+import PlayerItem from './PlayerItem.jsx';
+import PlayerActionCreator from '../actions/PlayerActionCreator.js';
+import PlayerStore from '../stores/PlayerStore.js';
 
 var CHANGE_EVENT = 'change';
 var CHANGE_ELAPSED_TIME_EVENT = 'change:elapsed_time';
@@ -202,4 +202,4 @@ var Player = React.createClass({
 	}
 });
 
-module.exports = Player;
+export default Player;

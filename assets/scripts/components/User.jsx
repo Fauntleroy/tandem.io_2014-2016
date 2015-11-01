@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 
 var User = React.createClass({
 	render: function(){
@@ -11,4 +11,4 @@ var User = React.createClass({
 	}
 });
 
-module.exports = User;
+export default User;

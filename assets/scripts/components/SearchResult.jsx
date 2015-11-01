@@ -1,7 +1,7 @@
-var React = require('react');
-var cx = require('classnames');
+import React from 'react';
+import cx from 'classnames';
 
-var PlaylistActionCreator = require('../actions/PlaylistActionCreator.js');
+import PlaylistActionCreator from '../actions/PlaylistActionCreator.js';
 
 var SearchResult = React.createClass({
 	render: function(){
@@ -35,4 +35,4 @@ var SearchResult = React.createClass({
 	}
 });
 
-module.exports = SearchResult;
+export default SearchResult;

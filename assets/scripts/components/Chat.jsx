@@ -1,20 +1,20 @@
-var React = require('react');
+import React from 'react';
 
-var AutosizeTextarea = require('react-textarea-autosize');
-var ChatMessage = require('./chat/ChatMessage.jsx');
-var ChatMessageEmote = require('./chat/ChatMessageEmote.jsx');
-var ChatMessageTitle = require('./chat/ChatMessageTitle.jsx');
-var ChatMessageLike = require('./chat/ChatMessageLike.jsx');
-var ChatMessagePlay = require('./chat/ChatMessagePlay.jsx');
-var ChatMessageSkip = require('./chat/ChatMessageSkip.jsx');
-var ChatMessageRemove = require('./chat/ChatMessageRemove.jsx');
-var ChatMessageSort = require('./chat/ChatMessageSort.jsx');
-var ChatMessageJoin = require('./chat/ChatMessageJoin.jsx');
-var ChatMessageLeave = require('./chat/ChatMessageLeave.jsx');
-var ChatActionCreator = require('../actions/ChatActionCreator.js');
-var PlayerActionCreator = require('../actions/PlayerActionCreator.js');
-var ChatStore = require('../stores/ChatStore.js');
-var PlayerStore = require('../stores/PlayerStore.js');
+import AutosizeTextarea from 'react-textarea-autosize';
+import ChatMessage from './chat/ChatMessage.jsx';
+import ChatMessageEmote from './chat/ChatMessageEmote.jsx';
+import ChatMessageTitle from './chat/ChatMessageTitle.jsx';
+import ChatMessageLike from './chat/ChatMessageLike.jsx';
+import ChatMessagePlay from './chat/ChatMessagePlay.jsx';
+import ChatMessageSkip from './chat/ChatMessageSkip.jsx';
+import ChatMessageRemove from './chat/ChatMessageRemove.jsx';
+import ChatMessageSort from './chat/ChatMessageSort.jsx';
+import ChatMessageJoin from './chat/ChatMessageJoin.jsx';
+import ChatMessageLeave from './chat/ChatMessageLeave.jsx';
+import ChatActionCreator from '../actions/ChatActionCreator.js';
+import PlayerActionCreator from '../actions/PlayerActionCreator.js';
+import ChatStore from '../stores/ChatStore.js';
+import PlayerStore from '../stores/PlayerStore.js';
 
 var CHANGE_EVENT = 'change';
 var STARTS_WITH_LIKE_TEXT_REGEX = /^<3(?:$|\s)|^\+\+(?:$|\s)/;
@@ -125,4 +125,4 @@ var Chat = React.createClass({
 	}
 });
 
-module.exports = Chat;
+export default Chat;

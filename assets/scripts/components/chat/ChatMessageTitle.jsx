@@ -1,7 +1,7 @@
-var React = require('react');
+import React from 'react';
 
-var User = require('../User.jsx');
-var Timestamp = require('./Timestamp.jsx');
+import User from '../User.jsx';
+import Timestamp from './Timestamp.jsx';
 
 var ChatMessageTitle = React.createClass({
 	render: function(){
@@ -16,4 +16,4 @@ var ChatMessageTitle = React.createClass({
 	}
 });
 
-module.exports = ChatMessageTitle;
+export default ChatMessageTitle;

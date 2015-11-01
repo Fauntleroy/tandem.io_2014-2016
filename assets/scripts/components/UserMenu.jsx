@@ -1,10 +1,8 @@
-var React = require('react');
-var cx = require('classnames');
+import React from 'react';
+import cx from 'classnames';
 
-var Dropdown = require('react-simple-dropdown');
-var DropdownTrigger = Dropdown.DropdownTrigger;
-var DropdownContent = Dropdown.DropdownContent;
-var User = require('./User.jsx');
+import Dropdown, { DropdownTrigger, DropdownContent } from 'react-simple-dropdown';
+import User from './User.jsx';
 
 var UserMenu = React.createClass({
 	render: function(){
@@ -40,4 +38,4 @@ var UserMenu = React.createClass({
 	}
 });
 
-module.exports = UserMenu;
+export default UserMenu;

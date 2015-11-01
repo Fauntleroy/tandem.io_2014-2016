@@ -1,8 +1,8 @@
-var React = require('react');
-var cx = require('classnames');
+import React from 'react';
+import cx from 'classnames';
 
-var User = require('../User.jsx');
-var Timestamp = require('./Timestamp.jsx');
+import User from '../User.jsx';
+import Timestamp from './Timestamp.jsx';
 
 // from https://github.com/medialize/URI.js/blob/0cd4b1f09c7367d86e51731e692c3d20111f2681/src/URI.js#L191
 var url_regex = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig;
@@ -53,4 +53,4 @@ var ChatMessage = React.createClass({
 	}
 });
 
-module.exports = ChatMessage;
+export default ChatMessage;

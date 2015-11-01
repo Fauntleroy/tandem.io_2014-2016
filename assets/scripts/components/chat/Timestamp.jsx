@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 
 var _generateTimestamp = function( time ){
 	var hours = time.getHours();
@@ -22,4 +22,4 @@ var Timestamp = React.createClass({
 	}
 });
 
-module.exports = Timestamp;
+export default Timestamp;

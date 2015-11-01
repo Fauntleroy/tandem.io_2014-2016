@@ -1,10 +1,10 @@
-var React = require('react');
-var cx = require('classnames');
+import React from 'react';
+import cx from 'classnames';
 
-var secondsToTime = require('../utils/secondsToTime.js');
+import secondsToTime from '../utils/secondsToTime.js';
 
-var User = require('./User.jsx');
-var PlaylistActionCreator = require('../actions/PlaylistActionCreator.js');
+import User from './User.jsx';
+import PlaylistActionCreator from '../actions/PlaylistActionCreator.js';
 
 var PlaylistItem = React.createClass({
 	render: function(){
@@ -44,4 +44,4 @@ var PlaylistItem = React.createClass({
 	}
 });
 
-module.exports = PlaylistItem;
+export default PlaylistItem;

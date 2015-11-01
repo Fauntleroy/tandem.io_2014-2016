@@ -1,12 +1,12 @@
-var React = require('react');
-var cx = require('classnames');
+import React from 'react';
+import cx from 'classnames';
 
-var secondsToTime = require('../utils/secondsToTime.js');
-var PlaylistActionCreator = require('../actions/PlaylistActionCreator.js');
-var SearchActionCreator = require('../actions/SearchActionCreator.js');
-var PlaylistStore = require('../stores/PlaylistStore.js');
-var YoutubeAPIUtils = require('../utils/YoutubeAPIUtils.js');
-var SoundcloudAPIUtils = require('../utils/SoundcloudAPIUtils.js');
+import secondsToTime from '../utils/secondsToTime.js';
+import PlaylistActionCreator from '../actions/PlaylistActionCreator.js';
+import SearchActionCreator from '../actions/SearchActionCreator.js';
+import PlaylistStore from '../stores/PlaylistStore.js';
+import YoutubeAPIUtils from '../utils/YoutubeAPIUtils.js';
+import SoundcloudAPIUtils from '../utils/SoundcloudAPIUtils.js';
 
 import SortableList from './sortable/List.jsx';
 import SortableItem from './sortable/Item.jsx';
@@ -120,4 +120,4 @@ var Playlist = React.createClass({
 	}
 });
 
-module.exports = Playlist;
+export default Playlist;

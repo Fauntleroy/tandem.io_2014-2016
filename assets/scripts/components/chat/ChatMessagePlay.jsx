@@ -1,8 +1,8 @@
-var React = require('react');
-var cx = require('classnames');
+import React from 'react';
+import cx from 'classnames';
 
-var User = require('../User.jsx');
-var Timestamp = require('./Timestamp.jsx');
+import User from '../User.jsx';
+import Timestamp from './Timestamp.jsx';
 
 var ChatMessagePlay = React.createClass({
 	render: function(){
@@ -36,4 +36,4 @@ var ChatMessagePlay = React.createClass({
 	}
 });
 
-module.exports = ChatMessagePlay;
+export default ChatMessagePlay;

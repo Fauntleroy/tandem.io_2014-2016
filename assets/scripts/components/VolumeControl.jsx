@@ -1,6 +1,6 @@
-var React = require('react');
-var throttle = require('lodash/function/throttle');
-var cx = require('classnames');
+import React from 'react';
+import throttle from 'lodash/function/throttle';
+import cx from 'classnames';
 
 var VolumeControl = React.createClass({
 	render: function(){
@@ -56,4 +56,4 @@ var VolumeControl = React.createClass({
 	}
 });
 
-module.exports = VolumeControl;
+export default VolumeControl;
