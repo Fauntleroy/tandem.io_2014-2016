@@ -24,8 +24,10 @@ const SOUNDCLOUD_CONFIG = {
 };
 const YOUTUBE_CONFIG = {
 	playerVars: {
+		autoplay: 1,
 		rel: 0
-	}
+	},
+	preload: true
 };
 
 var _getStateFromStore = function(){
@@ -106,6 +108,7 @@ var Player = React.createClass({
 							ref="player"
 							url={media_url}
 							volume={volume}
+							playing={true}
 							soundcloudConfig={SOUNDCLOUD_CONFIG}
 							youtubeConfig={YOUTUBE_CONFIG}
 							onProgress={this._onPlayerTime}
