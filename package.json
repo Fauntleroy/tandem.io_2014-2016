@@ -44,7 +44,7 @@
     "react-dnd": "^2.0.2",
     "react-dnd-html5-backend": "^2.0.0",
     "react-dom": "^0.14.0",
-    "react-player": "fauntleroy/react-player#fix-autoplay-prime-tmp",
+    "react-player": "fauntleroy/react-player#cff791169a30e448dba88724c02d513cd7885d16",
     "react-simple-dropdown": "0.1.x",
     "react-textarea-autosize": "^3.1.0",
     "request": "~2.33.0",
@@ -63,6 +63,7 @@
     "start": "node index.js",
     "postinstall": "gulp compile",
     "build": "gulp compile",
+    "buildmin": "gulp \"compile and minify\"",
     "dev": "gulp"
   }
 }
