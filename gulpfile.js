@@ -78,5 +78,5 @@ gulp.task( 'compile and watch js', function(){
 
 gulp.task( 'compile and minify', ['compile css', 'compile js'], minifyAssets );
 
-gulp.task( 'compile', ['compile and minify'] );
+gulp.task( 'compile', ['compile css', 'compile js'] );
 gulp.task( 'default', ['compile and watch css', 'compile and watch js'] );
