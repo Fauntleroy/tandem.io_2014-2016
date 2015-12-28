@@ -1,4 +1,8 @@
 {
+  "engines": {
+    "node": ">=5.0.0",
+    "npm": ">=3.0.0"
+  },
   "name": "tandem.io",
   "version": "0.0.1",
   "description": "Minimal, open-source version of TK Sync",
