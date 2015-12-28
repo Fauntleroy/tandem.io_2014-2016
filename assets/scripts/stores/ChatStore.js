@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import uuid from 'node-uuid';
+import uuid from 'uuid';
 import assign from 'lodash/object/assign';
 
 import TandemDispatcher from '../dispatcher/TandemDispatcher.js';

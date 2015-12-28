@@ -3,7 +3,7 @@ const nouns = ['Gopher','Venison','Pachyderm','Cupcake','Marshmallow','Capybara'
 
 var crypto = require('crypto');
 var _ = require('underscore');
-var uuid = require('node-uuid');
+var uuid = require('uuid');
 
 // generate a hash for use with gravatar
 var generateUsernameHash = function( username ){

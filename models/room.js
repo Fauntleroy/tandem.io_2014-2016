@@ -5,7 +5,7 @@ const MAX_TITLE_LENGTH = 50;
 const NO_OP = function(){};
 
 var _ = require('underscore');
-var uuid = require('node-uuid');
+var uuid = require('uuid');
 
 var io;
 var rooms = [];
