@@ -51,24 +51,24 @@ var SearchResultsStore = assign( {}, EventEmitter.prototype, {
 SearchResultsStore.dispatchToken = TandemDispatcher.register( function( payload ){
 	var action = payload.action;
 	switch( action.type ){
-		case ActionTypes.SEARCH_ACTIVE:
-			_active = action.toggle;
-			SearchResultsStore.emit( CHANGE_EVENT );
+	case ActionTypes.SEARCH_ACTIVE:
+		_active = action.toggle;
+		SearchResultsStore.emit( CHANGE_EVENT );
 		break;
-		case ActionTypes.SEARCH_START:
-			_query = action.query;
-			SearchResultsStore.emit( CHANGE_EVENT );
+	case ActionTypes.SEARCH_START:
+		_query = action.query;
+		SearchResultsStore.emit( CHANGE_EVENT );
 		break;
-		case ActionTypes.SEARCH_SWITCH_SOURCE:
-			_sources = _sources.map( function( source ){
-				source.active = ( action.source === source.name );
-				return source;
-			});
-			SearchResultsStore.emit( CHANGE_EVENT );
+	case ActionTypes.SEARCH_SWITCH_SOURCE:
+		_sources = _sources.map( function( source ){
+			source.active = ( action.source === source.name );
+			return source;
+		});
+		SearchResultsStore.emit( CHANGE_EVENT );
 		break;
-		case ActionTypes.SEARCH_RECEIVE_RESULTS:
-			_results[action.source] = action.results;
-			SearchResultsStore.emit( CHANGE_EVENT );
+	case ActionTypes.SEARCH_RECEIVE_RESULTS:
+		_results[action.source] = action.results;
+		SearchResultsStore.emit( CHANGE_EVENT );
 		break;
 	}
 });

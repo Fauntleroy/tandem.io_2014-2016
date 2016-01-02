@@ -1,13 +1,11 @@
 import url from 'url';
 import xhr from 'xhr';
-import assign from 'lodash/object/assign';
 
 import duration8601ToSeconds from './duration8601ToSeconds.js';
 
 import SearchServerActionCreator from '../actions/SearchServerActionCreator.js';
 
 var NO_OP = function(){};
-var REQUEST_TIMEOUT = 15 * 1000;
 var YOUTUBE_API_KEY = tandem.bridge.apis.youtube.api_key;
 var YOUTUBE_API_HOST = 'www.googleapis.com';
 var YOUTUBE_API_PATH = '/youtube/v3';
@@ -60,16 +58,15 @@ var YoutubeAPIUtils = {
 	testUrl: function( item_url ){
 		return /youtube\.com.*[\?&]v=(.{11})|youtu\.be\/(.{11})/i.test( item_url );
 	},
-	apiRequest: function( path, method, query, callback ){
-		callback = callback || NO_OP;
-		query = assign({
-			key: YOUTUBE_API_KEY
-		}, query);
+	apiRequest: function( path, method, query, callback = NO_OP ){
 		var request_url = url.format({
 			protocol: 'https:',
 			host: YOUTUBE_API_HOST,
 			pathname: YOUTUBE_API_PATH + path,
-			query: query
+			query: {
+				...query,
+				key: YOUTUBE_API_KEY
+			}
 		});
 		xhr({
 			url: request_url,
@@ -77,8 +74,7 @@ var YoutubeAPIUtils = {
 			json: true
 		}, callback);
 	},
-	getItemFromUrl: function( item_url, callback ){
-		callback = callback || NO_OP;
+	getItemFromUrl: function( item_url, callback = NO_OP ){
 		var id = _getIdFromUrl( item_url );
 		this.apiRequest( '/videos/', 'GET', {
 			part: 'contentDetails,id,snippet,status',
@@ -105,15 +101,13 @@ var YoutubeAPIUtils = {
 			maxResults: 30
 		}, function( err, response, body ){
 			if( err ){
-				console.log( 'YouTube search error', err );
 				return;
 			}
 			var results = _processYoutubeResults( body.items );
 			SearchServerActionCreator.receiveResults( results, 'youtube' );
 		});
 	},
-	likeItem: function( item_id, playlist_id, callback ){
-		callback = callback || NO_OP;
+	likeItem: function( item_id, playlist_id, callback = NO_OP ){
 		xhr({
 			url: YOUTUBE_API_PROXY_PATH +'/playlistItems?part=snippet',
 			method: 'POST',

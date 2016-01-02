@@ -1,37 +1,53 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import cx from 'classnames';
 
 import PlaylistActionCreator from '../actions/PlaylistActionCreator.js';
 
 var SearchResult = React.createClass({
+	propTypes: {
+		result: PropTypes.shape({
+			author: PropTypes.string,
+			description: PropTypes.string,
+			image: PropTypes.string,
+			source: PropTypes.string,
+			title: PropTypes.string,
+			url: PropTypes.string
+		})
+	},
+	handleAddClick: function( event ){
+		event.preventDefault();
+		const { result } = this.props;
+		const { source, url } = result;
+		PlaylistActionCreator.addItemFromUrl( url, source );
+	},
 	render: function(){
-		var result = this.props.result;
-		var thumbnail_classes_object = {
-			image: true
-		};
-		thumbnail_classes_object[result.source] = true;
-		var thumbnail_classes = cx( thumbnail_classes_object );
-		var thumbnail_style = {
-			backgroundImage: 'url('+ result.image +')'
+		const { result } = this.props;
+		const { author, description, image, source, title, url } = result;
+		const thumbnail_classes = cx({
+			image: true,
+			[source]: true
+		});
+		const thumbnail_style = {
+			backgroundImage: `url(${image})`
 		};
 		return (
 			<li>
 				<span className={thumbnail_classes} style={thumbnail_style} />
-				<h3 className="title"><a href={result.url} target="_blank">{result.title}</a></h3>
-				<p className="description">{result.description}</p>
+				<h3 className="title"><a href={url} target="_blank">{title}</a></h3>
+				<p className="description">{description}</p>
 				<ul className="details">
-					<li className="author">{result.author}</li>
+					<li className="author">{author}</li>
 				</ul>
-				<button className="add btn btn-small btn-primary" alt="add" value={result.url} onClick={this._onAddClick}>
+				<button
+					className="add btn btn-small btn-primary"
+					alt="add"
+					value={url}
+					onClick={this.handleAddClick}
+				>
 					Add to Playlist <i className="fa fa-plus"></i>
 				</button>
 			</li>
 		);
-	},
-	_onAddClick: function( event ){
-		event.preventDefault();
-		var result = this.props.result;
-		PlaylistActionCreator.addItemFromUrl( result.url, result.source );
 	}
 });
 

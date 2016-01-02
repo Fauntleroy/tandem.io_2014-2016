@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import cx from 'classnames';
 
 import secondsToTime from '../utils/secondsToTime.js';
@@ -7,40 +7,51 @@ import User from './User.jsx';
 import PlaylistActionCreator from '../actions/PlaylistActionCreator.js';
 
 var PlaylistItem = React.createClass({
+	propTypes: {
+		item: PropTypes.shape({
+			duration: PropTypes.number,
+			id: PropTypes.string,
+			image: PropTypes.string,
+			source: PropTypes.string,
+			title: PropTypes.string,
+			url: PropTypes.string,
+			user: PropTypes.object
+		})
+	},
+	handleRemoveClick: function( event ){
+		event.preventDefault();
+		PlaylistActionCreator.removeItem( this.props.item.id );
+	},
 	render: function(){
-		var item = this.props.item;
-		var image_classes = 'image ' + item.source;
-		var image_style = {
-			backgroundImage: 'url('+ item.image +')'
+		const { item } = this.props;
+		const { duration, id, image, source, title, url, user } = item;
+		const image_classes = 'image ' + source;
+		const image_style = {
+			backgroundImage: 'url('+ image +')'
 		};
-		var source_icon_classes_object = {
-			fa: true
-		};
-		source_icon_classes_object['fa-'+ item.source] = true;
-		var source_icon_classes = cx( source_icon_classes_object );
+		const source_icon_classes = cx({
+			'fa': true,
+			['fa-'+ source]: true
+		});
 		return (
-			<div data-id={item.id}>
+			<div data-id={id}>
 				<span className={image_classes} style={image_style} />
 				<h3 className="title">
-					<a href={item.url} target="_blank">{item.title}</a>
+					<a href={url} target="_blank">{title}</a>
 				</h3>
 				<br />
 				Posted by&nbsp;
-				<User user={item.user} />
+				<User user={user} />
 				&nbsp;via&nbsp;
-				<a href={item.url} target="_blank">
+				<a href={url} target="_blank">
 					<i className={source_icon_classes}></i>
 				</a>
-				<var className="duration">{secondsToTime( item.duration )}</var>
-				<a className="remove" href="#remove" onClick={this._onRemoveClick}>
+				<var className="duration">{secondsToTime( duration )}</var>
+				<a className="remove" href="#remove" onClick={this.handleRemoveClick}>
 					<i className="fa fa-times"></i>
 				</a>
 			</div>
 		);
-	},
-	_onRemoveClick: function( event ){
-		event.preventDefault();
-		PlaylistActionCreator.removeItem( this.props.item.id );
 	}
 });
 

@@ -42,78 +42,78 @@ var ChatStore = assign( {}, EventEmitter.prototype, {
 ChatStore.dispatchToken = TandemDispatcher.register( function( payload ){
 	var action = payload.action;
 	switch( action.type ){
-		case ActionTypes.CHAT_RECEIVE_ADD_MESSAGE:
-			_addMessage( action.message );
-			ChatStore.emit( CHANGE_EVENT );
+	case ActionTypes.CHAT_RECEIVE_ADD_MESSAGE:
+		_addMessage( action.message );
+		ChatStore.emit( CHANGE_EVENT );
 		break;
-		case ActionTypes.CHAT_RECEIVE_ADD_EMOTE:
-			_addMessage( action.message );
-			ChatStore.emit( CHANGE_EVENT );
+	case ActionTypes.CHAT_RECEIVE_ADD_EMOTE:
+		_addMessage( action.message );
+		ChatStore.emit( CHANGE_EVENT );
 		break;
-		case ActionTypes.ROOM_RECEIVE_SET_TITLE:
+	case ActionTypes.ROOM_RECEIVE_SET_TITLE:
+		_addMessage({
+			type: 'title',
+			user: action.user,
+			title: action.title
+		});
+		ChatStore.emit( CHANGE_EVENT );
+		break;
+	case ActionTypes.PLAYER_RECEIVE_LIKE_ITEM:
+		_addMessage({
+			type: 'like',
+			user: action.user,
+			content: action.like_message
+		});
+		ChatStore.emit( CHANGE_EVENT );
+		break;
+	case ActionTypes.PLAYER_RECEIVE_ITEM:
+		_addMessage({
+			type: 'play',
+			item: action.item
+		});
+		ChatStore.emit( CHANGE_EVENT );
+		break;
+	case ActionTypes.PLAYER_RECEIVE_SKIP_ITEM:
+		_addMessage({
+			type: 'skip',
+			user: action.user,
+			item: action.item
+		});
+		ChatStore.emit( CHANGE_EVENT );
+		break;
+	case ActionTypes.PLAYLIST_RECEIVE_REMOVE_ITEM:
+		if( action.user ){
 			_addMessage({
-				type: 'title',
-				user: action.user,
-				title: action.title
-			});
-			ChatStore.emit( CHANGE_EVENT );
-		break;
-		case ActionTypes.PLAYER_RECEIVE_LIKE_ITEM:
-			_addMessage({
-				type: 'like',
-				user: action.user,
-				content: action.like_message
-			});
-			ChatStore.emit( CHANGE_EVENT );
-		break;
-		case ActionTypes.PLAYER_RECEIVE_ITEM:
-			_addMessage({
-				type: 'play',
-				item: action.item
-			});
-			ChatStore.emit( CHANGE_EVENT );
-		break;
-		case ActionTypes.PLAYER_RECEIVE_SKIP_ITEM:
-			_addMessage({
-				type: 'skip',
-				user: action.user,
-				item: action.item
-			});
-			ChatStore.emit( CHANGE_EVENT );
-		break;
-		case ActionTypes.PLAYLIST_RECEIVE_REMOVE_ITEM:
-			if( action.user ){
-				_addMessage({
-					type: 'remove',
-					user: action.user,
-					item: action.item
-				});
-				ChatStore.emit( CHANGE_EVENT );
-			}
-		break;
-		case ActionTypes.PLAYLIST_RECEIVE_SORT_END:
-			_addMessage({
-				type: 'sort',
-				origin: action.origin,
-				destination: action.destination,
+				type: 'remove',
 				user: action.user,
 				item: action.item
 			});
 			ChatStore.emit( CHANGE_EVENT );
+		}
 		break;
-		case ActionTypes.USERS_RECEIVE_JOIN:
-			_addMessage({
-				type: 'join',
-				user: action.user
-			});
-			ChatStore.emit( CHANGE_EVENT );
+	case ActionTypes.PLAYLIST_RECEIVE_SORT_END:
+		_addMessage({
+			type: 'sort',
+			origin: action.origin,
+			destination: action.destination,
+			user: action.user,
+			item: action.item
+		});
+		ChatStore.emit( CHANGE_EVENT );
 		break;
-		case ActionTypes.USERS_RECEIVE_LEAVE:
-			_addMessage({
-				type: 'leave',
-				user: action.user
-			});
-			ChatStore.emit( CHANGE_EVENT );
+	case ActionTypes.USERS_RECEIVE_JOIN:
+		_addMessage({
+			type: 'join',
+			user: action.user
+		});
+		ChatStore.emit( CHANGE_EVENT );
+		break;
+	case ActionTypes.USERS_RECEIVE_LEAVE:
+		_addMessage({
+			type: 'leave',
+			user: action.user
+		});
+		ChatStore.emit( CHANGE_EVENT );
 		break;
 	}
 });

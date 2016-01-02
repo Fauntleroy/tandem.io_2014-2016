@@ -1,21 +1,29 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import User from '../User.jsx';
 import Timestamp from './Timestamp.jsx';
 
 var ChatMessageSort = React.createClass({
+	propTypes: {
+		message: PropTypes.shape({
+			item: PropTypes.object,
+			time: PropTypes.any,
+			user: PropTypes.object
+		})
+	},
 	render: function(){
-		var message = this.props.message;
+		const { message } = this.props;
+		const { item, time, user } = message;
 		return (
 			<li className="sort">
 				<i className="fa fa-random"></i>
-				<User user={message.user} /> moved&nbsp;
+				<User user={user} /> moved&nbsp;
 				<span className="item">
 					<strong className="title">
-						<a href={message.item.url} target="_blank">{message.item.title}</a>
+						<a href={item.url} target="_blank">{item.title}</a>
 					</strong>
 				</span>
-				<Timestamp time={message.time} />
+				<Timestamp time={time} />
 			</li>
 		);
 	}

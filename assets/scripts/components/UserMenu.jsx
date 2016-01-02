@@ -1,5 +1,4 @@
 import React from 'react';
-import cx from 'classnames';
 
 import Dropdown, { DropdownTrigger, DropdownContent } from 'react-simple-dropdown';
 import User from './User.jsx';

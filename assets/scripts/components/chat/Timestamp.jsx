@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+
+const HOURS_IN_DAY = 24;
+const HOURS_IN_HALF_DAY = HOURS_IN_DAY / 2;
 
 var _generateTimestamp = function( time ){
 	var hours = time.getHours();
-	var hours_12 = hours % 12 || 12;
-	var am_pm = ( hours > 11 )
+	var hours_12 = hours % HOURS_IN_HALF_DAY || HOURS_IN_HALF_DAY;
+	var am_pm = ( hours > HOURS_IN_HALF_DAY - 1 )
 		? 'PM'
 		: 'AM';
 	var minutes_string = time.getMinutes().toString();
@@ -14,6 +17,9 @@ var _generateTimestamp = function( time ){
 };
 
 var Timestamp = React.createClass({
+	propTypes: {
+		time: PropTypes.any.isRequired
+	},
 	render: function(){
 		var timestamp = _generateTimestamp( this.props.time );
 		return (
