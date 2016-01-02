@@ -16,9 +16,9 @@ You will need to:
 - Create a database in MySQL (e.g. `tandem`)
 - Add this to your [`hosts` file](http://www.rackspace.com/knowledge_center/article/modify-your-hosts-file): `127.0.0.1 dev.tandem.io`
 - Configure a [YouTube App](#user-content-youtube-app-registration)
-- Configured a [SoundCloud App](#user-content-soundcloud-app-registration)
+- Configure a [SoundCloud App](#user-content-soundcloud-app-registration)
 - Set the following `ENV` variables:
-
+    ```bash
     # Secrets
     export TANDEM_TOKEN_SECRET="YOUR-TOKEN-SECRET-HERE"
     export TANDEM_SESSION_SECRET="YOUR-SESSION-SECRET-HERE"
@@ -35,7 +35,7 @@ You will need to:
     export TANDEM_YOUTUBE_APP_ID="YOUR-YOUTUBE-APP-ID-HERE"
     export TANDEM_YOUTUBE_APP_SECRET="YOUR-YOUTUBE-APP-SECRET-HERE"
     export TANDEM_YOUTUBE_API_KEY="YOUR-YOUTUBE-API-KEY-HERE"
-
+    ```
 - Run `npm install` to install all of the node.js dependencies.
 
 Once you've done all of the above, you can start your development server by running: `npm run watch`. This will build Tandem, watch files for changes, run the server. While this is running you should be able to access the application at http://dev.tandem.io:8080.
