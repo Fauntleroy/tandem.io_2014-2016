@@ -11,7 +11,7 @@ var SOUNDCLOUD_API_HOST = 'api.soundcloud.com';
 var SOUNDCLOUD_API_PROXY_PATH = '/api/v1/proxy/soundcloud';
 
 var _processSoundcloudItem = function( item ){
-	var stream_url = item.stream_url +'?consumer_key='+ SOUNDCLOUD_CLIENT_ID;
+	var stream_url = `${item.stream_url}?consumer_key=${SOUNDCLOUD_CLIENT_ID}`;
 	// Get an image to represent this track
 	// If it doesn't have artwork, use the user's avatar
 	// Then make sure we get the biggest version of the image
@@ -35,10 +35,10 @@ var _processSoundcloudItem = function( item ){
 };
 
 var _processSoundcloudResults = function( results ){
-	var processed_results = results.map( function( result ){
+	var processed_results = results.map( result => {
 		var image = ( result.artwork_url || result.user.avatar_url );
 		image = image
-			? image.replace('large','crop')
+			? image.replace( 'large', 'crop' )
 			: 'https://s3-us-west-1.amazonaws.com/syncmedia/images/null.png';
 		var processed_result = {
 			original_id: result.id,
@@ -59,8 +59,8 @@ var _processSoundcloudResults = function( results ){
 };
 
 var SoundcloudAPIUtils = {
-	testUrl: function( url ){
-		return /.*soundcloud\.com\/.*/i.test( url );
+	testUrl: function( url_to_test ){
+		return /.*soundcloud\.com\/.*/i.test( url_to_test );
 	},
 	getItemFromUrl: function( item_url, callback = NO_OP ){
 		var resolve_url = url.format({
@@ -73,7 +73,7 @@ var SoundcloudAPIUtils = {
 		});
 		jsonp( resolve_url, {
 			timeout: REQUEST_TIMEOUT * 1000
-		}, function( error, data ){
+		}, ( error, data ) => {
 			if( error ){
 				return callback( new Error('Error resolving url with SoundCloud.') );
 			}
@@ -101,7 +101,7 @@ var SoundcloudAPIUtils = {
 		});
 		jsonp( search_url, {
 			timeout: REQUEST_TIMEOUT * 1000
-		}, function( err, data ){
+		}, ( err, data ) => {
 			if( err ){
 				alert('SoundCloud search error');
 				return;
@@ -112,7 +112,7 @@ var SoundcloudAPIUtils = {
 	},
 	likeItem: function( item_id, callback = NO_OP ){
 		xhr({
-			url: SOUNDCLOUD_API_PROXY_PATH +'/me/favorites/'+ item_id,
+			url: `${SOUNDCLOUD_API_PROXY_PATH}/me/favorites/${item_id}`,
 			method: 'PUT'
 		}, callback );
 	}

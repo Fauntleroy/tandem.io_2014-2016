@@ -13,7 +13,7 @@ var YOUTUBE_API_PROXY_PATH = '/api/v1/proxy/youtube';
 var YOUTUBE_WATCH_URL = 'http://www.youtube.com/watch?v=';
 
 var _getIdFromUrl = function( item_url ){
-	var query_id = item_url.match(/youtube\.com.*[\?&]v=(.{11})|youtu\.be\/(.{11})/i);
+	var query_id = item_url.match( /youtube\.com.*[\?&]v=(.{11})|youtu\.be\/(.{11})/i );
 	query_id = ( query_id )
 		? query_id[1] || query_id[2] || null
 		: null;
@@ -32,13 +32,13 @@ var _processYoutubeItem = function( item ){
 		type: 'video',
 		duration: duration8601ToSeconds( item.contentDetails.duration ),
 		artist: item.snippet.channelTitle,
-		artist_url: 'http://www.youtube.com/user/'+ item.snippet.channelTitle
+		artist_url: `http://www.youtube.com/user/${item.snippet.channelTitle}`
 	};
 	return processed_item;
 };
 
 var _processYoutubeResults = function( results ){
-	var processed_results = results.map( function( result ){
+	var processed_results = results.map( result => {
 		var processed_result = {
 			title: result.snippet.title,
 			url: YOUTUBE_WATCH_URL + result.id.videoId,
@@ -72,7 +72,7 @@ var YoutubeAPIUtils = {
 			url: request_url,
 			method: method,
 			json: true
-		}, callback);
+		}, callback );
 	},
 	getItemFromUrl: function( item_url, callback = NO_OP ){
 		var id = _getIdFromUrl( item_url );
@@ -80,7 +80,7 @@ var YoutubeAPIUtils = {
 			part: 'contentDetails,id,snippet,status',
 			fields: 'items(contentDetails,id,snippet,status)',
 			id: id
-		}, function( error, response, body ){
+		}, ( error, response, body ) => {
 			if( error ){
 				return callback( new Error('Error getting item from YouTube') );
 			}
@@ -99,7 +99,7 @@ var YoutubeAPIUtils = {
 			videoEmbeddable: true,
 			order: 'relevance',
 			maxResults: 30
-		}, function( err, response, body ){
+		}, ( err, response, body ) => {
 			if( err ){
 				return;
 			}
@@ -109,7 +109,7 @@ var YoutubeAPIUtils = {
 	},
 	likeItem: function( item_id, playlist_id, callback = NO_OP ){
 		xhr({
-			url: YOUTUBE_API_PROXY_PATH +'/playlistItems?part=snippet',
+			url: `${YOUTUBE_API_PROXY_PATH}/playlistItems?part=snippet`,
 			method: 'POST',
 			json: {
 				snippet: {

@@ -24,7 +24,7 @@ var _getStateFromStore = function(){
 };
 
 var Playlist = React.createClass({
-	getInitialState: function () {
+	getInitialState: function(){
 		return _getStateFromStore();
 	},
 	componentDidMount: function(){
@@ -91,7 +91,7 @@ var Playlist = React.createClass({
 			'playlist--is-remote-sorting': is_remote_sorting,
 			'playlist--is-adding': is_adding
 		});
-		var playlist_duration = items.reduce( function( duration, next_item ){
+		var playlist_duration = items.reduce( ( duration, next_item ) => {
 			return duration + next_item.duration;
 		}, 0 );
 		return (

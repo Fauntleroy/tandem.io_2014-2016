@@ -1,7 +1,9 @@
 import querystring from 'querystring';
 import io from 'socket.io-client';
 
-var TandemSocketConnection = io.connect( location.protocol +'//'+ location.host +'/rooms/'+ tandem.bridge.room.id, {
+const connection_url = `${location.protocol}//${location.host}/rooms/${tandem.bridge.room.id}`;
+
+var TandemSocketConnection = io.connect( connection_url, {
 	query: querystring.stringify({
 		token: tandem.bridge.user.token,
 		id: tandem.bridge.user.id,

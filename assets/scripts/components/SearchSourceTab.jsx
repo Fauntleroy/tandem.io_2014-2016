@@ -26,7 +26,7 @@ var SearchSourceTab = React.createClass({
 		});
 		return (
 			<li className={classes}>
-				<a href={'#'+ name} onClick={this.handleClick}>{display_name}</a>
+				<a href={`#${name}`} onClick={this.handleClick}>{display_name}</a>
 			</li>
 		);
 	}

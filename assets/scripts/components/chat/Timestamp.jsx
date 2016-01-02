@@ -11,9 +11,9 @@ var _generateTimestamp = function( time ){
 		: 'AM';
 	var minutes_string = time.getMinutes().toString();
 	if( minutes_string.length < 2 ){
-		minutes_string = '0'+ minutes_string;
+		minutes_string = `0${minutes_string}`;
 	}
-	return hours_12 +':'+ minutes_string +' '+ am_pm;
+	return `${hours_12}:${minutes_string} ${am_pm}`;
 };
 
 var Timestamp = React.createClass({

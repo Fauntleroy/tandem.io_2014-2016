@@ -17,7 +17,7 @@ var _move = function( array, origin, destination ){
 };
 
 var _removeItem = function( item_id ){
-	var items = reject( _items, function( item ){
+	var items = reject( _items, item => {
 		return item.id === item_id;
 	});
 	return items;
@@ -35,7 +35,7 @@ var PlaylistStore = assign( {}, EventEmitter.prototype, {
 	}
 });
 
-PlaylistStore.dispatchToken = TandemDispatcher.register( function( payload ){
+PlaylistStore.dispatchToken = TandemDispatcher.register( payload => {
 	var action = payload.action;
 	switch( action.type ){
 	case ActionTypes.PLAYLIST_ADD_ITEM_FROM_URL:

@@ -40,7 +40,7 @@ var RoomTitle = React.createClass({
 		event.preventDefault();
 		var title_input_element = this.refs.title;
 		title_input_element.value = this.state.title;
-		setTimeout( function(){
+		setTimeout( () => {
 			title_input_element.focus();
 		}, 0 );
 		this.setState({

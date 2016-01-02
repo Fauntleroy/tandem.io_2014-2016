@@ -24,6 +24,7 @@ const YOUTUBE_CONFIG = {
 };
 const MAXIMUM_PLAYER_ELAPSED_DRIFT = 3;
 const MAXIMUM_VOLUME = 100;
+const MAXIMUM_ELAPSED = 100;
 
 var _getStateFromStore = function(){
 	return {
@@ -108,17 +109,18 @@ var Player = React.createClass({
 				? player.item.url
 				: player.item.media_url
 			: null;
+		const elapsed_percent = ( player.client_elapsed_time / duration ) * MAXIMUM_ELAPSED;
 		var player_classes = cx({
 			player: true,
 			'player--empty': !player.item
 		});
 		var cover_style = {
 			backgroundImage: ( player.item )
-				? 'url('+ player.item.image +')'
+				? `url(${player.item.image})`
 				: null
 		};
 		var elapsed_style = {
-			width: ( player.client_elapsed_time / duration ) * MAXIMUM_VOLUME +'%'
+			width: `${elapsed_percent}%`
 		};
 		var like_classes = cx({
 			player__controls__like: true,

@@ -29,7 +29,7 @@ var Users = React.createClass({
 		this.setState( _getStateFromStore() );
 	},
 	renderUsers: function(){
-		var users_jsx = this.state.users.map( function( user ){
+		var users_jsx = this.state.users.map( user => {
 			var li_classes = cx({
 				users__user: true,
 				'users__user--self': ( user.id === tandem.bridge.user.id )

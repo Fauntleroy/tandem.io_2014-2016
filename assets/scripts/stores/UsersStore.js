@@ -15,7 +15,7 @@ var UsersStore = assign( {}, EventEmitter.prototype, {
 	}
 });
 
-UsersStore.dispatchToken = TandemDispatcher.register( function( payload ){
+UsersStore.dispatchToken = TandemDispatcher.register( payload => {
 	var action = payload.action;
 	switch( action.type ){
 	case ActionTypes.USERS_RECEIVE_STATE:
@@ -27,9 +27,7 @@ UsersStore.dispatchToken = TandemDispatcher.register( function( payload ){
 		UsersStore.emit( CHANGE_EVENT );
 		break;
 	case ActionTypes.USERS_RECEIVE_LEAVE:
-		_users = filter( _users, function( user ){
-			return user.id !== action.user.id;
-		});
+		_users = filter( _users, user => user.id !== action.user.id );
 		UsersStore.emit( CHANGE_EVENT );
 		break;
 	}

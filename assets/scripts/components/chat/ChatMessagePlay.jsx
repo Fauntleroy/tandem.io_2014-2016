@@ -28,7 +28,7 @@ var ChatMessagePlay = React.createClass({
 		thumbnail_classes_object[item.source] = true;
 		var thumbnail_classes = cx( thumbnail_classes_object );
 		var thumbnail_style = {
-			backgroundImage: 'url('+ item.image +')'
+			backgroundImage: `url(${item.image})`
 		};
 		return (
 			<li className="play">

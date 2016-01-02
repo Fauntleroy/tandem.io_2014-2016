@@ -18,7 +18,8 @@ var VolumeControl = React.createClass({
 		var new_volume = ( mouse_location / volume_level_element.offsetWidth ) * MAXIMUM_VOLUME;
 		if( new_volume > MAXIMUM_VOLUME ){
 			new_volume = MAXIMUM_VOLUME;
-		} else if( new_volume < 0 ){
+		}
+		else if( new_volume < 0 ){
 			new_volume = 0;
 		}
 		this.props.onChange( new_volume );
@@ -49,7 +50,7 @@ var VolumeControl = React.createClass({
 			'volume--muted': mute
 		});
 		const volume_style = {
-			width: volume +'%'
+			width: `${volume}%`
 		};
 		return (
 			<span className={volume_controls_classes}>

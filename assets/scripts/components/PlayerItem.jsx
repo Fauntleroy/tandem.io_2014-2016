@@ -12,7 +12,7 @@ var PlayerItem = React.createClass({
 		const { source, title, url, user } = item;
 		const source_icon_classes = cx({
 			fa: true,
-			['fa-'+ source]: true
+			[`fa-${source}`]: true
 		});
 		return (
 			<div className="player__item">

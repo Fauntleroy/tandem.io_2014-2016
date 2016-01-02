@@ -25,13 +25,13 @@ var PlaylistItem = React.createClass({
 	render: function(){
 		const { item } = this.props;
 		const { duration, id, image, source, title, url, user } = item;
-		const image_classes = 'image ' + source;
+		const image_classes = `image ${source}`;
 		const image_style = {
-			backgroundImage: 'url('+ image +')'
+			backgroundImage: `url(${image})`
 		};
 		const source_icon_classes = cx({
 			'fa': true,
-			['fa-'+ source]: true
+			[`fa-${source}`]: true
 		});
 		return (
 			<div data-id={id}>

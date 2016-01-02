@@ -15,8 +15,8 @@ var ChatMessage = React.createClass({
 	},
 	renderContent: function(){
 		const { content } = this.props.message;
-		return content.map( function( content ){
-			const { text, uuid } = content;
+		return content.map( message_content => {
+			const { text, uuid } = message_content;
 			return <p key={uuid}>{text}</p>;
 		});
 	},

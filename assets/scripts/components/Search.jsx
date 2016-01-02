@@ -48,7 +48,7 @@ var Search = React.createClass({
 		SearchActionCreator.startSearch( query );
 	},
 	renderResults: function(){
-		const results_jsx = this.state.results.map( function( result ){
+		const results_jsx = this.state.results.map( result => {
 			const { item_id } = result;
 			return (
 				<SearchResult result={result} key={item_id} />

@@ -43,7 +43,7 @@ class List extends Component {
 	onDragEnd( index ){
 		this.props.onSortEnd( this.state.start_index, index );
 		this.setState({
-			start_index: undefined
+			start_index: undefined // eslint-disable-line no-undefined
 		});
 	}
 	moveItem( drag_index, hover_index ){
@@ -55,11 +55,11 @@ class List extends Component {
 		this.props.onSortChange( drag_index, hover_index );
 	}
 	render(){
-		var classes = ' ' + this.props.className;
+		var classes = ` ${this.props.className}`;
 		var children = React.Children.toArray(this.props.children);
 		children = this.state.order.map((key, index) => {
 			// TODO determine if this is a brittle way to do this or not
-			var child = _.find(children, child => child.key.indexOf(key) >= 0);
+			var child = _.find(children, _child => _child.key.indexOf(key) >= 0);
 			return React.cloneElement( child, {
 				moveItem: this.moveItem,
 				index: index,

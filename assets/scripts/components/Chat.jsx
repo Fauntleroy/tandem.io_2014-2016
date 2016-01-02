@@ -69,7 +69,7 @@ var Chat = React.createClass({
 		}
 	},
 	renderMessages: function(){
-		var messages_jsx = this.state.messages.map( function( message ){
+		var messages_jsx = this.state.messages.map( message => {
 			switch( message.type ){
 			case 'chat':
 				return <ChatMessage key={message.uuid} message={message} />;

@@ -20,12 +20,12 @@ var PlaylistActionCreator = {
 		});
 		switch( source ){
 		case 'youtube':
-			YoutubeAPIUtils.getItemFromUrl( url, function( err, item ){
+			YoutubeAPIUtils.getItemFromUrl( url, ( err, item ) => {
 				PlaylistActionCreator.receiveAddItemFromUrl( err, item );
 			});
 			break;
 		case 'soundcloud':
-			SoundcloudAPIUtils.getItemFromUrl( url, function( err, item ){
+			SoundcloudAPIUtils.getItemFromUrl( url, ( err, item ) => {
 				PlaylistActionCreator.receiveAddItemFromUrl( err, item );
 			});
 			break;

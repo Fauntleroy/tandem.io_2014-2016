@@ -72,12 +72,12 @@ class Item extends Component {
 	}
 }
 
-Item = DropTarget('item', sort_target, function( connect ){
+Item = DropTarget('item', sort_target, connect => {
 	return {
 		connectDropTarget: connect.dropTarget()
 	};
 })(Item);
-Item = DragSource('item', sort_source, function( connect, monitor ){
+Item = DragSource('item', sort_source, ( connect, monitor ) => {
 	return {
 		connectDragSource: connect.dragSource(),
 		isDragging: monitor.isDragging()

@@ -18,7 +18,7 @@ var _item;
 var _likers = [];
 var _elapsed_time = 0;
 var _client_elapsed_time = 0;
-var _orders = ['fifo','shuffle'];
+var _orders = [ 'fifo', 'shuffle' ];
 var _order = _orders[0];
 if( typeof store.get( VOLUME_KEY ) === 'undefined' ){
 	store.set( VOLUME_KEY, DEFAULT_VOLUME );
@@ -51,7 +51,7 @@ var PlayerStore = assign( {}, EventEmitter.prototype, {
 	}
 });
 
-PlayerStore.dispatchToken = TandemDispatcher.register( function( payload ){
+PlayerStore.dispatchToken = TandemDispatcher.register( payload => {
 	var action = payload.action;
 	switch( action.type ){
 	case ActionTypes.PLAYER_SET_ELAPSED_TIME:

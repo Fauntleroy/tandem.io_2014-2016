@@ -39,7 +39,7 @@ var ChatStore = assign( {}, EventEmitter.prototype, {
 	}
 });
 
-ChatStore.dispatchToken = TandemDispatcher.register( function( payload ){
+ChatStore.dispatchToken = TandemDispatcher.register( payload => {
 	var action = payload.action;
 	switch( action.type ){
 	case ActionTypes.CHAT_RECEIVE_ADD_MESSAGE:

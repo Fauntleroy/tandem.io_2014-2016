@@ -14,7 +14,7 @@ var RoomStore = assign( {}, EventEmitter.prototype, {
 	}
 });
 
-RoomStore.dispatchToken = TandemDispatcher.register( function( payload ){
+RoomStore.dispatchToken = TandemDispatcher.register( payload => {
 	var action = payload.action;
 	switch( action.type ){
 	case ActionTypes.ROOM_RECEIVE_SET_TITLE:

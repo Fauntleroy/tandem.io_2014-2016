@@ -31,7 +31,7 @@ var SearchResultsStore = assign( {}, EventEmitter.prototype, {
 		return _query;
 	},
 	getActiveSource: function(){
-		var active_source = find( _sources, function( source ){
+		var active_source = find( _sources, source => {
 			return source.active;
 		});
 		return active_source;
@@ -48,7 +48,7 @@ var SearchResultsStore = assign( {}, EventEmitter.prototype, {
 	}
 });
 
-SearchResultsStore.dispatchToken = TandemDispatcher.register( function( payload ){
+SearchResultsStore.dispatchToken = TandemDispatcher.register( payload => {
 	var action = payload.action;
 	switch( action.type ){
 	case ActionTypes.SEARCH_ACTIVE:
@@ -60,7 +60,7 @@ SearchResultsStore.dispatchToken = TandemDispatcher.register( function( payload 
 		SearchResultsStore.emit( CHANGE_EVENT );
 		break;
 	case ActionTypes.SEARCH_SWITCH_SOURCE:
-		_sources = _sources.map( function( source ){
+		_sources = _sources.map( source => {
 			source.active = ( action.source === source.name );
 			return source;
 		});
