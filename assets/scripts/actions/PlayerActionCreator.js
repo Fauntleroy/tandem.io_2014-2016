@@ -34,15 +34,15 @@ var PlayerActionCreator = {
 		});
 		TandemPlayerSocketUtils.likeItem();
 		switch( item.source ){
-			case 'youtube':
-				if( user.is_youtube_linked && user.youtube_likes_id ){
-					YoutubeAPIUtils.likeItem( item.original_id, user.youtube_likes_id );
-				}
+		case 'youtube':
+			if( user.is_youtube_linked && user.youtube_likes_id ){
+				YoutubeAPIUtils.likeItem( item.original_id, user.youtube_likes_id );
+			}
 			break;
-			case 'soundcloud':
-				if( user.is_soundcloud_linked ){
-					SoundcloudAPIUtils.likeItem( item.original_id );
-				}
+		case 'soundcloud':
+			if( user.is_soundcloud_linked ){
+				SoundcloudAPIUtils.likeItem( item.original_id );
+			}
 			break;
 		}
 	},

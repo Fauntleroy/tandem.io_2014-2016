@@ -10,15 +10,8 @@ import PlayerItem from './PlayerItem.jsx';
 import PlayerActionCreator from '../actions/PlayerActionCreator.js';
 import PlayerStore from '../stores/PlayerStore.js';
 
-var CHANGE_EVENT = 'change';
-var CHANGE_ELAPSED_TIME_EVENT = 'change:elapsed_time';
-var CHANGE_ITEM_EVENT = 'change:item';
-var CHANGE_MUTE_EVENT = 'change:mute';
-var CHANGE_VOLUME_EVENT = 'change:volume';
-var MEDIA_TYPES = {
-	youtube: 'youtube',
-	soundcloud: 'mp3'
-};
+const CHANGE_EVENT = 'change';
+const CHANGE_ELAPSED_TIME_EVENT = 'change:elapsed_time';
 const SOUNDCLOUD_CONFIG = {
 	clientId: tandem.bridge.apis.soundcloud.client_id
 };
@@ -29,6 +22,9 @@ const YOUTUBE_CONFIG = {
 	},
 	preload: true
 };
+const MAXIMUM_PLAYER_ELAPSED_DRIFT = 3;
+const MAXIMUM_VOLUME = 100;
+const MAXIMUM_ELAPSED = 100;
 
 var _getStateFromStore = function(){
 	return {
@@ -44,15 +40,58 @@ var _getStateFromStore = function(){
 
 var Player = React.createClass({
 	getInitialState: function(){
-	  return _getStateFromStore();
+		return _getStateFromStore();
 	},
 	componentDidMount: function(){
-		PlayerStore.on( CHANGE_EVENT, this._onChange );
-		PlayerStore.on( CHANGE_ELAPSED_TIME_EVENT, this._onElapsedTimeChange );
+		PlayerStore.on( CHANGE_EVENT, this.handleChange );
+		PlayerStore.on( CHANGE_ELAPSED_TIME_EVENT, this.handleElapsedTimeChange );
 	},
 	componentWillUnmount: function(){
-		PlayerStore.removeListener( CHANGE_EVENT, this._onChange );
-		PlayerStore.removeListener( CHANGE_ELAPSED_TIME_EVENT, this._onElapsedTimeChange );
+		PlayerStore.removeListener( CHANGE_EVENT, this.handleChange );
+		PlayerStore.removeListener( CHANGE_ELAPSED_TIME_EVENT, this.handleElapsedTimeChange );
+	},
+	handleChange: function(){
+		this.setState( _getStateFromStore() );
+	},
+	handleElapsedTimeChange: function(){
+		var elapsed_time = this.state.elapsed_time;
+		var client_elapsed_time = this.state.client_elapsed_time;
+		if( elapsed_time - MAXIMUM_PLAYER_ELAPSED_DRIFT > client_elapsed_time || elapsed_time + MAXIMUM_PLAYER_ELAPSED_DRIFT < client_elapsed_time ){
+			this.refs.player.seekTo(this.state.elapsed_time / this.state.item.duration);
+		}
+	},
+	handlePlayerTime: function( progress ){
+		// TODO figure out what's actually going on with these conflicting dispatches
+		if (progress.played === 0) {
+			return;
+		}
+		var elapsed_time = parseInt( progress.played * this.state.item.duration );
+		PlayerActionCreator.setElapsedTime( elapsed_time );
+	},
+	handleOrderChange: function( event ){
+		event.preventDefault();
+		PlayerActionCreator.setOrder( event.target.value );
+	},
+	handleSkipClick: function( event ){
+		event.preventDefault();
+		var current_item = PlayerStore.getItem();
+		if( !current_item ){
+			return;
+		}
+		if( confirm('Are you sure you want to skip this? It will be skipped for every user in the room.') ){
+			PlayerActionCreator.skipItem();
+		}
+	},
+	handleLikeClick: function( event ){
+		event.preventDefault();
+		PlayerActionCreator.likeItem( this.state.item );
+	},
+	handleMute: function( toggle ){
+		PlayerActionCreator.mute( toggle );
+	},
+	handleVolumeChange: function( volume ){
+		PlayerActionCreator.setVolume( volume );
+		PlayerActionCreator.mute( false );
 	},
 	render: function(){
 		var player = this.state;
@@ -64,23 +103,24 @@ var Player = React.createClass({
 		});
 		var volume = this.state.mute
 			? 0
-			: this.state.volume / 100;
+			: this.state.volume / MAXIMUM_VOLUME;
 		var media_url = player.item
 			? player.item.source === 'soundcloud'
 				? player.item.url
 				: player.item.media_url
 			: null;
+		const elapsed_percent = ( player.client_elapsed_time / duration ) * MAXIMUM_ELAPSED;
 		var player_classes = cx({
 			player: true,
 			'player--empty': !player.item
 		});
 		var cover_style = {
 			backgroundImage: ( player.item )
-				? 'url('+ player.item.image +')'
+				? `url(${player.item.image})`
 				: null
 		};
 		var elapsed_style = {
-			width: ( player.client_elapsed_time / duration ) * 100 +'%'
+			width: `${elapsed_percent}%`
 		};
 		var like_classes = cx({
 			player__controls__like: true,
@@ -111,7 +151,7 @@ var Player = React.createClass({
 							playing={true}
 							soundcloudConfig={SOUNDCLOUD_CONFIG}
 							youtubeConfig={YOUTUBE_CONFIG}
-							onProgress={this._onPlayerTime}
+							onProgress={this.handlePlayerTime}
 						/>
 					</div>
 					<img className="player__media__aspect" src="/images/16x9.png" />
@@ -130,18 +170,18 @@ var Player = React.createClass({
 					</div>
 					<ul className="player__controls">
 						<li className="player__controls__order player__controls__control">
-							<select name="order" value={player.order} onChange={this._onOrderChange}>
+							<select name="order" value={player.order} onChange={this.handleOrderChange}>
 								<option value="fifo">Normal</option>
 								<option value="shuffle">Shuffle</option>
 							</select>
 						</li>
 						<li className="player__controls__skip player__controls__control">
-							<a href="#skip" onClick={this._onSkipClick}>
+							<a href="#skip" onClick={this.handleSkipClick}>
 								<i className="fa fa-forward"></i>
 							</a>
 						</li>
 						<li className={like_classes}>
-							<a className="player__controls__like__button" href="#like" onClick={this._onLikeClick}>
+							<a className="player__controls__like__button" href="#like" onClick={this.handleLikeClick}>
 								<i className={like_icon_classes}></i>
 							</a>
 							<var className="player__controls__like__count">{player.likers.length || null}</var>
@@ -150,8 +190,8 @@ var Player = React.createClass({
 							<VolumeControl
 								mute={player.mute}
 								volume={player.volume}
-								onMute={this._onMute}
-								onChange={this._onVolumeChange}
+								onMute={this.handleMute}
+								onChange={this.handleVolumeChange}
 							/>
 						</li>
 					</ul>
@@ -159,49 +199,6 @@ var Player = React.createClass({
 				</div>
 			</div>
 		);
-	},
-	_onChange: function(){
-		this.setState( _getStateFromStore() );
-	},
-	_onElapsedTimeChange: function(){
-		var elapsed_time = this.state.elapsed_time;
-		var client_elapsed_time = this.state.client_elapsed_time;
-		if( elapsed_time - 3 > client_elapsed_time || elapsed_time + 3 < client_elapsed_time ){
-			this.refs.player.seekTo(this.state.elapsed_time / this.state.item.duration);
-		}
-	},
-	_onPlayerTime: function( progress ){
-		// TODO figure out what's actually going on with these conflicting dispatches
-		if (progress.played === 0) {
-			return;
-		}
-		var elapsed_time = parseInt( progress.played * this.state.item.duration, 10 );
-		PlayerActionCreator.setElapsedTime( elapsed_time );
-	},
-	_onOrderChange: function( event ){
-		event.preventDefault();
-		PlayerActionCreator.setOrder( event.target.value );
-	},
-	_onSkipClick: function( event ){
-		event.preventDefault();
-		var current_item = PlayerStore.getItem();
-		if( !current_item ){
-			return;
-		}
-		if( confirm('Are you sure you want to skip this? It will be skipped for every user in the room.') ){
-			PlayerActionCreator.skipItem();
-		}
-	},
-	_onLikeClick: function( event ){
-		event.preventDefault();
-		PlayerActionCreator.likeItem( this.state.item );
-	},
-	_onMute: function( toggle ){
-		PlayerActionCreator.mute( toggle );
-	},
-	_onVolumeChange: function( volume ){
-		PlayerActionCreator.setVolume( volume );
-		PlayerActionCreator.mute( false );
 	}
 });
 

@@ -17,7 +17,7 @@ import Title from './components/Title.js';
 window.tandem = window.tandem || {};
 
 // Wait for DOM so views will work
-domready( function(){
+domready( () => {
 	tandem.components = {
 		title: new Title(),
 		user_menu: ReactDOM.render( <UserMenu />, document.getElementById('user-menu') ),

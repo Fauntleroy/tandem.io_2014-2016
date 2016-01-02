@@ -16,56 +16,20 @@ import PlayerActionCreator from '../actions/PlayerActionCreator.js';
 import ChatStore from '../stores/ChatStore.js';
 import PlayerStore from '../stores/PlayerStore.js';
 
-var CHANGE_EVENT = 'change';
-var STARTS_WITH_LIKE_TEXT_REGEX = /^<3(?:$|\s)|^\+\+(?:$|\s)/;
+const CHANGE_EVENT = 'change';
+const STARTS_WITH_LIKE_TEXT_REGEX = /^<3(?:$|\s)|^\+\+(?:$|\s)/;
+const MAX_MESSAGES = 250;
+const ENTER_KEY_CODE = 13;
 
 var _getStateFromStore = function(){
 	return {
-		messages: ChatStore.getMessages( 250 )
-	}
-};
-
-var _generateMessages = function( messages ){
-	var messages_jsx = messages.map( function( message ){
-		switch( message.type ){
-			case 'chat':
-				return <ChatMessage key={message.uuid} message={message} />;
-			break;
-			case 'emote':
-				return <ChatMessageEmote key={message.uuid} message={message} />;
-			break;
-			case 'title':
-				return <ChatMessageTitle key={message.uuid} message={message} />;
-			break;
-			case 'like':
-				return <ChatMessageLike key={message.uuid} message={message} />;
-			break;
-			case 'play':
-				return <ChatMessagePlay key={message.uuid} message={message} />;
-			break;
-			case 'skip':
-				return <ChatMessageSkip key={message.uuid} message={message} />;
-			break;
-			case 'remove':
-				return <ChatMessageRemove key={message.uuid} message={message} />;
-			break;
-			case 'sort':
-				return <ChatMessageSort key={message.uuid} message={message} />;
-			break;
-			case 'join':
-				return <ChatMessageJoin key={message.uuid} message={message} />;
-			break;
-			case 'leave':
-				return <ChatMessageLeave key={message.uuid} message={message} />;
-			break;
-		}
-	});
-	return messages_jsx;
+		messages: ChatStore.getMessages( MAX_MESSAGES )
+	};
 };
 
 var Chat = React.createClass({
 	getInitialState: function(){
-	    return _getStateFromStore();
+		return _getStateFromStore();
 	},
 	componentDidMount: function(){
 		ChatStore.on( CHANGE_EVENT, this._onChange );
@@ -73,35 +37,16 @@ var Chat = React.createClass({
 	componentWillUnmount: function(){
 		ChatStore.removeListener( CHANGE_EVENT, this._onChange );
 	},
-	render: function(){
-		var messages_jsx = _generateMessages( this.state.messages );
-		return (
-			<div className="chat">
-				<form className="new_message">
-					<AutosizeTextarea
-						name="new_message"
-						value={this.state.new_message}
-						placeholder="(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ type to chat"
-						onChange={this._onNewMessageChange}
-						onKeyPress={this._onNewMessageKeyPress}
-					/>
-				</form>
-				<ul className="messages">
-					{messages_jsx}
-				</ul>
-			</div>
-		);
-	},
 	_onChange: function(){
 		this.setState( _getStateFromStore() );
 	},
-	_onNewMessageChange: function( event ){
+	handleNewMessageChange: function( event ){
 		this.setState({
 			new_message: event.target.value
 		});
 	},
-	_onNewMessageKeyPress: function( event ){
-		if( event.which === 13 && !event.shiftKey ){
+	handleNewMessageKeyPress: function( event ){
+		if( event.which === ENTER_KEY_CODE && !event.shiftKey ){
 			event.preventDefault();
 			var new_message = this.state.new_message;
 			if( new_message ){
@@ -122,6 +67,51 @@ var Chat = React.createClass({
 				});
 			}
 		}
+	},
+	renderMessages: function(){
+		var messages_jsx = this.state.messages.map( message => {
+			switch( message.type ){
+			case 'chat':
+				return <ChatMessage key={message.uuid} message={message} />;
+			case 'emote':
+				return <ChatMessageEmote key={message.uuid} message={message} />;
+			case 'title':
+				return <ChatMessageTitle key={message.uuid} message={message} />;
+			case 'like':
+				return <ChatMessageLike key={message.uuid} message={message} />;
+			case 'play':
+				return <ChatMessagePlay key={message.uuid} message={message} />;
+			case 'skip':
+				return <ChatMessageSkip key={message.uuid} message={message} />;
+			case 'remove':
+				return <ChatMessageRemove key={message.uuid} message={message} />;
+			case 'sort':
+				return <ChatMessageSort key={message.uuid} message={message} />;
+			case 'join':
+				return <ChatMessageJoin key={message.uuid} message={message} />;
+			case 'leave':
+				return <ChatMessageLeave key={message.uuid} message={message} />;
+			}
+		});
+		return messages_jsx;
+	},
+	render: function(){
+		return (
+			<div className="chat">
+				<form className="new_message">
+					<AutosizeTextarea
+						name="new_message"
+						value={this.state.new_message}
+						placeholder="(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ type to chat"
+						onChange={this.handleNewMessageChange}
+						onKeyPress={this.handleNewMessageKeyPress}
+					/>
+				</form>
+				<ul className="messages">
+					{this.renderMessages()}
+				</ul>
+			</div>
+		);
 	}
 });
 

@@ -18,11 +18,11 @@ var SearchActionCreator = {
 		});
 		var source = SearchResultsStore.getActiveSource();
 		switch( source.name ){
-			case 'youtube':
-				YoutubeAPIUtils.startSearch( query );
+		case 'youtube':
+			YoutubeAPIUtils.startSearch( query );
 			break;
-			case 'soundcloud':
-				SoundcloudAPIUtils.startSearch( query );
+		case 'soundcloud':
+			SoundcloudAPIUtils.startSearch( query );
 			break;
 		}
 	},

@@ -17,65 +17,69 @@ var _getStateFromStore = function(){
 	};
 };
 
-var _generateResults = function( results ){
-	var results_jsx = results.map( function( result ){
-		return (
-			<SearchResult result={result} />
-		);
-	});
-	return results_jsx;
-};
-
 var Search = React.createClass({
 	getInitialState: function(){
 		return _getStateFromStore();
 	},
 	componentDidMount: function(){
-		SearchResultsStore.on( CHANGE_EVENT, this._onChange );
+		SearchResultsStore.on( CHANGE_EVENT, this.handleChange );
 	},
 	componentWillUnmount: function(){
-		SearchResultsStore.removeListener( CHANGE_EVENT, this._onChange );
+		SearchResultsStore.removeListener( CHANGE_EVENT, this.handleChange );
+	},
+	handleChange: function(){
+		this.setState( _getStateFromStore() );
+	},
+	handleHideClick: function( event ){
+		event.preventDefault();
+		SearchActionCreator.toggleActive( false );
+	},
+	handleQueryInputChange: function( event ){
+		this.setState({
+			query: event.target.value
+		});
+	},
+	handleQueryFormSubmit: function( event ){
+		event.preventDefault();
+		SearchActionCreator.startSearch( this.state.query );
+	},
+	handleSearch: function( query ){
+		SearchActionCreator.toggleActive( true );
+		SearchActionCreator.startSearch( query );
+	},
+	renderResults: function(){
+		const results_jsx = this.state.results.map( result => {
+			const { item_id } = result;
+			return (
+				<SearchResult result={result} key={item_id} />
+			);
+		});
+		return results_jsx;
 	},
 	render: function(){
 		var search_classes = cx({
 			search: true,
 			active: this.state.active
 		});
-		var results = _generateResults.bind(this)( this.state.results );
 		return (
 			<div className={search_classes}>
-				<a href="#hide" className="hide" onClick={this._onHideClick}>
+				<a href="#hide" className="hide" onClick={this.handleHideClick}>
 					<i className="fa fa-times"></i>
 				</a>
-				<form onSubmit={this._onQueryFormSubmit}>
-					<input name="query" type="text" value={this.state.query} onChange={this._onQueryInputChange} />
+				<form onSubmit={this.handleQueryFormSubmit}>
+					<input
+						name="query"
+						type="text"
+						value={this.state.query}
+						onChange={this.handleQueryInputChange}
+					/>
 					<SearchSourceTabs sources={this.state.sources} />
 				</form>
 				<ul className="results">
-					{results}
+					{this.renderResults()}
 				</ul>
 			</div>
 		);
-	},
-	_onChange: function(){
-		this.setState( _getStateFromStore() );
-	},
-	_onHideClick: function( event ){
-		event.preventDefault();
-		SearchActionCreator.toggleActive( false );
-	},
-	_onQueryInputChange: function( event ){
-		this.setState({
-			query: event.target.value
-		});
-	},
-	_onQueryFormSubmit: function( event ){
-		event.preventDefault();
-		SearchActionCreator.startSearch( this.state.query );
-	},
-	_onSearch: function( query ){
-		SearchActionCreator.toggleActive( true );
-		SearchActionCreator.startSearch( query );
 	}
 });
 

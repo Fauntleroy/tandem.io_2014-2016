@@ -1,13 +1,11 @@
 import url from 'url';
 import xhr from 'xhr';
-import assign from 'lodash/object/assign';
 
 import duration8601ToSeconds from './duration8601ToSeconds.js';
 
 import SearchServerActionCreator from '../actions/SearchServerActionCreator.js';
 
 var NO_OP = function(){};
-var REQUEST_TIMEOUT = 15 * 1000;
 var YOUTUBE_API_KEY = tandem.bridge.apis.youtube.api_key;
 var YOUTUBE_API_HOST = 'www.googleapis.com';
 var YOUTUBE_API_PATH = '/youtube/v3';
@@ -15,7 +13,7 @@ var YOUTUBE_API_PROXY_PATH = '/api/v1/proxy/youtube';
 var YOUTUBE_WATCH_URL = 'http://www.youtube.com/watch?v=';
 
 var _getIdFromUrl = function( item_url ){
-	var query_id = item_url.match(/youtube\.com.*[\?&]v=(.{11})|youtu\.be\/(.{11})/i);
+	var query_id = item_url.match( /youtube\.com.*[\?&]v=(.{11})|youtu\.be\/(.{11})/i );
 	query_id = ( query_id )
 		? query_id[1] || query_id[2] || null
 		: null;
@@ -34,13 +32,13 @@ var _processYoutubeItem = function( item ){
 		type: 'video',
 		duration: duration8601ToSeconds( item.contentDetails.duration ),
 		artist: item.snippet.channelTitle,
-		artist_url: 'http://www.youtube.com/user/'+ item.snippet.channelTitle
+		artist_url: `http://www.youtube.com/user/${item.snippet.channelTitle}`
 	};
 	return processed_item;
 };
 
 var _processYoutubeResults = function( results ){
-	var processed_results = results.map( function( result ){
+	var processed_results = results.map( result => {
 		var processed_result = {
 			title: result.snippet.title,
 			url: YOUTUBE_WATCH_URL + result.id.videoId,
@@ -60,31 +58,29 @@ var YoutubeAPIUtils = {
 	testUrl: function( item_url ){
 		return /youtube\.com.*[\?&]v=(.{11})|youtu\.be\/(.{11})/i.test( item_url );
 	},
-	apiRequest: function( path, method, query, callback ){
-		callback = callback || NO_OP;
-		query = assign({
-			key: YOUTUBE_API_KEY
-		}, query);
+	apiRequest: function( path, method, query, callback = NO_OP ){
 		var request_url = url.format({
 			protocol: 'https:',
 			host: YOUTUBE_API_HOST,
 			pathname: YOUTUBE_API_PATH + path,
-			query: query
+			query: {
+				...query,
+				key: YOUTUBE_API_KEY
+			}
 		});
 		xhr({
 			url: request_url,
 			method: method,
 			json: true
-		}, callback);
+		}, callback );
 	},
-	getItemFromUrl: function( item_url, callback ){
-		callback = callback || NO_OP;
+	getItemFromUrl: function( item_url, callback = NO_OP ){
 		var id = _getIdFromUrl( item_url );
 		this.apiRequest( '/videos/', 'GET', {
 			part: 'contentDetails,id,snippet,status',
 			fields: 'items(contentDetails,id,snippet,status)',
 			id: id
-		}, function( error, response, body ){
+		}, ( error, response, body ) => {
 			if( error ){
 				return callback( new Error('Error getting item from YouTube') );
 			}
@@ -103,19 +99,17 @@ var YoutubeAPIUtils = {
 			videoEmbeddable: true,
 			order: 'relevance',
 			maxResults: 30
-		}, function( err, response, body ){
+		}, ( err, response, body ) => {
 			if( err ){
-				console.log( 'YouTube search error', err );
 				return;
 			}
 			var results = _processYoutubeResults( body.items );
 			SearchServerActionCreator.receiveResults( results, 'youtube' );
 		});
 	},
-	likeItem: function( item_id, playlist_id, callback ){
-		callback = callback || NO_OP;
+	likeItem: function( item_id, playlist_id, callback = NO_OP ){
 		xhr({
-			url: YOUTUBE_API_PROXY_PATH +'/playlistItems?part=snippet',
+			url: `${YOUTUBE_API_PROXY_PATH}/playlistItems?part=snippet`,
 			method: 'POST',
 			json: {
 				snippet: {

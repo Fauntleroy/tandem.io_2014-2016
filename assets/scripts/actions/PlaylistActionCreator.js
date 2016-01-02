@@ -19,15 +19,15 @@ var PlaylistActionCreator = {
 			source: source
 		});
 		switch( source ){
-			case 'youtube':
-				YoutubeAPIUtils.getItemFromUrl( url, function( err, item ){
-					PlaylistActionCreator.receiveAddItemFromUrl( err, item );
-				});
+		case 'youtube':
+			YoutubeAPIUtils.getItemFromUrl( url, ( err, item ) => {
+				PlaylistActionCreator.receiveAddItemFromUrl( err, item );
+			});
 			break;
-			case 'soundcloud':
-				SoundcloudAPIUtils.getItemFromUrl( url, function( err, item ){
-					PlaylistActionCreator.receiveAddItemFromUrl( err, item );
-				});
+		case 'soundcloud':
+			SoundcloudAPIUtils.getItemFromUrl( url, ( err, item ) => {
+				PlaylistActionCreator.receiveAddItemFromUrl( err, item );
+			});
 			break;
 		}
 	},

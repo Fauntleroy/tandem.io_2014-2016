@@ -17,7 +17,7 @@ var _move = function( array, origin, destination ){
 };
 
 var _removeItem = function( item_id ){
-	var items = reject( _items, function( item ){
+	var items = reject( _items, item => {
 		return item.id === item_id;
 	});
 	return items;
@@ -35,45 +35,45 @@ var PlaylistStore = assign( {}, EventEmitter.prototype, {
 	}
 });
 
-PlaylistStore.dispatchToken = TandemDispatcher.register( function( payload ){
+PlaylistStore.dispatchToken = TandemDispatcher.register( payload => {
 	var action = payload.action;
 	switch( action.type ){
-		case ActionTypes.PLAYLIST_ADD_ITEM_FROM_URL:
-			_is_adding = true;
-			PlaylistStore.emit( CHANGE_EVENT );
+	case ActionTypes.PLAYLIST_ADD_ITEM_FROM_URL:
+		_is_adding = true;
+		PlaylistStore.emit( CHANGE_EVENT );
 		break;
-		case ActionTypes.PLAYLIST_SORT_END:
+	case ActionTypes.PLAYLIST_SORT_END:
+		_move( _items, action.origin, action.destination );
+		PlaylistStore.emit( CHANGE_EVENT );
+		break;
+	case ActionTypes.PLAYLIST_RECEIVE_ADD_ITEM_FROM_URL:
+		_is_adding = false;
+		PlaylistStore.emit( CHANGE_EVENT );
+		break;
+	case ActionTypes.PLAYLIST_RECEIVE_STATE:
+		_items = action.state;
+		PlaylistStore.emit( CHANGE_EVENT );
+		break;
+	case ActionTypes.PLAYLIST_RECEIVE_ADD_ITEM:
+		_items.push( action.item );
+		PlaylistStore.emit( CHANGE_EVENT );
+		break;
+	case ActionTypes.PLAYLIST_RECEIVE_REMOVE_ITEM:
+		_items = _removeItem( action.item.id );
+		PlaylistStore.emit( CHANGE_EVENT );
+		break;
+	case ActionTypes.PLAYLIST_RECEIVE_SORT_START:
+		if( action.user.id !== tandem.bridge.user.id ){
+			_is_remote_sorting = true;
+			PlaylistStore.emit( CHANGE_EVENT );
+		}
+		break;
+	case ActionTypes.PLAYLIST_RECEIVE_SORT_END:
+		if( action.user.id !== tandem.bridge.user.id ){
+			_is_remote_sorting = false;
 			_move( _items, action.origin, action.destination );
 			PlaylistStore.emit( CHANGE_EVENT );
-		break;
-		case ActionTypes.PLAYLIST_RECEIVE_ADD_ITEM_FROM_URL:
-			_is_adding = false;
-			PlaylistStore.emit( CHANGE_EVENT );
-		break;
-		case ActionTypes.PLAYLIST_RECEIVE_STATE:
-			_items = action.state;
-			PlaylistStore.emit( CHANGE_EVENT );
-		break;
-		case ActionTypes.PLAYLIST_RECEIVE_ADD_ITEM:
-			_items.push( action.item );
-			PlaylistStore.emit( CHANGE_EVENT );
-		break;
-		case ActionTypes.PLAYLIST_RECEIVE_REMOVE_ITEM:
-			_items = _removeItem( action.item.id );
-			PlaylistStore.emit( CHANGE_EVENT );
-		break;
-		case ActionTypes.PLAYLIST_RECEIVE_SORT_START:
-			if( action.user.id !== tandem.bridge.user.id ){
-				_is_remote_sorting = true;
-				PlaylistStore.emit( CHANGE_EVENT );
-			}
-		break;
-		case ActionTypes.PLAYLIST_RECEIVE_SORT_END:
-			if( action.user.id !== tandem.bridge.user.id ){
-				_is_remote_sorting = false;
-				_move( _items, action.origin, action.destination );
-				PlaylistStore.emit( CHANGE_EVENT );
-			}
+		}
 		break;
 	}
 });
