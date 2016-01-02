@@ -6,7 +6,7 @@ import Timestamp from './Timestamp.jsx';
 var ChatMessageEmote = React.createClass({
 	propTypes: {
 		message: PropTypes.shape({
-			content: PropTypes.array,
+			content: PropTypes.string,
 			time: PropTypes.any,
 			user: PropTypes.object
 		})
