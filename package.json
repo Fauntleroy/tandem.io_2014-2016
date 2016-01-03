@@ -39,7 +39,7 @@
     "react-dnd-html5-backend": "^2.0.0",
     "react-dom": "^0.14.0",
     "react-linkify": "^0.1.1",
-    "react-player": "^0.3.1",
+    "react-player": "fauntleroy/react-player#33228fbc4e7f2ac6a4d49d09ba11b3b9d54fc0ee",
     "react-simple-dropdown": "0.1.x",
     "react-textarea-autosize": "^3.1.0",
     "request": "~2.33.0",
@@ -84,6 +84,6 @@
     "watch:js": "watchify -t [ babelify --presets [ es2015 stage-0 react ] ] --extension=.jsx assets/scripts/room.jsx --outfile assets/compiled/room.js -v",
     "start": "node index.js",
     "clean": "trash compiled",
-    "postinstall": "npm-run-all build minify"
+    "postinstall": "npm-run-all build"
   }
 }
