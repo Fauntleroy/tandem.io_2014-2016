@@ -84,6 +84,6 @@
     "watch:js": "watchify -t [ babelify --presets [ es2015 stage-0 react ] ] --extension=.jsx assets/scripts/room.jsx --outfile assets/compiled/room.js -v",
     "start": "node index.js",
     "clean": "trash compiled",
-    "postinstall": "npm-run-all build"
+    "postinstall": "npm-run-all build minify"
   }
 }
