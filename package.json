@@ -64,6 +64,7 @@
     "eslint": "^1.10.3",
     "eslint-plugin-react": "^3.13.1",
     "less": "^2.5.3",
+    "livereload": "^0.4.0",
     "mkdirp": "^0.5.1",
     "npm-run-all": "^1.4.0",
     "trash-cli": "^1.2.0",
@@ -73,7 +74,7 @@
   "scripts": {
     "build": "mkdirp compiled && npm-run-all build:*",
     "build:css": "lessc assets/styles/index.less assets/compiled/index.css",
-    "build:js": "browserify -t [ babelify --presets [ es2015 stage-0 react ] ] --extension=.jsx assets/scripts/room.jsx --outfile assets/compiled/room.js",
+    "build:js": "browserify -t [ babelify ] --extension=.jsx assets/scripts/room.jsx --outfile assets/compiled/room.js",
     "lint": "eslint assets/scripts --ext .js --ext .jsx",
     "minify": "npm-run-all minify:*",
     "minify:css": "cleancss assets/compiled/index.css -o assets/compiled/index.css",
@@ -81,7 +82,7 @@
     "watch": "mkdirp compiled && npm-run-all -p watch:css watch:js start",
     "watch:assets": "npm-run-all -p watch:css watch:js",
     "watch:css": "watch \"npm run build:css\" assets/styles",
-    "watch:js": "watchify -t [ babelify --presets [ es2015 stage-0 react ] ] --extension=.jsx assets/scripts/room.jsx --outfile assets/compiled/room.js -v",
+    "watch:js": "watchify -t [ babelify ] --extension=.jsx assets/scripts/room.jsx --outfile assets/compiled/room.js -v",
     "start": "node index.js",
     "clean": "trash compiled",
     "postinstall": "npm-run-all build minify"
