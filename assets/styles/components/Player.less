@@ -60,11 +60,12 @@
 /* place everything above the "cover" element */
 .player__meta {
 	position: relative;
+}
 
-	> * {
-		position: relative;
-		z-index: 3;
-	}
+.player__controls,
+.player__item {
+	position: relative;
+	z-index: 3;
 }
 
 .player__cover {
@@ -98,15 +99,14 @@
 }
 
 .player__progress__times__elapsed {
-	font-size: 75%;
 	font-style: normal;
 	font-weight: bold;
 	color: rgba( 255, 255, 255, 0.9 );
 }
 
 .player__progress__times__duration {
-	font-size: 75%;
 	font-style: normal;
+	font-weight: normal;
 }
 
 .player__progress__bars {

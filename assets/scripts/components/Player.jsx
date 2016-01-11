@@ -161,6 +161,7 @@ var Player = React.createClass({
 					<div className="player__progress">
 						<div className="player__progress__times">
 							<var className="player__progress__times__elapsed">{secondsToTime(player.client_elapsed_time)}</var>
+							{' · '}
 							<span className="player__progress__times__duration">{secondsToTime(duration)}</span>
 						</div>
 						<div className="player__progress__bars">
