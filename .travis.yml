@@ -1,10 +1,4 @@
 language: node_js
 node_js:
-  - "5"
+  - "5.1.1"
 before_script: npm run lint
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-4.8
