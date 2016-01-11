@@ -27,7 +27,6 @@
     "express-hbs": "~0.7.10",
     "express-session": "^1.9.2",
     "flux": "^2.0.1",
-    "jsonp": "^0.1.0",
     "keymirror": "^0.1.1",
     "lodash": "^3.3.1",
     "mongoose": "~3.8.6",

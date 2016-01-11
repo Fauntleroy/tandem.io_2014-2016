@@ -20,7 +20,7 @@ var _sources = [{
 }];
 var _results = {
 	youtube: [],
-	souncloud: []
+	soundcloud: []
 };
 
 var SearchResultsStore = assign( {}, EventEmitter.prototype, {

@@ -1,5 +1,4 @@
 import url from 'url';
-import jsonp from 'jsonp';
 import xhr from 'xhr';
 
 import SearchServerActionCreator from '../actions/SearchServerActionCreator.js';
@@ -71,19 +70,21 @@ var SoundcloudAPIUtils = {
 				url: item_url
 			}
 		});
-		jsonp( resolve_url, {
+		xhr({
+			url: resolve_url,
+			json: true,
 			timeout: REQUEST_TIMEOUT * 1000
-		}, ( error, data ) => {
+		}, (error, data) => {
 			if( error ){
 				return callback( new Error('Error resolving url with SoundCloud.') );
 			}
-			else if( data.kind !== 'track' ){
+			else if( data.body.kind !== 'track' ){
 				return callback( new Error('Invalid SoundCloud URL. Must be a SoundCloud track (no sets for now).') );
 			}
-			else if( !data.streamable ){
+			else if( !data.body.streamable ){
 				return callback( new Error('Streaming has been disabled for this track! Nooo :(') );
 			}
-			var item = _processSoundcloudItem( data );
+			var item = _processSoundcloudItem( data.body );
 			return callback( null, item );
 		});
 	},
@@ -99,14 +100,16 @@ var SoundcloudAPIUtils = {
 				q: query
 			}
 		});
-		jsonp( search_url, {
+		xhr({
+			url: search_url,
+			json: true,
 			timeout: REQUEST_TIMEOUT * 1000
-		}, ( err, data ) => {
-			if( err ){
+		}, ( error, data ) => {
+			if( error ){
 				alert('SoundCloud search error');
 				return;
 			}
-			var results = _processSoundcloudResults( data );
+			var results = _processSoundcloudResults( data.body );
 			SearchServerActionCreator.receiveResults( results, 'soundcloud' );
 		});
 	},
