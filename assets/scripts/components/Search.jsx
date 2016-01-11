@@ -58,12 +58,12 @@ var Search = React.createClass({
 	},
 	render: function(){
 		var search_classes = cx({
-			search: true,
-			active: this.state.active
+			'search': true,
+			'search--active': this.state.active
 		});
 		return (
 			<div className={search_classes}>
-				<a href="#hide" className="hide" onClick={this.handleHideClick}>
+				<a href="#hide" className="search__hide" onClick={this.handleHideClick}>
 					<i className="fa fa-times"></i>
 				</a>
 				<form onSubmit={this.handleQueryFormSubmit}>
@@ -75,7 +75,7 @@ var Search = React.createClass({
 					/>
 					<SearchSourceTabs sources={this.state.sources} />
 				</form>
-				<ul className="results">
+				<ul className="search__results">
 					{this.renderResults()}
 				</ul>
 			</div>

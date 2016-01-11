@@ -21,12 +21,13 @@ var SearchSourceTab = React.createClass({
 		const { source } = this.props;
 		const { active, display_name, name } = source;
 		const classes = cx({
-			active: active,
-			[name]: true
+			'search__source-tab': true,
+			'search__source-tab--active': active,
+			[`search__source-tab--${name}`]: true
 		});
 		return (
 			<li className={classes}>
-				<a href={`#${name}`} onClick={this.handleClick}>{display_name}</a>
+				<a className="search__source-tab__link" href={`#${name}`} onClick={this.handleClick}>{display_name}</a>
 			</li>
 		);
 	}

@@ -13,7 +13,7 @@ var SearchSourceTabs = React.createClass({
 	},
 	render: function(){
 		return (
-			<ul className="providers">
+			<ul className="search__source-tabs">
 				{this.renderSourceTabs()}
 			</ul>
 		);
