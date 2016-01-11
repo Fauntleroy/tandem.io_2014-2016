@@ -66,7 +66,7 @@ var Search = React.createClass({
 				<a href="#hide" className="search__hide" onClick={this.handleHideClick}>
 					<i className="fa fa-times"></i>
 				</a>
-				<form onSubmit={this.handleQueryFormSubmit}>
+				<form className="search__controls" onSubmit={this.handleQueryFormSubmit}>
 					<input
 						name="query"
 						type="text"
